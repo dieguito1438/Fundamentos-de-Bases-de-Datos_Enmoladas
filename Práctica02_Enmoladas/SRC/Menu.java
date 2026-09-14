@@ -239,9 +239,17 @@ public class Menu{
 
     /**
      * Método para agregar un cliente a a base de datos.
+     * No puede haber más de un clientes con la misma llave.
      */
     private void agregarCliente(){
         Cliente cliente = crearCliente();
+        String llave = cliente.getIdCliente();
+        for(ArchivoCSV a : clientes){
+            if(a.consultar(llave)){
+                System.out.println("No puede haber Id's repetidos... Intente de nuevo");
+                return;
+            }
+        }
         try{
             cliente.validar();
         }catch(IllegalArgumentException iae){
@@ -278,9 +286,17 @@ public class Menu{
 
     /**
      * Método para agregar una sucursal a la base de datos.
+     * No puede haber más de una sucursal con la misma llave.
      */
     private void agregarSucursal(){
         Sucursal sucursal = crearSucursal();
+        String llave = sucursal.getIdSucursal();
+        for(ArchivoCSV a : sucursales){
+            if(a.consultar(llave)){
+                System.out.println("No puede haber Id's repetidos... Intente de nuevo");
+                return;
+            }
+        }
         try{
             sucursal.validar()
         }catch(IllegalArgumentException iae){
@@ -290,7 +306,7 @@ public class Menu{
         }
         sucursales.add(sucursal);
         try{
-            guardarClientes();
+            guardarSucursales();
         }catch(IOException ioe){
             System.out.println("Ocurrio un error al guardar la nueva sucursal en el archivo .csv.");
         }
@@ -306,9 +322,17 @@ public class Menu{
 
     /**
      * Método para agregar un premio a la base de datos.
+     * No puede haber más de un premio con la misma llave.
      */
     private void agregarPremio(){
         Premio premio = crearPremio();
+        String llave = premio.getIdPremio();
+        for(ArchivoCSV a : premios){
+            if(a.consultar(llave)){
+                System.out.println("No puede haber Id's repetidos... intente de nuevo");
+                return;
+            }
+        }
         try{
             premio.validar();
         }catch(IllegalArgumentException iae){
