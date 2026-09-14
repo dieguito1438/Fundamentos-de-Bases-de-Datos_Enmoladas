@@ -70,7 +70,7 @@ public class Premio implements ArchivoCSV{
      * @param valorAproximado Valor monetario aproximado del premio
      * @param puntosNecesarios Puntos necesarios para canjear el premio
      */
-    private Premio(
+    public Premio(
         int idPremio,
         String nombre,
         CategoriaPremio categoria,
@@ -224,7 +224,7 @@ public class Premio implements ArchivoCSV{
         this.puntosNecesarios = Integer.parseInt(partes[5].trim());
     }
 
-    private void validar() {
+    public  void validar() {
     if (idPremio <= 0) {
         throw new IllegalArgumentException(
             "El id del premio debe ser mayor que 0."
