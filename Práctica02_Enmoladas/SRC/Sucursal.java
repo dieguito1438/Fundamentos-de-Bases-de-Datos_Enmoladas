@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Esta clase representa la Sucursal, una de las Entidades identificadas del Centro de Entretenimiento Familiar.
  * Se encarga de manejar la información de cada sucursal, como su nombre, dirección, horarios, etc. (atributos/informacion particular de c/Sucursal)
@@ -39,6 +42,9 @@ public class Sucursal implements ArchivoCSV {
     /** Horarios de atención de la sucursal. */
     private String horarios;
 
+    /** Inventario de premios disponibles en la sucursal. */
+    private List<Premio> inventarioPremios;
+
     /**
      * Constructor por defecto.
      * Inicializa todos los atributos de la sucursal con cadenas vacías para evitar valores nulos.
@@ -53,6 +59,7 @@ public class Sucursal implements ArchivoCSV {
         this.estado = "";
         this.telefono = "";
         this.horarios = "";
+        this.inventarioPremios = new ArrayList<>();
     }
 
     /**
@@ -81,6 +88,7 @@ public class Sucursal implements ArchivoCSV {
         this.estado = estado;
         this.telefono = telefono;
         this.horarios = horarios;
+        this.inventarioPremios = new ArrayList<>();
     }
 
     /** @return El identificador de la sucursal. */
@@ -137,6 +145,12 @@ public class Sucursal implements ArchivoCSV {
     /** @param horarios Los nuevos horarios para la sucursal. */
     public void setHorarios(String horarios) { this.horarios = horarios; }
 
+    /** @return El inventario de premios de la sucursal. */
+    public List<Premio> getInventarioPremios() { return inventarioPremios; }
+    
+    /** @param inventarioPremios El nuevo inventario de premios para la sucursal. */
+    public void setInventarioPremios(List<Premio> inventarioPremios) { this.inventarioPremios = inventarioPremios; }
+
     /**
      * Verifica si esta sucursal corresponde a la llave primaria buscada.
      * @param llave El idSucursal a buscar.
@@ -165,6 +179,11 @@ public class Sucursal implements ArchivoCSV {
         this.estado = s.estado;
         this.telefono = s.telefono;
         this.horarios = s.horarios;
+        if (s.inventarioPremios != null) {
+            this.inventarioPremios = new ArrayList<>(s.inventarioPremios);
+        } else {
+            this.inventarioPremios = new ArrayList<>();
+        }
     }
 
     /**
@@ -242,7 +261,8 @@ public class Sucursal implements ArchivoCSV {
                (colonia != null ? colonia.equals(sucursal.colonia) : sucursal.colonia == null) &&
                (estado != null ? estado.equals(sucursal.estado) : sucursal.estado == null) &&
                (telefono != null ? telefono.equals(sucursal.telefono) : sucursal.telefono == null) &&
-               (horarios != null ? horarios.equals(sucursal.horarios) : sucursal.horarios == null);
+               (horarios != null ? horarios.equals(sucursal.horarios) : sucursal.horarios == null) &&
+               (inventarioPremios != null ? inventarioPremios.equals(sucursal.inventarioPremios) : sucursal.inventarioPremios == null);
     }
 
     /**
@@ -261,6 +281,7 @@ public class Sucursal implements ArchivoCSV {
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", horarios='" + horarios + '\'' +
+                ", inventarioPremios=" + inventarioPremios +
                 '}';
     }
 }
