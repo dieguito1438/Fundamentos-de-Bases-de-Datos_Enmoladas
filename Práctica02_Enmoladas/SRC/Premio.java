@@ -12,7 +12,7 @@ public class Premio implements ArchivoCSV{
 
 
     /** LLave de la Entidad  */
-    private int idPremio;
+    private String idPremio;
 
     /**Nombre del premio. No puede ser vacio */
     private String nombre;
@@ -71,7 +71,7 @@ public class Premio implements ArchivoCSV{
      * @param puntosNecesarios Puntos necesarios para canjear el premio
      */
     public Premio(
-        int idPremio,
+        String idPremio,
         String nombre,
         CategoriaPremio categoria,
         RangoEdad rangoEdad,
@@ -86,10 +86,19 @@ public class Premio implements ArchivoCSV{
         this.puntosNecesarios = puntosNecesarios;
     }
 
+    public Premio() {
+        this.idPremio = null;
+        this.nombre = null;
+        this.categoria = null;
+        this.rangoEdad = null;
+        this.valorAproximado = 0;
+        this.puntosNecesarios = 0;
+    }
+
     /** 
      * @return Llave del Premio
      */
-    public int getIdPremio() {
+    public String getIdPremio() {
         return idPremio;
     }
 
@@ -134,7 +143,7 @@ public class Premio implements ArchivoCSV{
     /**
      * @param idPremio Llave del Premio
      */
-    public void setIdPremio(int idPremio) {
+    public void setIdPremio(String idPremio) {
         this.idPremio = idPremio;
     }
 
@@ -179,7 +188,7 @@ public class Premio implements ArchivoCSV{
      */
     @Override
     public boolean consultar(String llave) {
-    return this.idPremio == Integer.parseInt(llave);
+    return this.idPremio.equals(llave);
     }
     @Override
     public void actualizar(Object o) {
@@ -216,7 +225,7 @@ public class Premio implements ArchivoCSV{
                 "Línea CSV de Premio inválida: " + csv);
             }
 
-        this.idPremio = Integer.parseInt(partes[0].trim());
+        this.idPremio = partes[0].trim();
         this.nombre = partes[1].trim();
         this.categoria = CategoriaPremio.valueOf(partes[2].trim());
         this.rangoEdad = RangoEdad.valueOf(partes[3].trim());
@@ -225,7 +234,7 @@ public class Premio implements ArchivoCSV{
     }
 
     public  void validar() {
-    if (idPremio <= 0) {
+    if (idPremio == null || idPremio.trim().isEmpty()) {
         throw new IllegalArgumentException(
             "El id del premio debe ser mayor que 0."
         );
@@ -350,9 +359,11 @@ public class Premio implements ArchivoCSV{
             this.puntosNecesarios = puntosNecesarios;
             return this;
         }
-        /**
+
+
+        /*
          * @return Object de tipo Premio
-         */
+         *
         public Premio build() {
         return new Premio(
             idPremio,
@@ -361,7 +372,7 @@ public class Premio implements ArchivoCSV{
             rangoEdad,
             valorAproximado,
             puntosNecesarios);
-        }
+        } */
 
     }
 }

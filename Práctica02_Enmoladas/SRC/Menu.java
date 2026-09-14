@@ -664,6 +664,8 @@ public class Menu{
             }
         }catch(FileNotFoundException fnte){
             System.out.println("No se encontró el archivo clientes.csv, se creará al finalizar la sesión.");
+        }catch(IOException ioe){
+            System.out.println("Ocurrio un error al cargar los clientes de la base de datos.");
         }
         try(BufferedReader in = new BufferedReader(
                                     new InputStreamReader(
@@ -680,6 +682,8 @@ public class Menu{
             }
         }catch(FileNotFoundException fnte){
             System.out.println("No se encontró el archivo sucursales.csv, se creará al finalizar la sesión.");
+        }catch(IOException ioe){
+            System.out.println("Ocurrio un error al cargar las sucursales de la base de datos.");
         }
         try(BufferedReader in = new BufferedReader(
                                    new InputStreamReader(
@@ -696,6 +700,8 @@ public class Menu{
             }
         }catch(FileNotFoundException fnte){
             System.out.println("No se encontró el archivo premios.csv, se creará al finalizar la sesión.");
+        }catch(IOException ioe){
+            System.out.println("Ocurrio un error al cargar los premios de la base de datos.");
         }
     }
 
