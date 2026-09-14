@@ -8,7 +8,7 @@
  * Formato CSV:
  * idSucursal,nombre,calle,numInterior,numExterior,colonia,estado,telefono,horarios
  *
- * @author Integrante 2
+ * @author Enmoladas
  */
 public class Sucursal implements ArchivoCSV {
 
