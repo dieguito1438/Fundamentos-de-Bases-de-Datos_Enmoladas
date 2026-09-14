@@ -117,6 +117,7 @@ public class Menu{
                 System.out.println("Opción invalida, intente de nuevo");
                 continue;
             }
+            return entrada;
         }
 
     }
