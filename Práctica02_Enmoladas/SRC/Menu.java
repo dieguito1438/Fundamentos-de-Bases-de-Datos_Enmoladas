@@ -1,5 +1,14 @@
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * Clase Menu.
@@ -53,22 +62,26 @@ public class Menu{
             switch(opcion){
                 case 1: 
                     agregar();
+                    break;
                 case 2: 
                     consultar();
+                    break;
                 case 3: 
                     editar();
+                    break;
                 case 4:
                     eliminar();
+                    break;
                 case 5:
                     System.out.println("Cerrando sesión...");
                     try {
                         guardarClientes();
                         guardarSucursales();
                         guardarPremios();
-                        sc.close();
-                        System.exit(1);
+                        System.exit(0);
                     } catch (Exception e) {
                         System.out.print("No se pudo guardar la información... \nAbortando\n");
+                        System.exit(1);
                     }
                 default:
                     System.out.println("Enmoladas :)");
@@ -237,6 +250,11 @@ public class Menu{
             return;
         }
         clientes.add(cliente);
+        try{
+            guardarClientes();
+        }catch(IOException ioe){
+            System.out.println("Ocurrio un error al guardar el nuevo cliente en el archivo .csv");
+        }
     }
 
     /**
@@ -271,6 +289,11 @@ public class Menu{
             return;
         }
         sucursales.add(sucursal);
+        try{
+            guardarClientes();
+        }catch(IOException ioe){
+            System.out.println("Ocurrio un error al guardar la nueva sucursal en el archivo .csv.");
+        }
     }
 
     /**
@@ -294,6 +317,11 @@ public class Menu{
             return;
         }
         premios.add(premio);
+        try{
+            guardarPremios();
+        }catch(IOException ioe){
+            System.out.println("Ocurrio un error al guardar el nuevo premio en el archivo .csv");
+        }
     }
 
     /**
@@ -306,6 +334,7 @@ public class Menu{
 
     /**
      * Método para consultar clientes en la base de datos.
+     * Se le pedirá la llave del Cliente que se va a consultar.
      */
     private void consultarCliente(){
         if(clientes.isEmpty()){
@@ -323,6 +352,7 @@ public class Menu{
 
     /**
      * Método para consultar sucursales en la base de datos.
+     * Se le pedirá la llave de la Sucursal que se va a consultar.
      */
     private void consultarSucursal(){
         if(sucursales.isEmpty()){
@@ -341,6 +371,7 @@ public class Menu{
 
     /**
      * Método para consultar premios en la base de datos.
+     * Se le pedirá la llave del Premio que se va a consultar.
      */
     private void consultarPremio(){
         if(premios.isEmpty()){
@@ -359,6 +390,7 @@ public class Menu{
 
     /**
      * Método para editar clientes de la base de datos.
+     * Se le pedirá la llave del Cliente que se va a editar.
      */
     private void editarCliente(){
         if(clientes.isEmpty()){
@@ -381,6 +413,10 @@ public class Menu{
         }
     }
 
+    /**
+     * Método para editar sucursales en la base de datos.
+     * Se le pedirá la llave de la Sucursal que se va a editar.
+     */
     private void editarSucursal(){
         if(sucursales.isEmpty()){
             System.out.println("No hay sucursales por editar... Registre una nueva sucursal");
@@ -401,6 +437,10 @@ public class Menu{
         sucursalVieja.actualizar((Object) sucursalNueva);
     }
 
+    /**
+     * Método para editar premios de la base de datos.
+     * Se le pedirá la llave del Premio que se va a editar.
+     */
     private void editarPremio(){
         if(premios.isEmpty()){
             System.out.println("No hay premios por editar... Registre un nuevo premio.");
@@ -421,6 +461,10 @@ public class Menu{
         premioViejo.actualizar((Object) premioNuevo);
     }
 
+    /**
+     * Método para eliminar clientes de la base de datos.
+     * Se le pedirá la llave del Cliente que se va a eliminar.
+     */
     private void eliminarCliente(){
         if(clientes.isEmpty()){
             System.out.println("No hay clientes por eliminar... Registre un nuevo cliente.");
@@ -447,6 +491,10 @@ public class Menu{
         System.out.println("Cliente con llave " + llave + " no encontrado.");
     }
 
+    /**
+     * Método para eliminar Sucursales de la base de datos.
+     * Se le pedirá la llave de la sucursal que se va a eliminar.
+     */
     private void eliminarSucursal(){
         if(sucursales.isEmpty()){
             System.out.println("No hay sucursales por eliminar... Registre una nueva sucursal.");
@@ -474,6 +522,10 @@ public class Menu{
         System.out.println("Sucursal con llave " + llave + " no encontrada.");
     }
 
+    /**
+     * Método para eliminar Premios de la base de datos.
+     * Se le pedirá la llave del premio que se va a eliminar.
+     */
     private void eliminarPremio(){
         if(premios.isEmpty()){
             System.out.println("No hay premios por eliminar... Registre una nueva sucursal.");
@@ -501,20 +553,116 @@ public class Menu{
         System.out.println("Premio con llave " + llave + " no encontrado");
     }
 
-    private void guardarClientes(){
-
+    /**
+     * Guarda los clientes en el archivo "clientes.csv".
+     * @throws IOException si ocurre un error al guardar a los clientes.
+     */
+    private void guardarClientes() throws IOException{
+        try(BufferedWriter out = new BufferedWriter(
+                                new OutputStreamWriter(
+                                    new FileOutputStream("clientes.csv"), StandardCharsets.UTF_8))){
+            for(ArchivoCSV a : clientes){
+                out.write(a.getCSV());
+                out.newLine();
+            }
+            System.out.println("Clientes guardados con exito");
+        }catch(IOException e){
+                throw new IOException("Error al guardar a los clientes de la base de datos");
+        }
     }
 
-    private void guardarSucursales(){
-
+    /**
+     * Guarda las sucursales en el archivo "sucursales.csv".
+     * @throws IOException si ocurre un error al guardar las sucursales.
+     */
+    private void guardarSucursales() throws IOException{
+        try(BufferedWriter out = new BufferedWriter(
+                                new OutputStreamWriter(
+                                    new FileOutputStream("sucursales.csv"), StandardCharsets.UTF_8))){
+            for(ArchivoCSV a : sucursales){
+                out.write(a.getCSV());
+                out.newLine();
+            }
+            System.out.println("Sucursales guardadas con exito");
+        }catch(IOException e){
+                throw new IOException("Error al guardar a las sucursales de la base de datos");
+        }
     }
 
-    private void guardarPremios(){
-
+    /**
+     * Guarda los premios en el archivo "premios.csv".
+     * @throws IOException si ocurre un error al guardar los premios.
+     */
+    private void guardarPremios() throws IOException{
+        try(BufferedWriter out = new BufferedWriter(
+                                     new OutputStreamWriter(
+                                         new FileOutputStream("premios.csv"), StandardCharsets.UTF_8))){
+            for(ArchivoCSV a : premios){
+                out.write(a.getCSV());
+                out.newLine();
+            }
+            System.out.println("Premios guardados con exito");
+        }catch(IOException e){
+                throw new IOException("Error al guardar a los premios de la base de datos");
+        }
     }
 
+    /**
+     * Carga los registros de la base de datos.
+     * Carga del archivo "clientes.csv" a los clientes.
+     * Carga del archivo "sucursales.csv" a las sucursales.
+     * Carga del archivo "premios.csv" a los premios.
+     * Si alguno de estos no existe solamente se creará al momento de crear nuevos registros.
+     */
     private void cargar(){
-       
+       try(BufferedReader in = new BufferedReader(
+                                   new InputStreamReader(
+                                       new FileInputStream("clientes.csv")))){
+            String linea;
+            while((linea = in.readLine()) != null){
+                try{
+                    Cliente cliente = new Cliente();
+                    cliente.cargar(linea);
+                    clientes.add(cliente);
+                }catch(IllegalArgumentException iae){
+                    System.out.println("Error al cargar un cliente... Eliminando");
+                }
+            }
+        }catch(FileNotFoundException fnte){
+            System.out.println("No se encontró el archivo clientes.csv, se creará al finalizar la sesión.");
+        }
+        try(BufferedReader in = new BufferedReader(
+                                    new InputStreamReader(
+                                        new FileInputStream("sucursales.csv")))){
+            String linea;
+            while((linea = in.readLine()) != null){
+                try{
+                    Sucursal sucursal = new Sucursal();
+                    sucursal.cargar(linea);
+                    sucursales.add(sucursal);
+                }catch(IllegalArgumentException iae){
+                    System.out.println("Error al cargar una sucursal... Eliminando");
+                }
+            }
+        }catch(FileNotFoundException fnte){
+            System.out.println("No se encontró el archivo sucursales.csv, se creará al finalizar la sesión.");
+        }
+        try(BufferedReader in = new BufferedReader(
+                                   new InputStreamReader(
+                                       new FileInputStream("premios.csv")))){
+            String linea;
+            while((linea = in.readLine()) != null){
+                try{
+                    Premio premio = new Premio();
+                    premio.cargar(linea);
+                    premios.add(premio);
+                }catch(IllegalArgumentException iae){
+                    System.out.println("Error al cargar un premio... Eliminando");
+                }
+            }
+        }catch(FileNotFoundException fnte){
+            System.out.println("No se encontró el archivo premios.csv, se creará al finalizar la sesión.");
+        }
     }
 
 }
