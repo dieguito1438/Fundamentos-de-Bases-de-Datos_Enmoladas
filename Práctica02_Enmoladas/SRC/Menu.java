@@ -42,7 +42,7 @@ public class Menu{
     */
     public void inicio(){
         System.out.println("Práctica 2");
-        System.out.println("Enmoladas");
+        System.out.println("Enmoladas\n");
         cargar();
         menu();
     }
@@ -73,14 +73,14 @@ public class Menu{
                     eliminar();
                     break;
                 case 5:
-                    System.out.println("Cerrando sesión...");
+                    System.out.println("\n ~ Cerrando sesión... ~ \n");
                     try {
-                        guardarClientes();
-                        guardarSucursales();
-                        guardarPremios();
+                        guardarClientes("\n~ Clientes guardados con exito ~");
+                        guardarSucursales("~ Sucursales guardadas con exito ~");
+                        guardarPremios("~ Premios guardados con exito ~\n");
                         System.exit(0);
                     } catch (Exception e) {
-                        System.out.print("No se pudo guardar la información... \nAbortando\n");
+                        System.out.print("\n~ No se pudo guardar la información... Abortando ~\n");
                         System.exit(1);
                     }
                 default:
@@ -135,9 +135,9 @@ public class Menu{
                 if(opcion >= i && opcion <= f)
                     return opcion;
                 else
-                    System.out.println("La opción ingresada no pertenece a las opciones disponibles, intente de nuevo.");
+                    System.out.println("La opción ingresada no pertenece a las opciones disponibles, intente de nuevo.\n");
             } catch (NumberFormatException nfe) {
-                System.out.println("La opción ingresada no es un número, intente de nuevo.");
+                System.out.println("La opción ingresada no es un número, intente de nuevo.\n");
             }
         }
     }
@@ -247,7 +247,7 @@ public class Menu{
         String llave = cliente.getIdCliente();
         for(ArchivoCSV a : clientes){
             if(a.consultar(llave)){
-                System.out.println("No puede haber Id's repetidos... Intente de nuevo");
+                System.out.println("\n~ No puede haber Id's repetidos... Intente de nuevo\n");
                 return;
             }
         }
@@ -255,14 +255,14 @@ public class Menu{
             cliente.validar();
         }catch(IllegalArgumentException iae){
             System.out.println(iae.getMessage());
-            System.out.println("Cliente invalido... Abortando.");
+            System.out.println("\n~ Cliente invalido... Abortando.\n");
             return;
         }
         clientes.add(cliente);
         try{
-            guardarClientes();
+            guardarClientes("\n~ Cliente guardado con exito\n");
         }catch(IOException ioe){
-            System.out.println("Ocurrio un error al guardar el nuevo cliente en el archivo .csv");
+            System.out.println("\n~ Ocurrio un error al guardar el nuevo cliente en el archivo .csv ~\n");
         }
     }
 
@@ -271,17 +271,17 @@ public class Menu{
      * @return cliente el nuevo cliente.
      */
     private Cliente crearCliente(){
-        String idCliente = recibirString("Ingrese el ID del cliente: ");
-        String nombre = recibirString("Ingrese el nombre del cliente: ");
+        String idCliente = recibirString("Ingrese el ID del cliente (8 digitos): ");
+        String nombre = recibirString("Ingrese el nombre del cliente (Nombre(s): ");
         String apPaterno = recibirString("Ingrese el apellido paterno del cliente: ");
         String apMaterno = recibirString("Ingrese el apellido materno del cliente: ");
-        String telefono = recibirString("Ingrese el número de telefono del cliente: ");
+        String telefono = recibirString("Ingrese el número de telefono del cliente (10 digitos): ");
         String correo = recibirString("Ingrese el correo electronico del cliente: ");
         int puntos = 0;
         String calle = recibirString("Ingrese la calle del domicilio del cliente: ");
         String numero = recibirString("Ingrese el número exterior del domicilio del cliente: ");
         String colonia = recibirString("Ingrese la colonia de la dirección del cliente: ");
-        String cp = recibirString("Ingrese el codigo postal del cliente: ");
+        String cp = recibirString("Ingrese el codigo postal del cliente (5 digitos): ");
         return new Cliente(idCliente, nombre, apPaterno, apMaterno, telefono, correo, puntos, calle, numero, colonia, cp);
     }
 
@@ -294,7 +294,7 @@ public class Menu{
         String llave = sucursal.getIdSucursal();
         for(ArchivoCSV a : sucursales){
             if(a.consultar(llave)){
-                System.out.println("No puede haber Id's repetidos... Intente de nuevo");
+                System.out.println("\n ~ No puede haber Id's repetidos... Intente de nuevo ~\n");
                 return;
             }
         }
@@ -302,14 +302,14 @@ public class Menu{
             sucursal.validar();
         }catch(IllegalArgumentException iae){
             System.out.println(iae.getMessage());
-            System.out.println("Sucursal invalida... Abortando.");
+            System.out.println("\n ~ Sucursal invalida... Abortando ~\n");
             return;
         }
         sucursales.add(sucursal);
         try{
-            guardarSucursales();
+            guardarSucursales("\n~ Sucursal guardada con exito ~\n");
         }catch(IOException ioe){
-            System.out.println("Ocurrio un error al guardar la nueva sucursal en el archivo .csv.");
+            System.out.println("\n~ Ocurrio un error al guardar la nueva sucursal en el archivo .csv. ~\n");
         }
     }
 
@@ -325,8 +325,8 @@ public class Menu{
         String numExterior = recibirString("Ingrese el número exterior de la dirección de la sucursal: ");
         String colonia = recibirString("Ingrese la colonia de la dirección de la sucursal: ");
         String estado = recibirString("Ingrese el estado de la dirección de la sucursal: ");
-        String telefono = recibirString("Ingrese el telefono de la sucursal: ");
-        String horarios = recibirString("Ingrese el horario de atención de la sucursal: ");
+        String telefono = recibirString("Ingrese el telefono de la sucursal (10 digitos): ");
+        String horarios = recibirString("Ingrese el horario de atención de la sucursal (00:00 - 23:59 hrs): ");
         return new Sucursal(idSucursal, nombre, calle, numInterior, 
                             numExterior, colonia, estado, telefono, 
                             horarios);
@@ -337,11 +337,18 @@ public class Menu{
      * No puede haber más de un premio con la misma llave.
      */
     private void agregarPremio(){
-        Premio premio = crearPremio();
+        Premio premio = null;
+        try{
+            premio = crearPremio();
+        }catch(IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("\n~ Premio invalido... Abortando. ~\n");
+            return;
+        }
         String llave = premio.getIdPremio();
         for(ArchivoCSV a : premios){
             if(a.consultar(llave)){
-                System.out.println("No puede haber Id's repetidos... intente de nuevo");
+                System.out.println("\n~ No puede haber Id's repetidos... intente de nuevo ~\n");
                 return;
             }
         }
@@ -349,14 +356,14 @@ public class Menu{
             premio.validar();
         }catch(IllegalArgumentException iae){
             System.out.println(iae.getMessage());
-            System.out.println("Premio invalido... Abortando.");
+            System.out.println("\n~ Premio invalido... Abortando. ~\n");
             return;
         }
         premios.add(premio);
         try{
-            guardarPremios();
+            guardarPremios("\n~ Premio guardado con exito ~\n");
         }catch(IOException ioe){
-            System.out.println("Ocurrio un error al guardar el nuevo premio en el archivo .csv");
+            System.out.println("\n~ Ocurrio un error al guardar el nuevo premio en el archivo .csv ~\n");
         }
     }
 
@@ -365,7 +372,63 @@ public class Menu{
      * @return premio el nuevo premio.
      */
     private Premio crearPremio(){
-        return new Premio();
+        String idPremio = recibirString("Ingrese el Id del premio: ");
+        String nombre = recibirString("Ingrese el nombre del premio: ");
+        Premio.CategoriaPremio categoria = null;
+        String[] opcionesCategoria = {"Bajo", "Medio", "Grande"};
+        int opcionCategoria = decidirOpcion(opcionesCategoria);
+        switch (opcionCategoria) {
+            case 1:
+                categoria = Premio.CategoriaPremio.BAJO;
+                break;
+            case 2: 
+                categoria = Premio.CategoriaPremio.MEDIO;
+                break;
+            case 3:
+                categoria = Premio.CategoriaPremio.GRANDE;
+                break;
+            default:
+                System.out.println("No deberias de haber caido en este caso...");
+                break;
+        }
+        Premio.RangoEdad rango = null;
+        String[] opcionesRangoEdad = {"Infantil", "Juvenil", "Adulto"};
+        int opcionRangoEdad = decidirOpcion(opcionesRangoEdad);
+        switch (opcionRangoEdad) {
+            case 1:
+                rango = Premio.RangoEdad.INFANTIL;
+                break;
+            case 2:
+                rango = Premio.RangoEdad.JUVENIL;
+                break;
+            case 3:
+                rango = Premio.RangoEdad.ADULTO;
+                break;
+            default:
+                System.out.println("No deberias de haber caido en este caso...");
+                break;
+        }
+        double valorAproximado = 0.0;
+        try{
+            valorAproximado = Double.parseDouble(recibirString("Ingresa el precio aproximado del premio: "));
+            if(valorAproximado < 0){
+                throw new IllegalArgumentException("El valor aproximado no puede ser negativo. ~\n");
+            }
+        }catch(NumberFormatException nfe){
+            System.out.println("\n~ El valor aproximado debe de ser un número... Intente de nuevo ~");
+            throw new IllegalArgumentException("Valor aproximado invalido\n");
+        }
+        int puntosNecesarios = 0;
+        try{
+            puntosNecesarios = Integer.parseInt(recibirString("Ingrese los puntos necesarios para el premio: "));
+            if(puntosNecesarios < 1){
+                throw new IllegalArgumentException("Los puntos necesarios no pueden ser menores a 1.\n");
+            }
+        }catch(NumberFormatException nfe){
+            System.out.println("\n~ Los puntos necesarios del premio debe ser un número... Intente de nuevo. ~");
+            throw new IllegalArgumentException("Puntos necesarios invalidos\n");
+        }
+        return new Premio(idPremio, nombre, categoria, rango, valorAproximado, puntosNecesarios);   
     }
 
     /**
@@ -374,7 +437,7 @@ public class Menu{
      */
     private void consultarCliente(){
         if(clientes.isEmpty()){
-            System.out.println("No hay clientes registrados... Registre un nuevo cliente.");
+            System.out.println("\n~ No hay clientes registrados... Registre un nuevo cliente. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave del cliente a consultar: ");
@@ -383,7 +446,7 @@ public class Menu{
                 System.out.println(a);
                 return;
         }
-        System.out.println("Cliente con llave " + llave + " no encontrado");
+        System.out.println(" \n~ Cliente con llave " + llave + " no encontrado. ~\n");
     }
 
     /**
@@ -392,7 +455,7 @@ public class Menu{
      */
     private void consultarSucursal(){
         if(sucursales.isEmpty()){
-            System.out.println("No hay sucursales registradas... Registre una nueva sucursal.");
+            System.out.println("\n~ No hay sucursales registradas... Registre una nueva sucursal. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave de la sucursal que desea consultar: ");
@@ -402,7 +465,7 @@ public class Menu{
                 return;
             }
         }
-        System.out.println("Sucursal con llave " + llave + " no encontrado");
+        System.out.println("\n~ Sucursal con llave " + llave + " no encontrado. ~\n");
     }
 
     /**
@@ -411,7 +474,7 @@ public class Menu{
      */
     private void consultarPremio(){
         if(premios.isEmpty()){
-            System.out.println("No hay premios registrados... Registre un nuevo premio.");
+            System.out.println("\n~ No hay premios registrados... Registre un nuevo premio. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave del premio que quiere consultar: ");
@@ -430,7 +493,7 @@ public class Menu{
      */
     private void editarCliente(){
         if(clientes.isEmpty()){
-            System.out.println("No hay clientes por editar... Registre un nuevo cliente");
+            System.out.println("\n~ No hay clientes por editar... Registre un nuevo cliente ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave del cliente que desea editar: ");
@@ -440,12 +503,17 @@ public class Menu{
                 clienteViejo = a;
         }
         if(clienteViejo == null){
-            System.out.println("Cliente con llave " + llave + " no encontrado.");
+            System.out.println("\n~ Cliente con llave " + llave + " no encontrado. ~\n");
             return;
         }
-        System.out.println("~ Ingrese los nuevos valores del cliente ~");
+        System.out.println("\n~ Ingrese los nuevos valores del cliente ~\n");
         Cliente clienteNuevo = crearCliente();
         clienteViejo.actualizar((Object) clienteNuevo);
+        try{
+            guardarClientes("\n~ Cliente editado con exito ~\n");
+        }catch(IOException ioe){
+            System.out.println("\n~ Error al guardar el cliente en la base de datos ~\n");
+        }
     }
 
     /**
@@ -454,7 +522,7 @@ public class Menu{
      */
     private void editarSucursal(){
         if(sucursales.isEmpty()){
-            System.out.println("No hay sucursales por editar... Registre una nueva sucursal");
+            System.out.println("\n~ No hay sucursales por editar... Registre una nueva sucursal. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave de la sucursal que desea editar: ");
@@ -464,12 +532,17 @@ public class Menu{
                 sucursalVieja = a;
         }
         if(sucursalVieja == null){
-            System.out.println("Sucursal con llave " + llave + " no encontrada.");
+            System.out.println("\n~ Sucursal con llave " + llave + " no encontrada. ~\n");
             return;
         }
-        System.out.println("~ Ingrese los nuevos valores de la sucursal ~");
+        System.out.println("\n~ Ingrese los nuevos valores de la sucursal ~\n");
         Sucursal sucursalNueva = crearSucursal();
         sucursalVieja.actualizar((Object) sucursalNueva);
+        try{
+            guardarSucursales("\n~ Sucursal editada con exito ~\n");
+        }catch(IOException ioe){
+            System.out.println("\n~ Error al guardar la sucursal en la base de datos ~\n");
+        }
     }
 
     /**
@@ -478,7 +551,7 @@ public class Menu{
      */
     private void editarPremio(){
         if(premios.isEmpty()){
-            System.out.println("No hay premios por editar... Registre un nuevo premio.");
+            System.out.println("\n~ No hay premios por editar... Registre un nuevo premio. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave del premio que desea editar: ");
@@ -488,12 +561,17 @@ public class Menu{
                 premioViejo = a;
         }
         if(premioViejo == null){
-            System.out.println("Premio con llave " + llave + " no encontrado.");
+            System.out.println("\n~ Premio con llave " + llave + " no encontrado. ~\n");
             return;
         }
-        System.out.println("~ Ingrese los nuevos valores del premio ~");
+        System.out.println("\n~ Ingrese los nuevos valores del premio ~\n");
         Premio premioNuevo = crearPremio();
         premioViejo.actualizar((Object) premioNuevo);
+        try{
+            guardarPremios("\n~ Premio editado con exito ~\n");
+        }catch(IOException ioe){
+            System.out.println("\n~ Error al editar el premio de la base de datos ~\n");
+        }
     }
 
     /**
@@ -502,7 +580,7 @@ public class Menu{
      */
     private void eliminarCliente(){
         if(clientes.isEmpty()){
-            System.out.println("No hay clientes por eliminar... Registre un nuevo cliente.");
+            System.out.println("\n~ No hay clientes por eliminar... Registre un nuevo cliente. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave del cliente que desea eliminar: ");
@@ -510,20 +588,25 @@ public class Menu{
             if(a.consultar(llave))
                 System.out.println("Esta seguro de querer eliminar al cliente?: ");
                 System.out.println(a);
-                String[] opciones = {"Si, No"};
+                String[] opciones = {"Si", "No"};
                 int opcion = decidirOpcion(opciones);
                 switch(opcion){
                     case 1:
                         clientes.remove(a);
+                        try{
+                            guardarClientes("\n~ Cliente eliminado con exito ~\n");
+                        }catch(IOException ioe){
+                            System.out.println("\n~ Error al eliminar el cliente de la base de datos. ~\n");
+                        }
                         return;
                     case 2: 
-                        System.out.println("Abortando...");
+                        System.out.println("\n~ Abortando... ~\n");
                         return;
                     default: 
                         System.out.println("No deberias de haber caido en esta opción...");
                 }
         }
-        System.out.println("Cliente con llave " + llave + " no encontrado.");
+        System.out.println("\n~ Cliente con llave " + llave + " no encontrado. ~\n");
     }
 
     /**
@@ -532,7 +615,7 @@ public class Menu{
      */
     private void eliminarSucursal(){
         if(sucursales.isEmpty()){
-            System.out.println("No hay sucursales por eliminar... Registre una nueva sucursal.");
+            System.out.println("\n~ No hay sucursales por eliminar... Registre una nueva sucursal. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave de la sucursal que desea eliminar: ");
@@ -545,16 +628,21 @@ public class Menu{
                 switch(opcion){
                     case 1:
                         sucursales.remove(a);
+                        try{
+                            guardarSucursales("\n~ Sucursal eliminada con exito. ~\n");
+                        }catch(IOException ioe){
+                            System.out.println("\n~ Error al eliminar la sucursal de la base de datos. ~\n");
+                        }
                         return;
                     case 2:
-                        System.out.println("Abortando...");
+                        System.out.println("\n~ Abortando... ~\n");
                         return;
                     default:
                         System.out.println("No deberias de haber caido en esta opción...");
                 }
             }
         }
-        System.out.println("Sucursal con llave " + llave + " no encontrada.");
+        System.out.println("\n~ Sucursal con llave " + llave + " no encontrada. ~\n");
     }
 
     /**
@@ -563,7 +651,7 @@ public class Menu{
      */
     private void eliminarPremio(){
         if(premios.isEmpty()){
-            System.out.println("No hay premios por eliminar... Registre una nueva sucursal.");
+            System.out.println("\n~ No hay premios por eliminar... Registre una nueva sucursal. ~\n");
             return;
         }
         String llave = recibirString("Ingrese la llave del premio que desea eliminar");
@@ -576,9 +664,14 @@ public class Menu{
                 switch(opcion){
                     case 1:
                         premios.remove(a);
+                        try{
+                            guardarPremios("Premio eliminado con exito");
+                        }catch(IOException ioe){
+                            System.out.println("\n~ Error eliminando el premio de la base de datos. ~\n");
+                        }
                         return;
                     case 2:
-                        System.out.println("Abortando...");
+                        System.out.println("\n~ Abortando... ~\n");
                         return;
                     default:
                         System.out.println("No deberias de haber caido en esta opción...");
@@ -592,7 +685,7 @@ public class Menu{
      * Guarda los clientes en el archivo "clientes.csv".
      * @throws IOException si ocurre un error al guardar a los clientes.
      */
-    private void guardarClientes() throws IOException{
+    private void guardarClientes(String mensaje) throws IOException{
         try(BufferedWriter out = new BufferedWriter(
                                 new OutputStreamWriter(
                                     new FileOutputStream("clientes.csv"), StandardCharsets.UTF_8))){
@@ -600,7 +693,7 @@ public class Menu{
                 out.write(a.getCSV());
                 out.newLine();
             }
-            System.out.println("Clientes guardados con exito");
+            System.out.println(mensaje);
         }catch(IOException e){
                 throw new IOException("Error al guardar a los clientes de la base de datos");
         }
@@ -610,7 +703,7 @@ public class Menu{
      * Guarda las sucursales en el archivo "sucursales.csv".
      * @throws IOException si ocurre un error al guardar las sucursales.
      */
-    private void guardarSucursales() throws IOException{
+    private void guardarSucursales(String mensaje) throws IOException{
         try(BufferedWriter out = new BufferedWriter(
                                 new OutputStreamWriter(
                                     new FileOutputStream("sucursales.csv"), StandardCharsets.UTF_8))){
@@ -618,7 +711,7 @@ public class Menu{
                 out.write(a.getCSV());
                 out.newLine();
             }
-            System.out.println("Sucursales guardadas con exito");
+            System.out.println(mensaje);
         }catch(IOException e){
                 throw new IOException("Error al guardar a las sucursales de la base de datos");
         }
@@ -628,7 +721,7 @@ public class Menu{
      * Guarda los premios en el archivo "premios.csv".
      * @throws IOException si ocurre un error al guardar los premios.
      */
-    private void guardarPremios() throws IOException{
+    private void guardarPremios(String mensaje) throws IOException{
         try(BufferedWriter out = new BufferedWriter(
                                      new OutputStreamWriter(
                                          new FileOutputStream("premios.csv"), StandardCharsets.UTF_8))){
@@ -636,7 +729,7 @@ public class Menu{
                 out.write(a.getCSV());
                 out.newLine();
             }
-            System.out.println("Premios guardados con exito");
+            System.out.println(mensaje);
         }catch(IOException e){
                 throw new IOException("Error al guardar a los premios de la base de datos");
         }
@@ -660,13 +753,13 @@ public class Menu{
                     cliente.cargar(linea);
                     clientes.add(cliente);
                 }catch(IllegalArgumentException iae){
-                    System.out.println("Error al cargar un cliente... Eliminando");
+                    System.out.println("~ Error al cargar un cliente... Eliminando ~");
                 }
             }
         }catch(FileNotFoundException fnte){
-            System.out.println("No se encontró el archivo clientes.csv, se creará al finalizar la sesión.");
+            System.out.println("\n~ No se encontró el archivo clientes.csv, se creará al finalizar la sesión. ~\n");
         }catch(IOException ioe){
-            System.out.println("Ocurrio un error al cargar los clientes de la base de datos.");
+            System.out.println("\n~ Ocurrio un error al cargar los clientes de la base de datos. ~\n");
         }
         try(BufferedReader in = new BufferedReader(
                                     new InputStreamReader(
@@ -678,13 +771,13 @@ public class Menu{
                     sucursal.cargar(linea);
                     sucursales.add(sucursal);
                 }catch(IllegalArgumentException iae){
-                    System.out.println("Error al cargar una sucursal... Eliminando");
+                    System.out.println("~ Error al cargar una sucursal... Eliminando ~");
                 }
             }
         }catch(FileNotFoundException fnte){
-            System.out.println("No se encontró el archivo sucursales.csv, se creará al finalizar la sesión.");
+            System.out.println("\n~ No se encontró el archivo sucursales.csv, se creará al finalizar la sesión. ~\n");
         }catch(IOException ioe){
-            System.out.println("Ocurrio un error al cargar las sucursales de la base de datos.");
+            System.out.println("\n~ Ocurrio un error al cargar las sucursales de la base de datos. ~\n");
         }
         try(BufferedReader in = new BufferedReader(
                                    new InputStreamReader(
@@ -696,13 +789,13 @@ public class Menu{
                     premio.cargar(linea);
                     premios.add(premio);
                 }catch(IllegalArgumentException iae){
-                    System.out.println("Error al cargar un premio... Eliminando");
+                    System.out.println("~ Error al cargar un premio... Eliminando ~");
                 }
             }
         }catch(FileNotFoundException fnte){
-            System.out.println("No se encontró el archivo premios.csv, se creará al finalizar la sesión.");
+            System.out.println("\n~ No se encontró el archivo premios.csv, se creará al finalizar la sesión. ~\n");
         }catch(IOException ioe){
-            System.out.println("Ocurrio un error al cargar los premios de la base de datos.");
+            System.out.println("\n~ Ocurrio un error al cargar los premios de la base de datos. ~\n");
         }
     }
 
