@@ -39,7 +39,7 @@ public class Menu{
     }
 
     /**
-     * Menu de interacción con el usuario.
+     * Menú de interacción con el usuario.
      * 1. Agregar.
      * 2. Consultar.
      * 3. Editar.
@@ -129,7 +129,7 @@ public class Menu{
     }
 
     /**
-     * Menu de selección para agregar entidades a la base de datos.
+     * Menú de selección para agregar entidades a la base de datos.
      * 1. Agregar Clientes.
      * 2. Agregar Sucursales.
      * 3. Agregar Premios.
@@ -153,7 +153,7 @@ public class Menu{
     }
 
     /**
-     * Menu de selección para consultar entidades de la base de datos.
+     * Menú de selección para consultar entidades de la base de datos.
      * 1. Consultar Clientes.
      * 2. Consultar Sucursales.
      * 3. Consultar Premios.
@@ -177,7 +177,7 @@ public class Menu{
     }
 
     /**
-     * Menu de selección para edición de entidades en la base de datos.
+     * Menú de selección para edición de entidades en la base de datos.
      * 1. Editar Clientes.
      * 2. Editar Sucursales.
      * 3. Editar Premios.
@@ -201,7 +201,7 @@ public class Menu{
     }
 
     /**
-     * Menu de selección para la eliminación de entidades en la base de datos.
+     * Menú de selección para la eliminación de entidades en la base de datos.
      * 1. Eliminar Clientes.
      * 2. Eliminar Sucursales.
      * 3. Eliminar premios.
@@ -224,7 +224,26 @@ public class Menu{
         }
     }
 
+    /**
+     * Método para agregar un cliente a a base de datos.
+     */
     private void agregarCliente(){
+        Cliente cliente = crearCliente();
+        try{
+            cliente.validar();
+        }catch(IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("Cliente invalido... Abortando.");
+            return;
+        }
+        clientes.add(cliente);
+    }
+
+    /**
+     * Menu para crear un cliente.
+     * @return cliente el nuevo cliente.
+     */
+    private Cliente crearCliente(){
         String idCliente = recibirString("Ingrese el ID del cliente: ");
         String nombre = recibirString("Ingrese el nombre del cliente: ");
         String apPaterno = recibirString("Ingrese el apellido paterno del cliente: ");
@@ -236,26 +255,58 @@ public class Menu{
         String numero = recibirString("Ingrese el número exterior del domicilio del cliente: ");
         String colonia = recibirString("Ingrese la colonia de la dirección del cliente: ");
         String cp = recibirString("Ingrese el codigo postal del cliente: ");
-        Cliente cliente = new Cliente(idCliente, nombre, apPaterno, apMaterno, 
-                                      telefono, correo, puntos, calle, numero, 
-                                      colonia, cp);
+        return new Cliente(idCliente, nombre, apPaterno, apMaterno, telefono, correo, puntos, calle, numero, colonia, cp);
+    }
+
+    /**
+     * Método para agregar una sucursal a la base de datos.
+     */
+    private void agregarSucursal(){
+        Sucursal sucursal = crearSucursal();
         try{
-            cliente.validar();
+            sucursal.validar()
         }catch(IllegalArgumentException iae){
             System.out.println(iae.getMessage());
-            System.out.println("Cliente invalido... Abortando.");
+            System.out.println("Sucursal invalida... Abortando.");
             return;
         }
-        clientes.add(cliente);
+        sucursales.add(sucursal);
     }
 
-    private void agregarSucursal(){
-
+    /**
+     * Menu para crear una sucursal.
+     * @return sucursal la nueva sucursal.
+     */
+    private Sucursal crearSucursal(){
+        return new Sucursal();
     }
 
+    /**
+     * Método para agregar un premio a la base de datos.
+     */
     private void agregarPremio(){
+        Premio premio = crearPremio();
+        try{
+            premio.validar();
+        }catch(IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("Premio invalido... Abortando.");
+            return;
+        }
+        premios.add(premio);
     }
 
+    /**
+     * Menu para crear un premio.
+     * @return premio el nuevo premio.
+     */
+    private Premio crearPremio(){
+        return new Premio();
+    }
+
+    /**
+     * Método para consultar clientes en la base de datos.
+     */
     private void consultarCliente(){
         if(clientes.isEmpty()){
             System.out.println("No hay clientes registrados... Registre un nuevo cliente.");
@@ -270,6 +321,9 @@ public class Menu{
         System.out.println("Cliente con llave " + llave + " no encontrado");
     }
 
+    /**
+     * Método para consultar sucursales en la base de datos.
+     */
     private void consultarSucursal(){
         if(sucursales.isEmpty()){
             System.out.println("No hay sucursales registradas... Registre una nueva sucursal.");
@@ -285,6 +339,9 @@ public class Menu{
         System.out.println("Sucursal con llave " + llave + " no encontrado");
     }
 
+    /**
+     * Método para consultar premios en la base de datos.
+     */
     private void consultarPremio(){
         if(premios.isEmpty()){
             System.out.println("No hay premios registrados... Registre un nuevo premio.");
@@ -300,28 +357,148 @@ public class Menu{
         System.out.println("Premio con llave " + llave + " no encontrado.");
     }
 
+    /**
+     * Método para editar clientes de la base de datos.
+     */
     private void editarCliente(){
-        
+        if(clientes.isEmpty()){
+            System.out.println("No hay clientes por editar... Registre un nuevo cliente");
+            return;
+        }
+        String llave = recibirString("Ingrese la llave del cliente que desea editar: ");
+        ArchivoCSV clienteViejo;
+        for(ArchivoCSV a : clientes){
+            if(a.consultar(llave))
+                clienteViejo = a;
+        }
+        if(clienteViejo == null){
+            System.out.println("Cliente con llave " + llave + " no encontrado.");
+            return;
+        }
+        System.out.println("~ Ingrese los nuevos valores del cliente ~");
+        Cliente clienteNuevo = crearCliente();
+        clienteViejo.actualizar((Object) clienteNuevo);
+        }
     }
 
     private void editarSucursal(){
-
+        if(sucursales.isEmpty()){
+            System.out.println("No hay sucursales por editar... Registre una nueva sucursal");
+            return;
+        }
+        String llave = recibirString("Ingrese la llave de la sucursal que desea editar: ");
+        ArchivoCSV sucursalVieja;
+        for(ArchivoCSV a : sucursales){
+            if(a.consultar(llave))
+                sucursalVieja = a;
+        }
+        if(sucursalVieja == null){
+            System.out.println("Sucursal con llave " + llave + " no encontrada.");
+            return;
+        }
+        System.out.println("~ Ingrese los nuevos valores de la sucursal ~");
+        Sucursal sucursalNueva = crearSucursal();
+        sucursalVieja.actualizar((Object) sucursalNueva);
     }
 
     private void editarPremio(){
-
+        if(premios.isEmpty()){
+            System.out.println("No hay premios por editar... Registre un nuevo premio.");
+            return;
+        }
+        String llave = recibirString("Ingrese la llave del premio que desea editar: ");
+        ArchivoCSV premioViejo;
+        for(ArchivoCSV a : premios){
+            if(a.consultar(llave))
+                premioViejo = a;
+        }
+        if(premioViejo == null){
+            System.out.println("Premio con llave " + llave + " no encontrado.");
+            return;
+        }
+        System.out.println("~ Ingrese los nuevos valores del premio ~");
+        Premio premioNuevo = crearPremio();
+        premioViejo.actualizar((Object) premioNuevo);
     }
 
     private void eliminarCliente(){
-
+        if(clientes.isEmpty()){
+            System.out.println("No hay clientes por eliminar... Registre un nuevo cliente.");
+            return;
+        }
+        String llave = recibirString("Ingrese la llave del cliente que desea eliminar: ");
+        for(ArchivoCSV a : clientes){
+            if(a.consultar(llave))
+                System.out.println("Esta seguro de querer eliminar al cliente?: ");
+                System.out.println(a);
+                String[] opciones = {"Si, No"};
+                int opcion = decidirOpcion(opciones);
+                switch(opcion){
+                    case 1:
+                        clientes.remove(a);
+                        return;
+                    case 2: 
+                        System.out.println("Abortando...");
+                        return;
+                    default: 
+                        System.out.println("No deberias de haber caido en esta opción...");
+                }
+        }
+        System.out.println("Cliente con llave " + llave + " no encontrado.");
     }
 
     private void eliminarSucursal(){
-
+        if(sucursales.isEmpty()){
+            System.out.println("No hay sucursales por eliminar... Registre una nueva sucursal.");
+            return;
+        }
+        String llave = recibirString("Ingrese la llave de la sucursal que desea eliminar: ");
+        for(ArchivoCSV a : sucursales){
+            if(a.consultar(llave)){
+                System.out.println("Esta seguro de querer eliminar la sucursal?: ");
+                System.out.println(a);
+                String[] opciones = {"Si", "No"};
+                int opcion = decidirOpcion(opciones);
+                switch(opcion){
+                    case 1:
+                        sucursales.remove(a);
+                        return;
+                    case 2:
+                        System.out.println("Abortando...");
+                        return;
+                    default:
+                        System.out.println("No deberias de haber caido en esta opción...");
+                }
+            }
+        }
+        System.out.println("Sucursal con llave " + llave + " no encontrada.");
     }
 
     private void eliminarPremio(){
-
+        if(premios.isEmpty()){
+            System.out.println("No hay premios por eliminar... Registre una nueva sucursal.");
+            return;
+        }
+        String llave = recibirString("Ingrese la llave del premio que desea eliminar");
+        for(ArchivoCSV a : premios){
+            if(a.consultar(llave)){
+                System.out.println("Esta seguro de querer eliminar el premio?: ");
+                System.out.println(a);
+                String[] opciones = {"Si", "No"};
+                int opcion = decidirOpcion(opciones);
+                switch(opcion){
+                    case 1:
+                        premios.remove(a);
+                        return;
+                    case 2:
+                        System.out.println("Abortando...");
+                        return;
+                    default:
+                        System.out.println("No deberias de haber caido en esta opción...");
+                }
+            }
+        }
+        System.out.println("Premio con llave " + llave + " no encontrado");
     }
 
     private void guardarClientes(){
@@ -337,7 +514,7 @@ public class Menu{
     }
 
     private void cargar(){
-
+       
     }
 
 }
