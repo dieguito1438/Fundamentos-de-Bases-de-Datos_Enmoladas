@@ -298,7 +298,7 @@ public class Menu{
             }
         }
         try{
-            sucursal.validar()
+            sucursal.validar();
         }catch(IllegalArgumentException iae){
             System.out.println(iae.getMessage());
             System.out.println("Sucursal invalida... Abortando.");
@@ -317,7 +317,18 @@ public class Menu{
      * @return sucursal la nueva sucursal.
      */
     private Sucursal crearSucursal(){
-        return new Sucursal();
+        String idSucursal = recibirString("Ingrese el Id de la sucursal: ");
+        String nombre = recibirString("Ingrese el nombre de la sucursal: ");
+        String calle = recibirString("Ingrese la calle de la dirección de la sucursal: ");
+        String numInterior = recibirString("Ingrese el número interior de la dirección de la sucursal (n.a si no aplica.): ");
+        String numExterior = recibirString("Ingrese el número exterior de la dirección de la sucursal: ");
+        String colonia = recibirString("Ingrese la colonia de la dirección de la sucursal: ");
+        String estado = recibirString("Ingrese el estado de la dirección de la sucursal: ");
+        String telefono = recibirString("Ingrese el telefono de la sucursal: ");
+        String horarios = recibirString("Ingrese el horario de atención de la sucursal: ");
+        return new Sucursal(idSucursal, nombre, calle, numInterior, 
+                            numExterior, colonia, estado, telefono, 
+                            horarios);
     }
 
     /**
@@ -422,7 +433,7 @@ public class Menu{
             return;
         }
         String llave = recibirString("Ingrese la llave del cliente que desea editar: ");
-        ArchivoCSV clienteViejo;
+        ArchivoCSV clienteViejo = null;
         for(ArchivoCSV a : clientes){
             if(a.consultar(llave))
                 clienteViejo = a;
@@ -434,7 +445,6 @@ public class Menu{
         System.out.println("~ Ingrese los nuevos valores del cliente ~");
         Cliente clienteNuevo = crearCliente();
         clienteViejo.actualizar((Object) clienteNuevo);
-        }
     }
 
     /**
@@ -447,7 +457,7 @@ public class Menu{
             return;
         }
         String llave = recibirString("Ingrese la llave de la sucursal que desea editar: ");
-        ArchivoCSV sucursalVieja;
+        ArchivoCSV sucursalVieja = null;
         for(ArchivoCSV a : sucursales){
             if(a.consultar(llave))
                 sucursalVieja = a;
@@ -471,7 +481,7 @@ public class Menu{
             return;
         }
         String llave = recibirString("Ingrese la llave del premio que desea editar: ");
-        ArchivoCSV premioViejo;
+        ArchivoCSV premioViejo = null;
         for(ArchivoCSV a : premios){
             if(a.consultar(llave))
                 premioViejo = a;
