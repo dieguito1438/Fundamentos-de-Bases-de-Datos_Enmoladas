@@ -267,8 +267,8 @@ public class Menu{
         try{
             cliente.validar();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
-            System.out.println("\n~ Cliente invalido... Abortando.\n");
+            System.out.println("\n" + iae.getMessage());
+            System.out.println("~ Cliente invalido... Abortando.\n");
             return;
         }
         clientes.add(cliente);
@@ -284,7 +284,7 @@ public class Menu{
      * @return cliente el nuevo cliente.
      */
     private Cliente crearCliente(){
-        String idCliente = recibirString("Ingrese el ID del cliente (8 digitos): ");
+        String idCliente = recibirString("Ingrese el ID del cliente (C### con # un número): ");
         String nombre = recibirString("Ingrese el nombre del cliente (Nombre(s): ");
         String apPaterno = recibirString("Ingrese el apellido paterno del cliente: ");
         String apMaterno = recibirString("Ingrese el apellido materno del cliente: ");
@@ -314,8 +314,8 @@ public class Menu{
         try{
             sucursal.validar();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
-            System.out.println("\n ~ Sucursal invalida... Abortando ~\n");
+            System.out.println("\n" + iae.getMessage());
+            System.out.println("~ Sucursal invalida... Abortando ~\n");
             return;
         }
         sucursales.add(sucursal);
@@ -354,8 +354,8 @@ public class Menu{
         try{
             premio = crearPremio();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
-            System.out.println("\n~ Premio invalido... Abortando. ~\n");
+            System.out.println("\n" + iae.getMessage());
+            System.out.println("~ Premio invalido... Abortando. ~\n");
             return;
         }
         String llave = premio.getIdPremio();
@@ -524,7 +524,7 @@ public class Menu{
         try{
             clienteNuevo.validar();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
+            System.out.println("\n" + iae.getMessage());
             System.out.println("~ Edición de cliente invalida... Intente de nuevo. ~\n");
             return;
         }
@@ -560,7 +560,7 @@ public class Menu{
         try{
             sucursalNueva.validar();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
+            System.out.println("\n" + iae.getMessage());
             System.out.println("~ Edición de sucursal invalida... Intente de nuevo. ~\n");
             return;
         }
@@ -596,7 +596,7 @@ public class Menu{
         try{
             premioNuevo.validar();
         }catch(IllegalArgumentException iae){
-            System.out.println(iae.getMessage());
+            System.out.println("\n" + iae.getMessage());
             System.out.println("~ Edición de premio invalida... Intente de nuevo. ~\n");
         }
         premioViejo.actualizar((Object) premioNuevo);
