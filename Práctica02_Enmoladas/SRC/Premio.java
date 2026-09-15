@@ -231,6 +231,8 @@ public class Premio implements ArchivoCSV{
         this.rangoEdad = RangoEdad.valueOf(partes[3].trim());
         this.valorAproximado = Double.parseDouble(partes[4].trim());
         this.puntosNecesarios = Integer.parseInt(partes[5].trim());
+
+        this.validar();
     }
 
     public  void validar() {

@@ -5,7 +5,7 @@
  * Formato CSV:
  * id_cliente,nombre,apPaterno,apMaterno,telefono,correo,puntos,calle,numero,colonia,cp
  *
- * @author Integrante 4
+ * @author Enmoladas
  * @version 1.0
  */
 public class Cliente implements ArchivoCSV {
@@ -215,7 +215,7 @@ public class Cliente implements ArchivoCSV {
      * No es un atributo almacenado: se construye al vuelo a partir
      * de los campos planos de dirección.
      *
-     * @return Dirección formateada. &lt;Calle&gt; #&lt;Número&gt;, Col. &lt;Colonia&gt;, CP &lt;CódigoPostal&gt;
+     * @return Dirección formateada. {@code <Calle>} #{@code <Número>}, Col. {@code <Colonia>}, CP {@code <CódigoPostal>}
      */
     public String getDireccion() {
         return calle + " #" + numero + ", Col. " + colonia + ", CP " + cp;
@@ -303,6 +303,8 @@ public class Cliente implements ArchivoCSV {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Los puntos deben ser un número entero: " + partes[6]);
         }
+        
+        this.validar();
     }
 
     // ------------------------------------------------------------------

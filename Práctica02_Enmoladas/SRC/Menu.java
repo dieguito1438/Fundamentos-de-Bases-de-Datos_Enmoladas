@@ -93,6 +93,7 @@ public class Menu{
                         guardarPremios("~ Premios guardados con exito ~\n");
                         System.exit(0);
                     } catch (Exception e) {
+                        System.out.println("\n~ Razón del error: " + e.getMessage() + " ~");
                         System.out.print("\n~ No se pudo guardar la información... Abortando ~\n");
                         System.exit(1);
                     }
@@ -795,6 +796,7 @@ public class Menu{
                     clientes.add(cliente);
                 }catch(IllegalArgumentException iae){
                     System.out.println("~ Error al cargar un cliente... Eliminando ~");
+                    System.out.println("Detalle: " + iae.getMessage());
                 }
             }
         }catch(FileNotFoundException fnte){
@@ -815,6 +817,7 @@ public class Menu{
                     sucursales.add(sucursal);
                 }catch(IllegalArgumentException iae){
                     System.out.println("~ Error al cargar una sucursal... Eliminando ~");
+                    System.out.println("Detalle: " + iae.getMessage());
                 }
             }
         }catch(FileNotFoundException fnte){
@@ -835,6 +838,7 @@ public class Menu{
                     premios.add(premio);
                 }catch(IllegalArgumentException iae){
                     System.out.println("~ Error al cargar un premio... Eliminando ~");
+                    System.out.println("Detalle: " + iae.getMessage());
                 }
             }
         }catch(FileNotFoundException fnte){

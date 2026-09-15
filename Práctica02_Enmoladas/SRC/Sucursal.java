@@ -197,6 +197,8 @@ public class Sucursal implements ArchivoCSV {
         this.estado = partes[6].trim();
         this.telefono = partes[7].trim();
         this.horarios = partes[8].trim();
+        
+        this.validar();
     }
 
     /**
@@ -205,21 +207,32 @@ public class Sucursal implements ArchivoCSV {
      * @throws IllegalArgumentException si alguna regla de validación falla.
      */
     public void validar() {
-        if (idSucursal == null || idSucursal.isEmpty()) throw new IllegalArgumentException("El ID no puede estar vacío.");
-        if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("El nombre no puede estar vacío.");
-        if (calle == null || calle.isEmpty()) throw new IllegalArgumentException("La calle no puede estar vacía.");
-        if (numExterior == null || numExterior.isEmpty()) throw new IllegalArgumentException("El número exterior no puede estar vacío.");
-        if (colonia == null || colonia.isEmpty()) throw new IllegalArgumentException("La colonia no puede estar vacía.");
-        if (estado == null || estado.isEmpty()) throw new IllegalArgumentException("El estado no puede estar vacío.");
-        if (numInterior == null) throw new IllegalArgumentException("El número interior no puede ser nulo."); 
-        if (telefono == null || telefono.isEmpty()) {
-            throw new IllegalArgumentException("El teléfono no puede estar vacío.");
+        if (idSucursal == null || !idSucursal.matches("S\\d{3}")) {
+            throw new IllegalArgumentException("El ID de la sucursal debe tener el formato S### (ej. S001).");
         }
-        if (!telefono.matches("\\d+")) { // Verifica que solo contenga números
+        if (nombre == null || !nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            throw new IllegalArgumentException("El nombre solo debe contener letras.");
+        }
+        if (calle == null || !calle.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            throw new IllegalArgumentException("La calle solo debe contener letras.");
+        }
+        if (numExterior == null || !numExterior.matches("\\d+")) {
+            throw new IllegalArgumentException("El número exterior debe contener únicamente números.");
+        }
+        if (colonia == null || !colonia.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            throw new IllegalArgumentException("La colonia solo debe contener letras.");
+        }
+        if (estado == null || !estado.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            throw new IllegalArgumentException("El estado solo debe contener letras.");
+        }
+        if (numInterior == null || !numInterior.matches("\\d+")) {
+            throw new IllegalArgumentException("El número interior debe contener únicamente números.");
+        }
+        if (telefono == null || !telefono.matches("\\d+")) {
             throw new IllegalArgumentException("El teléfono debe contener únicamente números.");
         }
-        if (horarios == null || horarios.isEmpty()) {
-            throw new IllegalArgumentException("Los horarios no pueden estar vacíos.");
+        if (horarios == null || !horarios.matches("([01]\\d|2[0-3]):([0-5]\\d)")) {
+            throw new IllegalArgumentException("Los horarios deben tener el formato ##:## de 24 horas (ej. 14:30).");
         }
     }
 
