@@ -332,7 +332,7 @@ public class Menu{
      * @return sucursal la nueva sucursal.
      */
     private Sucursal crearSucursal(){
-        String idSucursal = recibirString("Ingrese el Id de la sucursal: ");
+        String idSucursal = recibirString("Ingrese el Id de la sucursal (S### con # un número): ");
         String nombre = recibirString("Ingrese el nombre de la sucursal: ");
         String calle = recibirString("Ingrese la calle de la dirección de la sucursal: ");
         String numInterior = recibirString("Ingrese el número interior de la dirección de la sucursal (n.a si no aplica.): ");
@@ -340,10 +340,11 @@ public class Menu{
         String colonia = recibirString("Ingrese la colonia de la dirección de la sucursal: ");
         String estado = recibirString("Ingrese el estado de la dirección de la sucursal: ");
         String telefono = recibirString("Ingrese el telefono de la sucursal (10 digitos): ");
-        String horarios = recibirString("Ingrese el horario de atención de la sucursal (00:00 - 23:59 hrs): ");
+        String horarioInicio = recibirString("Ingrese el horario de apertura de la sucursal (00:00 - 23:59 hrs): ");
+        String horarioFinal = recibirString("Ingrese el horario de cierre de la sucursal (00:00 - 23:59 hrs): ");
         return new Sucursal(idSucursal, nombre, calle, numInterior, 
                             numExterior, colonia, estado, telefono, 
-                            horarios);
+                            horarioInicio, horarioFinal);
     }
 
     /**

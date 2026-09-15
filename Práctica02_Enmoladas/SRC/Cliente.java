@@ -318,41 +318,46 @@ public class Cliente implements ArchivoCSV {
      * @throws IllegalArgumentException Si algún atributo no cumple las reglas.
      */
     public void validar() {
+        StringBuilder errores = new StringBuilder();
+
         if (idCliente == null || idCliente.trim().isEmpty()) {
-            throw new IllegalArgumentException("El id del cliente no puede estar vacío.");
-        }
-        if (!idCliente.matches("\\d+")) {
-            throw new IllegalArgumentException("El id del cliente debe tener el formato C### (ej. C001).");
+            errores.append("- El id del cliente no puede estar vacío.\n");
+        } else if (!idCliente.matches("\\d{8}")) {
+            errores.append("- El id del cliente debe tener 8 dígitos numéricos.\n");
         }
         if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+            errores.append("- El nombre no puede estar vacío.\n");
         }
         if (apPaterno == null || apPaterno.trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido paterno no puede estar vacío.");
+            errores.append("- El apellido paterno no puede estar vacío.\n");
         }
         if (apMaterno == null || apMaterno.trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido materno no puede estar vacío.");
+            errores.append("- El apellido materno no puede estar vacío.\n");
         }
         if (telefono == null || !telefono.matches("\\d{10}")) {
-            throw new IllegalArgumentException("El teléfono debe tener exactamente 10 dígitos numéricos.");
+            errores.append("- El teléfono debe tener exactamente 10 dígitos numéricos.\n");
         }
         if (correo == null || !correo.contains("@") || !correo.contains(".")) {
-            throw new IllegalArgumentException("El correo debe contener '@' y '.'.");
+            errores.append("- El correo debe contener '@' y '.'.\n");
         }
         if (puntos < 0) {
-            throw new IllegalArgumentException("Los puntos no pueden ser negativos.");
+            errores.append("- Los puntos no pueden ser negativos.\n");
         }
         if (calle == null || calle.trim().isEmpty()) {
-            throw new IllegalArgumentException("La calle no puede estar vacía.");
+            errores.append("- La calle no puede estar vacía.\n");
         }
         if (numero == null || numero.trim().isEmpty()) {
-            throw new IllegalArgumentException("El número exterior no puede estar vacío.");
+            errores.append("- El número exterior no puede estar vacío.\n");
         }
         if (colonia == null || colonia.trim().isEmpty()) {
-            throw new IllegalArgumentException("La colonia no puede estar vacía.");
+            errores.append("- La colonia no puede estar vacía.\n");
         }
         if (cp == null || !cp.matches("\\d{5}")) {
-            throw new IllegalArgumentException("El código postal debe tener exactamente 5 dígitos numéricos.");
+            errores.append("- El código postal debe tener exactamente 5 dígitos numéricos.\n");
+        }
+
+        if (errores.length() > 0) {
+            throw new IllegalArgumentException("Se encontraron los siguientes errores:\n" + errores.toString());
         }
     }
 

@@ -235,43 +235,37 @@ public class Premio implements ArchivoCSV{
         this.validar();
     }
 
-    public  void validar() {
-    if (idPremio == null || idPremio.trim().isEmpty()) {
-        throw new IllegalArgumentException(
-            "El id del premio debe ser mayor que 0."
-        );
-    }
+    public void validar() {
+        StringBuilder errores = new StringBuilder();
 
-    if (nombre == null || nombre.trim().isEmpty()) {
-        throw new IllegalArgumentException(
-            "El nombre del premio no puede estar vacío."
-        );
-    }
+        if (idPremio == null || idPremio.trim().isEmpty()) {
+            errores.append("- El id del premio debe ser mayor que 0.\n");
+        }
 
-    if (categoria == null) {
-        throw new IllegalArgumentException(
-            "La categoría del premio no puede ser nula."
-        );
-    }
+        if (nombre == null || nombre.trim().isEmpty()) {
+            errores.append("- El nombre del premio no puede estar vacío.\n");
+        }
 
-    if (rangoEdad == null) {
-        throw new IllegalArgumentException(
-            "El rango de edad no puede ser nulo."
-        );
-    }
+        if (categoria == null) {
+            errores.append("- La categoría del premio no puede ser nula.\n");
+        }
 
-    if (valorAproximado < 0) {
-        throw new IllegalArgumentException(
-            "El valor aproximado no puede ser negativo."
-        );
-    }
+        if (rangoEdad == null) {
+            errores.append("- El rango de edad no puede ser nulo.\n");
+        }
 
-    if (puntosNecesarios < 20) {
-        throw new IllegalArgumentException(
-            "El premio debe requerir al menos 20 puntos."
-        );
+        if (valorAproximado < 0) {
+            errores.append("- El valor aproximado no puede ser negativo.\n");
+        }
+
+        if (puntosNecesarios < 20) {
+            errores.append("- El premio debe requerir al menos 20 puntos.\n");
+        }
+
+        if (errores.length() > 0) {
+            throw new IllegalArgumentException("Se encontraron los siguientes errores:\n" + errores.toString());
+        }
     }
-}
     /** evuelve una representación legible del premio
      *  para mostrarlo en consola.
      *

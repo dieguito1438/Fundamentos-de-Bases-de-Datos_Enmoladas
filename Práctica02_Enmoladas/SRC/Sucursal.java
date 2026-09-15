@@ -36,8 +36,11 @@ public class Sucursal implements ArchivoCSV {
     /** Número de teléfono de contacto de la sucursal. */
     private String telefono;
     
-    /** Horarios de atención de la sucursal. */
-    private String horarios;
+    /** Horario de apertura de la sucursal. */
+    private String horarioInicio;
+    
+    /** Horario de cierre de la sucursal. */
+    private String horarioFinal;
 
     /**
      * Constructor por defecto.
@@ -52,7 +55,8 @@ public class Sucursal implements ArchivoCSV {
         this.colonia = "";
         this.estado = "";
         this.telefono = "";
-        this.horarios = "";
+        this.horarioInicio = "";
+        this.horarioFinal = "";
     }
 
     /**
@@ -67,11 +71,12 @@ public class Sucursal implements ArchivoCSV {
      * @param colonia      La colonia.
      * @param estado       El estado.
      * @param telefono     El teléfono de contacto.
-     * @param horarios     Los horarios de atención.
+     * @param horarioInicio El horario de apertura.
+     * @param horarioFinal El horario de cierre.
      */
     public Sucursal(String idSucursal, String nombre, String calle, String numInterior,
                     String numExterior, String colonia, String estado, String telefono,
-                    String horarios) {
+                    String horarioInicio, String horarioFinal) {
         this.idSucursal = idSucursal;
         this.nombre = nombre;
         this.calle = calle;
@@ -80,7 +85,8 @@ public class Sucursal implements ArchivoCSV {
         this.colonia = colonia;
         this.estado = estado;
         this.telefono = telefono;
-        this.horarios = horarios;
+        this.horarioInicio = horarioInicio;
+        this.horarioFinal = horarioFinal;
     }
 
     /** @return El identificador de la sucursal. */
@@ -131,11 +137,17 @@ public class Sucursal implements ArchivoCSV {
     /** @param telefono El nuevo teléfono para la sucursal. */
     public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    /** @return Los horarios de la sucursal. */
-    public String getHorarios() { return horarios; }
+    /** @return El horario de apertura de la sucursal. */
+    public String getHorarioInicio() { return horarioInicio; }
     
-    /** @param horarios Los nuevos horarios para la sucursal. */
-    public void setHorarios(String horarios) { this.horarios = horarios; }
+    /** @param horarioInicio El nuevo horario de apertura para la sucursal. */
+    public void setHorarioInicio(String horarioInicio) { this.horarioInicio = horarioInicio; }
+
+    /** @return El horario de cierre de la sucursal. */
+    public String getHorarioFinal() { return horarioFinal; }
+    
+    /** @param horarioFinal El nuevo horario de cierre para la sucursal. */
+    public void setHorarioFinal(String horarioFinal) { this.horarioFinal = horarioFinal; }
 
     /**
      * Verifica si esta sucursal corresponde a la llave primaria buscada.
@@ -164,7 +176,8 @@ public class Sucursal implements ArchivoCSV {
         this.colonia = s.colonia;
         this.estado = s.estado;
         this.telefono = s.telefono;
-        this.horarios = s.horarios;
+        this.horarioInicio = s.horarioInicio;
+        this.horarioFinal = s.horarioFinal;
     }
 
     /**
@@ -174,7 +187,7 @@ public class Sucursal implements ArchivoCSV {
     @Override
     public String getCSV() {
         return idSucursal + "," + nombre + "," + calle + "," + numInterior + "," + 
-               numExterior + "," + colonia + "," + estado + "," + telefono + "," + horarios;
+               numExterior + "," + colonia + "," + estado + "," + telefono + "," + horarioInicio + "," + horarioFinal;
     }
 
     /**
@@ -185,7 +198,7 @@ public class Sucursal implements ArchivoCSV {
     @Override
     public void cargar(String csv) throws IllegalArgumentException {
         String[] partes = csv.split(",", -1);
-        if (partes.length < 9) {
+        if (partes.length < 10) {
             throw new IllegalArgumentException("Formato CSV inválido para Sucursal.");
         }
         this.idSucursal = partes[0].trim();
@@ -196,7 +209,8 @@ public class Sucursal implements ArchivoCSV {
         this.colonia = partes[5].trim();
         this.estado = partes[6].trim();
         this.telefono = partes[7].trim();
-        this.horarios = partes[8].trim();
+        this.horarioInicio = partes[8].trim();
+        this.horarioFinal = partes[9].trim();
         
         this.validar();
     }
@@ -207,32 +221,41 @@ public class Sucursal implements ArchivoCSV {
      * @throws IllegalArgumentException si alguna regla de validación falla.
      */
     public void validar() {
+        StringBuilder errores = new StringBuilder();
+
         if (idSucursal == null || !idSucursal.matches("S\\d{3}")) {
-            throw new IllegalArgumentException("El ID de la sucursal debe tener el formato S### (ej. S001).");
+            errores.append("- El ID de la sucursal debe tener el formato S### (ej. S001).\n");
         }
         if (nombre == null || !nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-            throw new IllegalArgumentException("El nombre solo debe contener letras.");
+            errores.append("- El nombre solo debe contener letras.\n");
         }
         if (calle == null || !calle.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-            throw new IllegalArgumentException("La calle solo debe contener letras.");
+            errores.append("- La calle solo debe contener letras.\n");
         }
         if (numExterior == null || !numExterior.matches("\\d+")) {
-            throw new IllegalArgumentException("El número exterior debe contener únicamente números.");
+            errores.append("- El número exterior debe contener únicamente números.\n");
         }
         if (colonia == null || !colonia.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-            throw new IllegalArgumentException("La colonia solo debe contener letras.");
+            errores.append("- La colonia solo debe contener letras.\n");
         }
         if (estado == null || !estado.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-            throw new IllegalArgumentException("El estado solo debe contener letras.");
+            errores.append("- El estado solo debe contener letras.\n");
         }
         if (numInterior == null || !numInterior.matches("\\d+")) {
-            throw new IllegalArgumentException("El número interior debe contener únicamente números.");
+            errores.append("- El número interior debe contener únicamente números.\n");
         }
         if (telefono == null || !telefono.matches("\\d+")) {
-            throw new IllegalArgumentException("El teléfono debe contener únicamente números.");
+            errores.append("- El teléfono debe contener únicamente números.\n");
         }
-        if (horarios == null || !horarios.matches("([01]\\d|2[0-3]):([0-5]\\d)")) {
-            throw new IllegalArgumentException("Los horarios deben tener el formato ##:## de 24 horas (ej. 14:30).");
+        if (horarioInicio == null || !horarioInicio.matches("([01]\\d|2[0-3]):([0-5]\\d)")) {
+            errores.append("- El horario de apertura debe tener el formato ##:## de 24 horas (ej. 14:30).\n");
+        }
+        if (horarioFinal == null || !horarioFinal.matches("([01]\\d|2[0-3]):([0-5]\\d)")) {
+            errores.append("- El horario de cierre debe tener el formato ##:## de 24 horas (ej. 14:30).\n");
+        }
+
+        if (errores.length() > 0) {
+            throw new IllegalArgumentException("Se encontraron los siguientes errores:\n" + errores.toString());
         }
     }
 
@@ -255,7 +278,8 @@ public class Sucursal implements ArchivoCSV {
                (colonia != null ? colonia.equals(sucursal.colonia) : sucursal.colonia == null) &&
                (estado != null ? estado.equals(sucursal.estado) : sucursal.estado == null) &&
                (telefono != null ? telefono.equals(sucursal.telefono) : sucursal.telefono == null) &&
-               (horarios != null ? horarios.equals(sucursal.horarios) : sucursal.horarios == null);
+               (horarioInicio != null ? horarioInicio.equals(sucursal.horarioInicio) : sucursal.horarioInicio == null) &&
+               (horarioFinal != null ? horarioFinal.equals(sucursal.horarioFinal) : sucursal.horarioFinal == null);
     }
 
     /**
@@ -273,7 +297,7 @@ public class Sucursal implements ArchivoCSV {
                 ", nombre='" + nombre + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", telefono='" + telefono + '\'' +
-                ", horarios='" + horarios + '\'' +
+                ", horarios='" + horarioInicio + " - " + horarioFinal + '\'' +
                 '}';
     }
 }
