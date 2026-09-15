@@ -215,7 +215,7 @@ public class Cliente implements ArchivoCSV {
      * No es un atributo almacenado: se construye al vuelo a partir
      * de los campos planos de dirección.
      *
-     * @return Dirección formateada. <Calle> #<Número>, Col. <Colonia>, CP <CódigoPostal>
+     * @return Dirección formateada. &lt;Calle&gt; #&lt;Número&gt;, Col. &lt;Colonia&gt;, CP &lt;CódigoPostal&gt;
      */
     public String getDireccion() {
         return calle + " #" + numero + ", Col. " + colonia + ", CP " + cp;

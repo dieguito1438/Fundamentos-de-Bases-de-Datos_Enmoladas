@@ -31,9 +31,9 @@ public class Premio implements ArchivoCSV{
 
     /**
      * CategoriaPremio
-     * Premios Bajos De 20 a 1,000 puntos <juguetes simples, golosinas, etc>.
-     *  Premios Medios: De 1,001 a 3,999 puntos <peluches gigantes, artículos deportivos, juguetes tipo lego,etc>.
-     * Premios Grandes: De 4,000 a +10,000 puntos <artículos de marca, electrónicos pequeños, dispositivos electónicos, etc>.
+     * Premios Bajos De 20 a 1,000 puntos &lt;juguetes simples, golosinas, etc&gt;.
+     *  Premios Medios: De 1,001 a 3,999 puntos &lt;peluches gigantes, artículos deportivos, juguetes tipo lego,etc&gt;.
+     * Premios Grandes: De 4,000 a +10,000 puntos &lt;artículos de marca, electrónicos pequeños, dispositivos electónicos, etc&gt;.
      * 
      */
     public enum CategoriaPremio{
