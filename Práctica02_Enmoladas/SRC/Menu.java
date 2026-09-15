@@ -687,7 +687,7 @@ public class Menu{
             System.out.println("\n~ No hay premios por eliminar... Registre una nueva sucursal. ~\n");
             return;
         }
-        String llave = recibirString("Ingrese la llave del premio que desea eliminar");
+        String llave = recibirString("Ingrese la llave del premio que desea eliminar: ");
         for(ArchivoCSV a : premios){
             if(a.consultar(llave)){
                 System.out.println("Esta seguro de querer eliminar el premio?: ");
