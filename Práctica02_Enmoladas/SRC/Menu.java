@@ -42,7 +42,20 @@ public class Menu{
     */
     public void inicio(){
         System.out.println("Práctica 2");
-        System.out.println("Enmoladas\n");
+        System.out.println("Enmoladas");
+        System.out.println(
+                        "\n" + //
+                        "      ___         ___           ___                                       ___           ___           ___           ___           ___     \n" + //
+                        "     /\\  \\       /\\  \\         /\\__\\                                     /\\  \\         /\\__\\         /\\  \\         /\\  \\         /\\__\\    \n" + //
+                        "    /::\\  \\      \\:\\  \\       /:/ _/_                                   /::\\  \\       /:/ _/_       /::\\  \\       |::\\  \\       /:/ _/_   \n" + //
+                        "   /:/\\:\\__\\      \\:\\  \\     /:/ /\\__\\                                 /:/\\:\\  \\     /:/ /\\  \\     /:/\\:\\  \\      |:|:\\  \\     /:/ /\\__\\  \n" + //
+                        "  /:/ /:/  /  ___  \\:\\  \\   /:/ /:/ _/_   ___     ___   ___     ___   /:/ /::\\  \\   /:/ /::\\  \\   /:/ /::\\  \\   __|:|\\:\\  \\   /:/ /:/ _/_ \n" + //
+                        " /:/_/:/  /  /\\  \\  \\:\\__\\ /:/_/:/ /\\__\\ /\\  \\   /\\__\\ /\\  \\   /\\__\\ /:/_/:/\\:\\__\\ /:/__\\/\\:\\__\\ /:/_/:/\\:\\__\\ /::::|_\\:\\__\\ /:/_/:/ /\\__\\\n" + //
+                        " \\:\\/:/  /   \\:\\  \\ /:/  / \\:\\/:/ /:/  / \\:\\  \\ /:/  / \\:\\  \\ /:/  / \\:\\/:/  \\/__/ \\:\\  \\ /:/  / \\:\\/:/  \\/__/ \\:\\~~\\  \\/__/ \\:\\/:/ /:/  /\n" + //
+                        "  \\::/__/     \\:\\  /:/  /   \\::/_/:/  /   \\:\\  /:/  /   \\:\\  /:/  /   \\::/__/       \\:\\  /:/  /   \\::/__/       \\:\\  \\        \\::/_/:/  / \n" + //
+                        "   \\:\\  \\      \\:\\/:/  /     \\:\\/:/  /     \\:\\/:/  /     \\:\\/:/  /     \\:\\  \\        \\:\\/:/  /     \\:\\  \\        \\:\\  \\        \\:\\/:/  /  \n" + //
+                        "    \\:\\__\\      \\::/  /       \\::/  /       \\::/  /       \\::/  /       \\:\\__\\        \\::/  /       \\:\\__\\        \\:\\__\\        \\::/  /   \n" + //
+                        "     \\/__/       \\/__/         \\/__/         \\/__/         \\/__/         \\/__/         \\/__/         \\/__/         \\/__/         \\/__/\n\n");
         cargar();
         menu();
     }
@@ -260,7 +273,7 @@ public class Menu{
         }
         clientes.add(cliente);
         try{
-            guardarClientes("\n~ Cliente guardado con exito\n");
+            guardarClientes("\n~ Cliente guardado con exito ~\n");
         }catch(IOException ioe){
             System.out.println("\n~ Ocurrio un error al guardar el nuevo cliente en el archivo .csv ~\n");
         }
@@ -446,7 +459,7 @@ public class Menu{
                 System.out.println(a);
                 return;
         }
-        System.out.println(" \n~ Cliente con llave " + llave + " no encontrado. ~\n");
+        System.out.println("\n~ Cliente con llave " + llave + " no encontrado. ~\n");
     }
 
     /**
@@ -508,6 +521,13 @@ public class Menu{
         }
         System.out.println("\n~ Ingrese los nuevos valores del cliente ~\n");
         Cliente clienteNuevo = crearCliente();
+        try{
+            clienteNuevo.validar();
+        }catch(IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("~ Edición de cliente invalida... Intente de nuevo. ~\n");
+            return;
+        }
         clienteViejo.actualizar((Object) clienteNuevo);
         try{
             guardarClientes("\n~ Cliente editado con exito ~\n");
@@ -537,6 +557,13 @@ public class Menu{
         }
         System.out.println("\n~ Ingrese los nuevos valores de la sucursal ~\n");
         Sucursal sucursalNueva = crearSucursal();
+        try{
+            sucursalNueva.validar();
+        }catch(IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("~ Edición de sucursal invalida... Intente de nuevo. ~\n");
+            return;
+        }
         sucursalVieja.actualizar((Object) sucursalNueva);
         try{
             guardarSucursales("\n~ Sucursal editada con exito ~\n");
@@ -566,6 +593,12 @@ public class Menu{
         }
         System.out.println("\n~ Ingrese los nuevos valores del premio ~\n");
         Premio premioNuevo = crearPremio();
+        try{
+            premioNuevo.validar();
+        }catch(IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("~ Edición de premio invalida... Intente de nuevo. ~\n");
+        }
         premioViejo.actualizar((Object) premioNuevo);
         try{
             guardarPremios("\n~ Premio editado con exito ~\n");
@@ -689,6 +722,8 @@ public class Menu{
         try(BufferedWriter out = new BufferedWriter(
                                 new OutputStreamWriter(
                                     new FileOutputStream("clientes.csv"), StandardCharsets.UTF_8))){
+            out.write("\uFEFF");
+            out.newLine();
             for(ArchivoCSV a : clientes){
                 out.write(a.getCSV());
                 out.newLine();
@@ -707,6 +742,8 @@ public class Menu{
         try(BufferedWriter out = new BufferedWriter(
                                 new OutputStreamWriter(
                                     new FileOutputStream("sucursales.csv"), StandardCharsets.UTF_8))){
+            out.write("\uFEFF");
+            out.newLine();
             for(ArchivoCSV a : sucursales){
                 out.write(a.getCSV());
                 out.newLine();
@@ -725,6 +762,8 @@ public class Menu{
         try(BufferedWriter out = new BufferedWriter(
                                      new OutputStreamWriter(
                                          new FileOutputStream("premios.csv"), StandardCharsets.UTF_8))){
+            out.write("\uFEFF");
+            out.newLine();
             for(ArchivoCSV a : premios){
                 out.write(a.getCSV());
                 out.newLine();
@@ -748,6 +787,8 @@ public class Menu{
                                        new FileInputStream("clientes.csv")))){
             String linea;
             while((linea = in.readLine()) != null){
+                if (linea.replace("\uFEFF", "").trim().isEmpty())
+                    continue;
                 try{
                     Cliente cliente = new Cliente();
                     cliente.cargar(linea);
@@ -766,6 +807,8 @@ public class Menu{
                                         new FileInputStream("sucursales.csv")))){
             String linea;
             while((linea = in.readLine()) != null){
+                if (linea.replace("\uFEFF", "").trim().isEmpty())
+                    continue;
                 try{
                     Sucursal sucursal = new Sucursal();
                     sucursal.cargar(linea);
@@ -784,6 +827,8 @@ public class Menu{
                                        new FileInputStream("premios.csv")))){
             String linea;
             while((linea = in.readLine()) != null){
+                if (linea.replace("\uFEFF", "").trim().isEmpty())
+                    continue;
                 try{
                     Premio premio = new Premio();
                     premio.cargar(linea);
