@@ -284,6 +284,7 @@ public class Sucursal implements ArchivoCSV {
 
     /**
      * Genera una representación en formato de texto legible para mostrar la información 
+
      * en la consola al realizar consultas.
      * @return Una cadena formateada con los datos de la sucursal.
      */
