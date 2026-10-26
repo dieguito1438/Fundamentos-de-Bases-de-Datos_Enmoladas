@@ -1,7 +1,31 @@
 CREATE DATABASE puellaGames;
 USE puellaGames;
 
+CREATE TABLE Sucursal (
+    IDSucursal VARCHAR(4) NOT NULL,
+    Nombre VARCHAR(100) NOT NULL,
+    Telefono INT NOT NULL,
+    Calle TEXT NOT NULL,
+    NumInterior INT NOT NULL,
+    NumExterior INT NOT NULL,
+    Colonia TEXT NOT NULL,
+    Estado TEXT NOT NULL
+);
+
 -- Ya debe de estar definida Sucursal antes de los Empleados.
+
+CREATE TABLE Horario (
+    IDSucursal VARCHAR(4) NOT NULL,
+    HorarioInicio TIMETZ NOT NULL,
+    HorarioFinal TIMETZ NOT NULL,
+    Dia VARCHAR(9) NOT NULL
+);
+
+CREATE TABLE Guardar (
+    IDSucursal VARCHAR(4) NOT NULL,
+    IDPremio VARCHAR(4) NOT NULL,
+    CantidadInicial INT NOT NULL
+);
 
 CREATE TABLE Gerente(
     CURPGerente CHAR(18) PRIMARY KEY,
@@ -144,20 +168,37 @@ CREATE TABLE RegistroPartida(
 	Puntuacion INT NOT NULL,
 );
 
--- Restricciones RegistroPartida
+-- Restricciones:
 -- Dominio
+----- RegistroPartida
 ALTER TABLE RegistroPartidas ADD CONSTRAINT RegistroPartida_DOM01
 CHECK (Puntuacion >= 0);
+----- Guardar
+ALTER TABLE Guardar ADD CONSTRAINT Guardar_DOM01
+CHECK (CantidadInicial >= 0);
 
 -- Entidad
+----- RegistroPartida
 ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_PK
 PRIMARY KEY (IDRegistro);
+----- Sucursal
+ALTER TABLE Sucursal ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal);
+----- Horario
+ALTER TABLE Horario ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal);
 
 -- Referencial
+----- RegistroPartida
 ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
 FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina);
-
-ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
-FOREIGN KEY (NoTarjeta) REFERENCES Maquina(NoTarjeta);
+ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01T
+FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta);
+----- Horario
+ALTER TABLE Horario ADD CONSTRAINT  Horario_FK01S
+FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal);
+----- Guardar
+ALTER TABLE Guardar ADD CONSTRAINT Guardar_FK01S 
+FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal);
+ALTER TABLE Guardar ADD CONSTRAINT Guardar_FK01P 
+FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio);
 
 
