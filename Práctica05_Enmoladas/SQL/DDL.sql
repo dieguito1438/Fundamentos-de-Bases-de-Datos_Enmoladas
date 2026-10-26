@@ -132,3 +132,32 @@ CREATE TABLE Certificacion(
         REFERENCES Tecnico(CURPCajero)
 );
 
+-- NOTA
+-- Antes de RegistroPartida debe estar Tarjeta y Maquina
+
+CREATE TABLE RegistroPartida(
+	IDRegistro INT NOT NULL,
+	IDMaquina INT NOT NULL,
+	NoTarjeta INT NOT NULL,
+	Fecha DATE NOT NULL,
+	Hora TIMETZ NOT NULL,	
+	Puntuacion INT NOT NULL,
+);
+
+-- Restricciones RegistroPartida
+-- Dominio
+ALTER TABLE RegistroPartidas ADD CONSTRAINT RegistroPartida_DOM01
+CHECK (Puntuacion >= 0);
+
+-- Entidad
+ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_PK
+PRIMARY KEY (IDRegistro);
+
+-- Referencial
+ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
+FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina);
+
+ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
+FOREIGN KEY (NoTarjeta) REFERENCES Maquina(NoTarjeta);
+
+
