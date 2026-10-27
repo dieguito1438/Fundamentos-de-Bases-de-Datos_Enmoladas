@@ -1,5 +1,5 @@
 CREATE DATABASE puellaGames;
-USE puellaGames;
+
 
 -- 1# SUCURSAL
 CREATE TABLE Sucursal (
@@ -12,6 +12,10 @@ CREATE TABLE Sucursal (
     Colonia TEXT NOT NULL,
     Estado TEXT NOT NULL
 );
+
+ALTER TABLE Sucursal 
+	ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal);
+
 
 -- Ya debe de estar definida Sucursal antes de los Empleados.
 
@@ -27,7 +31,7 @@ CREATE TABLE Horario (
 CREATE TABLE Gerente(
     CURPGerente CHAR(18),
     IDSucursal INT,
-    RFCGerente CHAR(13)
+    RFCGerente CHAR(13),
     NombreGerente VARCHAR(50),
     ApellidoPaternoGerente VARCHAR(50),
     ApellidoMaternoGerente VARCHAR(50),
@@ -145,7 +149,7 @@ ALTER TABLE CorreoEncPremios
 -- 9# CAJERO
 CREATE TABLE Cajero(
     CURPCajero CHAR(18),
-    IDSucursal VARCHAR(4),
+    IDSucursal INT,
     RFCCajero VARCHAR(13),
     NombreCajero VARCHAR(50),
     ApellidoPaternoCajero VARCHAR(50),
@@ -192,7 +196,7 @@ ALTER TABLE TelefonoCajero
 -- 11# CORREO CAJERO
 CREATE TABLE CorreoCajero(
     CURPCajero CHAR(18),
-    TelefonoCajero CHAR(10)
+    CorreoCajero CHAR(10)
 );
 
 ALTER TABLE CorreoCajero
@@ -206,7 +210,7 @@ ALTER TABLE CorreoCajero
 -- 12# TECNICO
 CREATE TABLE Tecnico(
     CURPTecnico CHAR(18),
-    IDSucursal VARCHAR(4),
+    IDSucursal INT,
     RFCTecnico CHAR(13),
     NombreTecnico VARCHAR(50),
     ApellidoPaternoTecnico VARCHAR(50),
@@ -214,7 +218,7 @@ CREATE TABLE Tecnico(
     FechaNacimientoTecnico DATE,
     FechaContratacionTecnico DATE,
     SalarioTecnico NUMERIC(12, 2),
-    Especialidad VARCHAR(50),
+    Especialidad VARCHAR(50)
 );
 
 ALTER TABLE Tecnico
@@ -277,7 +281,93 @@ ALTER TABLE Certificacion
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
 
--- 16# JUEGO
+
+-- 16# CLIENTE
+CREATE TABLE Cliente (
+	IDCliente INT,
+	Nombre VARCHAR(100),
+	ApellidoP VARCHAR(100),
+	ApellidoM VARCHAR(100),
+	FechaNacimiento DATE
+);
+
+ALTER TABLE Cliente 
+	ADD CONSTRAINT pk_cliente PRIMARY KEY (IDCliente),
+	ALTER COLUMN Nombre SET NOT NULL,
+	ALTER COLUMN ApellidoP SET NOT NULL, 
+	ALTER COLUMN ApellidoM SET NOT NULL,
+	ALTER COLUMN FechaNacimiento SET NOT NULL,
+    ADD CONSTRAINT chk_fecha_nacimiento CHECK (
+        FechaNacimiento >= '1909-01-01' AND 
+        FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years' -- Creo es la única instancia de esto. 
+    );-- Lo comento igual para ver. "12 years" es para que al menos 12 años desde hoy, ergo no sobre el año calendario
+        -- sino sobre un intervalo de 1 año.
+
+    
+ -- 17# TARJETA
+CREATE TABLE Tarjeta (
+    NoTarjeta INT
+);
+
+ALTER TABLE Tarjeta
+	ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta);
+
+
+ -- 18# PERTENECER
+CREATE TABLE Pertenecer (
+	IDCliente INT,
+	NoTarjeta INT,
+	Nombre VARCHAR(100),
+	ApellidoP VARCHAR(100),
+	ApellidoM VARCHAR(100),
+	FechaNacimiento DATE
+);
+
+ALTER TABLE Pertenecer 
+	ADD CONSTRAINT pk_pertenecer PRIMARY KEY (IDCliente, NoTarjeta), --SE AGREGAN COMO PRIMARY KEY PERO TAMBIEN COMO FOREIGN KEY.
+	ADD CONSTRAINT fk_pertenecer_cliente FOREIGN KEY (IDCliente) 
+		REFERENCES Cliente(IDCliente),
+	ADD CONSTRAINT fk_pertenecer_tarjeta FOREIGN KEY (NoTarjeta) 
+		REFERENCES Tarjeta(NoTarjeta),
+	ALTER COLUMN Nombre SET NOT NULL,
+	ALTER COLUMN ApellidoP SET NOT NULL,
+	ALTER COLUMN ApellidoM SET NOT NULL,
+	ALTER COLUMN FechaNacimiento SET NOT NULL,
+    ADD CONSTRAINT chk_fecha_nacimiento CHECK (
+        FechaNacimiento >= '1909-01-01' AND 
+        FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years'
+    );
+    
+    
+ -- 19# CORREO CLIENTE
+CREATE TABLE CorreoCliente (
+	IDCliente INT,
+	CorreoCliente VARCHAR(76)
+);
+
+ALTER TABLE CorreoCliente
+	ADD CONSTRAINT pk_correocliente PRIMARY KEY (IDCliente, CorreoCliente), 
+	ADD CONSTRAINT fk_correocliente_cliente FOREIGN KEY (IDCliente) 
+		REFERENCES Cliente(IDCliente),
+    ADD CONSTRAINT chk_correo_formato CHECK (
+        CorreoCliente ~ '^[^@\s]+@[^@\s]+$' -- Uno supondría que aquí debería discutirse. 
+    );-- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
+    
+
+ -- 20# TELEFONO CLIENTE
+CREATE TABLE TelefonoCliente (
+	IDCliente INT,
+	TelefonoCliente CHAR(10)
+);
+
+ALTER TABLE TelefonoCliente
+	ADD CONSTRAINT pk_telefonocliente PRIMARY KEY (IDCliente, TelefonoCliente), --SE AGREGAN COMO PRIMARY KEY PERO TAMBIEN COMO FOREIGN KEY.
+	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
+		REFERENCES Cliente(IDCliente),
+    ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
+
+
+-- 21# JUEGO
 CREATE TABLE Juego(
 	IDJuego INT ,
 	Nombre VARCHAR(100) ,
@@ -295,7 +385,7 @@ ALTER TABLE Juego
 	ADD CONSTRAINT Tipo_Juego_Valido CHECK (TipoJuego IN ('Destreza','Disparos', 'Velocidad' , 'Ritmo'));
 
 
--- 17# MAQUINA
+-- 22# MAQUINA
 --NOTA
 -- Antes de Máquina debe estar definida Sucursal y Juego 
 CREATE TABLE Maquina(
@@ -317,9 +407,9 @@ ALTER TABLE Maquina
 	ADD CONSTRAINT Estado_Maquina_Valido CHECK (EstadoMaquina IN ('Activo', 'FueraDeServicio', 'Mantenimiento'));
 
 
--- 18# PREMIO
+-- 23# PREMIO
 CREATE TABLE Premio(
-	IDPremio VARCHAR(4), 
+	IDPremio INT, 
 	Nombre VARCHAR(100),
 	RangoEdad VARCHAR(8),
 	ValorAproximado NUMERIC(6,2)
@@ -335,7 +425,7 @@ ALTER TABLE Premio
 	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0);
 	
 
--- 19# REGISTRO PARTIDA
+-- 24# REGISTRO PARTIDA
 -- NOTA
 -- Antes de RegistroPartida debe estar Tarjeta y Maquina
 CREATE TABLE RegistroPartida(
@@ -344,11 +434,11 @@ CREATE TABLE RegistroPartida(
 	NoTarjeta INT NOT NULL,
 	Fecha DATE NOT NULL,
 	Hora TIMETZ NOT NULL,	
-	Puntuacion INT NOT NULL,
+	Puntuacion INT NOT NULL
 );
 
 
--- 20# CANJE
+-- 25# CANJE
 -- NOTA
 -- Antes de Canje debe estar Tarjeta y EncargadoPremios
 CREATE TABLE Canje(
@@ -371,7 +461,7 @@ ALTER TABLE Canje
 	ALTER COLUMN Hora SET NOT NULL;
 
 	
--- 21# RECARGA
+-- 26# RECARGA
 -- NOTA
 -- Antes de Canje debe estar Tarjeta y Cajero
 CREATE TABLE Recarga(
@@ -379,7 +469,7 @@ CREATE TABLE Recarga(
 	NoTarjeta INT,
 	Fecha DATE ,
 	Hora TIME ,
-	Monto MONEY ,
+	Monto INT,
 	MetodoAbono VARCHAR(14) 
 );
 
@@ -398,17 +488,17 @@ ALTER TABLE Recarga
 	ADD CONSTRAINT Recarga_MetodoAbono_Valido CHECK ( MetodoAbono IN ('Efectivo', 'TarjetaDebito','TarjetaCredito', 'Paypal'));
 
 
--- 22# GUARDAR
+-- 27# GUARDAR
 -- NOTA
 -- Antes de Guardar debe estar Sucursal y Premio.
 CREATE TABLE Guardar (
-    IDSucursal VARCHAR(4) NOT NULL,
-    IDPremio VARCHAR(4) NOT NULL,
+    IDSucursal INT NOT NULL,
+    IDPremio INT NOT NULL,
     CantidadInicial INT NOT NULL
 );
 
 
--- 23# INCLUIR
+-- 28# INCLUIR
 -- NOTA
 -- Antes de Inlcuir debe estar definido Premio y Canje.
 CREATE TABLE Incluir(
@@ -423,21 +513,16 @@ ALTER TABLE Incluir
 		REFERENCES Premio(IDPremio),
 	ALTER COLUMN IDCanjeo SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK02C FOREIGN KEY (IDCanjeo)
-		REFERENCES Premio(IDCanjeo),
+		REFERENCES Canje(IDCanjeo),
 	ALTER COLUMN Cantidad SET NOT NULL,
 	ADD CONSTRAINT Incluir_Cantidad_Valida CHECK (Cantidad >= 1);
 	
 	
 
-
-
-
-
-
 -- Restricciones:
 
 ----- RegistroPartida
-ALTER TABLE RegistroPartidas ADD CONSTRAINT RegistroPartida_DOM01
+ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
 CHECK (Puntuacion >= 0);
 ----- Guardar
 ALTER TABLE Guardar ADD CONSTRAINT Guardar_DOM01
@@ -448,8 +533,6 @@ CHECK (CantidadInicial >= 0);
 ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_PK
 PRIMARY KEY (IDRegistro);
 
------ Sucursal
-ALTER TABLE Sucursal ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal);
 
 ----- Horario
 ALTER TABLE Horario ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal);
