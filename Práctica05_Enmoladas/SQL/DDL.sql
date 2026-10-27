@@ -19,7 +19,7 @@ ALTER TABLE Sucursal
     ALTER COLUMN Telefono SET NOT NULL,
     ALTER COLUMN Calle SET NOT NULL,
     ALTER COLUMN NumInterior SET NOT NULL,
-    ALTER COLUMN NumExterior SET NOT NULL,
+    -- NumInterior puede ser null en caso de que no tenga uno, la direccion de la sucursal
     ALTER COLUMN Colonia SET NOT NULL,
     ALTER COLUMN Estado SET NOT NULL;
     ADD CONSTRAINT idSucursal_valido CHECK (IDSucursal >= 0),
@@ -75,7 +75,10 @@ ALTER TABLE Gerente
     ALTER COLUMN FechaContratacionGerente SET NOT NULL,
     ALTER COLUMN FechaNacimientoGerente SET NOT NULL,
     ALTER COLUMN SalarioGerente SET NOT NULL,
-    ALTER COLUMN CedulaProfesional SET NOT NULL;
+    ALTER COLUMN CedulaProfesional SET NOT NULL,
+			ADD CONSTRAINT gerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
+			ADD CONSTRAINT gerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
+			ADD CONSTRAINT gerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0);
 
 
 -- 4# TELEFONO GERENTE
@@ -135,7 +138,10 @@ ALTER TABLE EncargadoPremios
     ALTER COLUMN FechaNacimientoEncPremios SET NOT NULL,
     ALTER COLUMN FechaContratacionEncPremios SET NOT NULL,
     ALTER COLUMN SalarioEncPremios SET NOT NULL,
-    ALTER COLUMN EntradaEncPremios SET NOT NULL;
+    ALTER COLUMN EntradaEncPremios SET NOT NULL
+			ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
+			ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
+			ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios > 0);
 
 
 -- 7# TELEFONO ENCARGADO PREMIOS
@@ -196,7 +202,10 @@ ALTER TABLE Cajero
     ALTER COLUMN FechaContratacionCajero SET NOT NULL,
     ALTER COLUMN SalarioCajero SET NOT NULL,
     ALTER COLUMN EntradaCajero SET NOT NULL,
-    ALTER COLUMN SalidaCajero SET NOT NULL;
+    ALTER COLUMN SalidaCajero SET NOT NULL
+			ADD CONSTRAINT CajeroNombre_valido CHECK (NombreCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreCajero)) > 0),
+			ADD CONSTRAINT CajeroApellidoP_valido CHECK (ApellidoPaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoCajero)) > 0),
+			ADD CONSTRAINT CajeroApellidoM_valido CHECK (ApellidoMaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoCajero > 0);
 
 
 -- 10# TELEFONO CAJERO
@@ -254,7 +263,10 @@ ALTER TABLE Tecnico
     ALTER COLUMN ApellidoMaternoTecnico SET NOT NULL,
     ALTER COLUMN FechaNacimientoTecnico SET NOT NULL,
     ALTER COLUMN FechaContratacionTecnico SET NOT NULL,
-    ALTER COLUMN Especialidad SET NOT NULL;
+    ALTER COLUMN Especialidad SET NOT NULL
+    ADD CONSTRAINT TecnicoNombre_valido CHECK (NombreTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreTecnico)) > 0),
+			ADD CONSTRAINT TecnicoApellidoP_valido CHECK (ApellidoPaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoTecnico)) > 0),
+			ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico > 0);
 
 
 -- 13# TELEFONO TECNICO
@@ -320,8 +332,11 @@ ALTER TABLE Cliente
     ADD CONSTRAINT chk_fecha_nacimiento CHECK (
         FechaNacimiento >= '1909-01-01' AND 
         FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years' -- Creo es la única instancia de esto. 
-    );-- Lo comento igual para ver. "12 years" es para que al menos 12 años desde hoy, ergo no sobre el año calendario
+    ),-- Lo comento igual para ver. "12 years" es para que al menos 12 años desde hoy, ergo no sobre el año calendario
         -- sino sobre un intervalo de 1 año.
+	ADD CONSTRAINT ClienteNombre_valido CHECK (Nombre ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
+			ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
+			ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM > 0)
 
     
  -- 17# TARJETA
@@ -558,7 +573,7 @@ CREATE TABLE Mantenimiento(
 	IDMantenimiento INT,
 	CURPTecnico CHAR(18),
 	IDMaquina INT,
-	Hora TIME,
+	Hora TIMETZ,
 	Fecha DATE,
 	TipoMantenimiento VARCHAR(30),
 	Descripcion VARCHAR(300)
@@ -566,10 +581,10 @@ CREATE TABLE Mantenimiento(
 	
 ALTER TABLE Mantenimiento
 	ADD CONSTRAINT Mantenimiento_PK PRIMARY KEY (IDMantenimiento),
-	ALTER COLUMN CURPTecnico SET NOT NULL,
+	ALTER COLUMN CURPTecnico SET NOT NULL UNIQUE,
 	ADD CONSTRAINT Mantenimiento_FK01C FOREIGN KEY (CURPTecnico)
 		REFERENCES Mantenimiento(CURPTecnico),
-	ALTER COLUMN IDMaquina SET NOT NULL,
+	ALTER COLUMN IDMaquina SET NOT NULL UNIQUE,
 	ADD CONSTRAINT Mantenimiento_FK02I FOREIGN KEY (IDMaquina)
 		REFERENCES Maquina(IDMaquina),
     ALTER COLUMN Hora SET NOT NULL,
