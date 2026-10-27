@@ -350,10 +350,11 @@ ALTER TABLE CorreoCliente
 	ADD CONSTRAINT fk_correocliente_cliente FOREIGN KEY (IDCliente) 
 		REFERENCES Cliente(IDCliente),
     ADD CONSTRAINT chk_correo_formato CHECK (
-        CorreoCliente ~ '^[^@\s]+@[^@\s]+$' -- Uno supondría que aquí debería discutirse. 
-    );-- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
+        CorreoCliente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
+    );-- Uno supondría que aquí debería discutirse. 
+    -- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
+       
     
-
  -- 20# TELEFONO CLIENTE
 CREATE TABLE TelefonoCliente (
 	IDCliente INT,
@@ -520,6 +521,7 @@ ALTER TABLE Incluir
 	
 
 -- Restricciones:
+
 
 ----- RegistroPartida
 ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
