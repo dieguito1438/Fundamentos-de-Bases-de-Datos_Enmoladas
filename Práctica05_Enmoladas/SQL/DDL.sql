@@ -149,7 +149,7 @@ CREATE TABLE Pertenecer (
 
 CREATE TABLE CorreoCliente (
 	IDCliente INT,
-	CorreoCliente VARCHAR(100)
+	CorreoCliente VARCHAR(76)
 );
 
 CREATE TABLE TelefonoCliente (
@@ -305,14 +305,32 @@ ALTER TABLE Cliente
 	ALTER COLUMN Nombre SET NOT NULL,
 	ALTER COLUMN ApellidoP SET NOT NULL, 
 	ALTER COLUMN ApellidoM SET NOT NULL,
-	ALTER COLUMN FechaNacimiento SET NOT NULL;
+	ALTER COLUMN FechaNacimiento SET NOT NULL,
+    
+    ADD CONSTRAINT chk_fecha_nacimiento CHECK (
+        FechaNacimiento >= '1909-01-01' AND 
+        FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years' -- Creo es la única instancia de esto. 
+    );-- Lo comento igual para ver. "12 years" es para que al menos 12 años desde hoy, ergo no sobre el año calendario
+        -- sino sobre un intervalo de 1 año.
 
 ALTER TABLE Pertenecer 
 	ALTER COLUMN Nombre SET NOT NULL,
 	ALTER COLUMN ApellidoP SET NOT NULL,
 	ALTER COLUMN ApellidoM SET NOT NULL,
-	ALTER COLUMN FechaNacimiento SET NOT NULL;
+	ALTER COLUMN FechaNacimiento SET NOT NULL
+    
+    ADD CONSTRAINT chk_fecha_nacimiento CHECK (
+        FechaNacimiento >= '1909-01-01' AND 
+        FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years'
+    );
 
+ALTER TABLE TelefonoCliente
+    ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
+
+ALTER TABLE CorreoCliente
+    ADD CONSTRAINT chk_correo_formato CHECK (
+        CorreoCliente ~ '^[^@\s]+@[^@\s]+$' -- Uno supondría que aquí debería discutirse. 
+    );-- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
 
 ----- RegistroPartida
 ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
