@@ -81,7 +81,7 @@ CREATE TABLE Cajero(
     NombreCajero VARCHAR(50),
     ApellidoPaternoCajero VARCHAR(50),
     ApellidoMaternoCajero VARCHAR(50),
-    FechaNacimientoCajero DATE ,
+    FechaNacimientoCajero DATE,
     FechaContratacionCajero DATE,
     SalarioCajero NUMERIC(12, 2),
     EntradaCajero TIME,
