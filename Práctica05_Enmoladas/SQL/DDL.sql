@@ -126,6 +126,37 @@ CREATE TABLE Certificacion(
     Certificacion VARCHAR(150)
 );
 
+CREATE TABLE Cliente (
+	IDCliente INT,
+	Nombre VARCHAR(100),
+	ApellidoP VARCHAR(100),
+	ApellidoM VARCHAR(100),
+	FechaNacimiento DATE
+);
+
+CREATE TABLE Tarjeta (
+    NoTarjeta INT
+);
+
+CREATE TABLE Pertenecer (
+	IDCliente INT,
+	NoTarjeta INT,
+	Nombre VARCHAR(100),
+	ApellidoP VARCHAR(100),
+	ApellidoM VARCHAR(100),
+	FechaNacimiento DATE
+);
+
+CREATE TABLE CorreoCliente (
+	IDCliente INT,
+	CorreoCliente VARCHAR(100)
+);
+
+CREATE TABLE TelefonoCliente (
+	IDCliente INT,
+	TelefonoCliente CHAR(10)
+);
+
 -- NOTA
 -- Antes de RegistroPartida debe estar Tarjeta y Maquina
 
@@ -270,8 +301,21 @@ ALTER TABLE Certificacion
     ALTER COLUMN Certificacion SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
+ALTER TABLE Cliente 
+	ALTER COLUMN Nombre SET NOT NULL,
+	ALTER COLUMN ApellidoP SET NOT NULL, 
+	ALTER COLUMN ApellidoM SET NOT NULL,
+	ALTER COLUMN FechaNacimiento SET NOT NULL;
+
+ALTER TABLE Pertenecer 
+	ALTER COLUMN Nombre SET NOT NULL,
+	ALTER COLUMN ApellidoP SET NOT NULL,
+	ALTER COLUMN ApellidoM SET NOT NULL,
+	ALTER COLUMN FechaNacimiento SET NOT NULL;
+
+
 ----- RegistroPartida
-ALTER TABLE RegistroPartidas ADD CONSTRAINT RegistroPartida_DOM01
+ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
 CHECK (Puntuacion >= 0);
 ----- Guardar
 ALTER TABLE Guardar ADD CONSTRAINT Guardar_DOM01
@@ -287,6 +331,29 @@ ALTER TABLE Sucursal ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal);
 ALTER TABLE Horario ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal);
 
 -- Referencial
+
+----- Cliente
+ALTER TABLE Cliente 
+	ADD CONSTRAINT pk_cliente PRIMARY KEY (IDCliente);
+----- Tarjeta
+ALTER TABLE Tarjeta 
+    ADD CONSTRAINT pk_tarjeta PRIMARY KEY (NoTarjeta);
+----- Pertenecer
+ALTER TABLE Pertenecer 
+	ADD CONSTRAINT pk_pertenecer PRIMARY KEY (IDCliente, NoTarjeta),
+	ADD CONSTRAINT fk_pertenecer_cliente FOREIGN KEY (IDCliente) REFERENCES Cliente(IDCliente),
+	ADD CONSTRAINT fk_pertenecer_tarjeta FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta);
+
+----- CorreoCliente
+ALTER TABLE CorreoCliente
+	ADD CONSTRAINT pk_correocliente PRIMARY KEY (IDCliente, CorreoCliente),
+	ADD CONSTRAINT fk_correocliente_cliente FOREIGN KEY (IDCliente) REFERENCES Cliente(IDCliente);
+
+----- TelefonoCliente
+ALTER TABLE TelefonoCliente
+	ADD CONSTRAINT pk_telefonocliente PRIMARY KEY (IDCliente, TelefonoCliente),
+	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) REFERENCES Cliente(IDCliente);
+
 ----- RegistroPartida
 ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
 FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina);
