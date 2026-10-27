@@ -162,12 +162,14 @@ ALTER TABLE TelefonoGerente
     ADD CONSTRAINT TelefonoGerentePK PRIMARY KEY (TelefonoGerente),
     ADD CONSTRAINT TelefonoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
+    ALTER COLUMN TelefonoGerente SET NOT NULL,
     ALTER COLUMN CURPGerente SET NOT NULL;
 
 ALTER TABLE CorreoGerente
     ADD CONSTRAINT CorreoGerentePK PRIMARY KEY (CorreoGerente),
     ADD CONSTRAINT CorreoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
+    ALTER COLUMN CorreoGerente SET NOT NULL,
     ALTER COLUMN CURPGerente SET NOT NULL;
 
 ALTER TABLE EncargadoPremios
@@ -184,7 +186,6 @@ ALTER TABLE EncargadoPremios
     ALTER COLUMN FechaNacimientoEncPremios SET NOT NULL,
     ALTER COLUMN FechaContratacionEncPremios SET NOT NULL,
     ALTER COLUMN SalarioEncPremios SET NOT NULL,
-    ALTER COLUMN SalarioEncPremios SET NOT NULL,
     ALTER COLUMN EntradaEncPremios SET NOT NULL;
     
 
@@ -192,17 +193,19 @@ ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (TelefonoEncPremios),
     ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios)
         REFERENCES EncargadoPremios(CURPEncPremios),
-    ALTER COLUMN TelefonoEncPremios SET NOT NULL;
+    ALTER COLUMN TelefonoEncPremios SET NOT NULL,
+    ALTER COLUMN CURPEncPremios SET NOT NULL;
 
 ALTER TABLE CorreoEncPremios
     ADD CONSTRAINT CorreoEncPremiosPK PRIMARY KEY (CorreoEncPremios),
     ADD CONSTRAINT CorreoEncPremiosKF FOREIGN KEY (CURPEncPremios)
         REFERENCES EncargadoPremios(CURPEncPremios),
+    ALTER COLUMN CorreoEncPremios SET NOT NULL,
     ALTER COLUMN CURPEncPremios SET NOT NULL;
 
 ALTER TABLE Cajero
     ADD CONSTRAINT CajeroPK PRIMARY KEY (CURPCajero),
-    ADD CONSTRAINT CajeroFK FOREIGN KEY (IDSucursal),
+    ADD CONSTRAINT CajeroFK FOREIGN KEY (IDSucursal)
         REFERENCES Sucursal(IDSucursal),
     ADD CONSTRAINT RFCCajero_unico UNIQUE (RFCCajero),
     ADD CONSTRAINT SalarioCajero_valido CHECK (SalarioCajero > 0),
@@ -221,12 +224,14 @@ ALTER TABLE TelefonoCajero
     ADD CONSTRAINT TelefonoCajeroPK PRIMARY KEY (TelefonoCajero),
     ADD CONSTRAINT TelefonoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
+    ALTER COLUMN TelefonoCajero SET NOT NULL,
     ALTER COLUMN CURPCajero SET NOT NULL;
 
 ALTER TABLE CorreoCajero
     ADD CONSTRAINT CorreoCajeroPK PRIMARY KEY (CorreoCajero),
     ADD CONSTRAINT CorreoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
+    ALTER COLUMN CorreoCajero SET NOT NULL,
     ALTER COLUMN CURPCajero SET NOT NULL;
 
 ALTER TABLE Tecnico
@@ -235,7 +240,7 @@ ALTER TABLE Tecnico
         REFERENCES Sucursal(IDSucursal),
     ADD CONSTRAINT RFCTecnico_unico UNIQUE (RFCTecnico),
     ADD CONSTRAINT SalarioTecnico_valido CHECK (SalarioTecnico > 0),
-    ALTER COLUMN IdSucursal SET NOT NULL,
+    ALTER COLUMN IDSucursal SET NOT NULL,
     ALTER COLUMN RFCTecnico SET NOT NULL,
     ALTER COLUMN NombreTecnico SET NOT NULL,
     ALTER COLUMN ApellidoPaternoTecnico SET NOT NULL,
@@ -246,20 +251,23 @@ ALTER TABLE Tecnico
 
 ALTER TABLE TelefonoTecnico
     ADD CONSTRAINT TelefonoTecnicoPK PRIMARY KEY (TelefonoTecnico),
-    ADD CONSTRAINT FOREIGN KEY (CURPTecnico)
+    ADD CONSTRAINT TelefonoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
+    ALTER COLUMN TelefonoTecnico SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
 ALTER TABLE CorreoTecnico 
     ADD CONSTRAINT CorreoTecnicoPK PRIMARY KEY (CorreoTecnico),
     ADD CONSTRAINT CorreoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
+    ALTER COLUMN CorreoTecnico SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
 ALTER TABLE Certificacion
     ADD CONSTRAINT CertificacionPK PRIMARY KEY (Certificacion),
     ADD CONSTRAINT CertificacionFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
+    ALTER COLUMN Certificacion SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
 ----- RegistroPartida
