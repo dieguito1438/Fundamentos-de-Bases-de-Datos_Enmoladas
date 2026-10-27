@@ -4,17 +4,32 @@ CREATE DATABASE puellaGames;
 -- 1# SUCURSAL
 CREATE TABLE Sucursal (
     IDSucursal INT ,
-    Nombre VARCHAR(100) NOT NULL,
-    Telefono INT NOT NULL,
-    Calle TEXT NOT NULL,
-    NumInterior INT NOT NULL,
-    NumExterior INT NOT NULL,
-    Colonia TEXT NOT NULL,
-    Estado TEXT NOT NULL
+    Nombre VARCHAR(100),
+    Telefono INT,
+    Calle VARCHAR(150),
+    NumInterior INT,
+    NumExterior INT,
+    Colonia VARCHAR(100),
+    Estado VARCHAR(50)
 );
 
 ALTER TABLE Sucursal 
-	ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal);
+	ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal)
+    ALTER COLUMN Nombre SET NOT NULL,
+    ALTER COLUMN Telefono SET NOT NULL,
+    ALTER COLUMN Calle SET NOT NULL,
+    ALTER COLUMN NumInterior SET NOT NULL,
+    ALTER COLUMN NumExterior SET NOT NULL,
+    ALTER COLUMN Colonia SET NOT NULL,
+    ALTER COLUMN Estado SET NOT NULL;
+    ADD CONSTRAINT idSucursal_valido CHECK (IDSucursal >= 0),
+    ADD CONSTRAINT sucursalNombre_valido CHECK (Nombre ~ '^[^0-9]+$' AND LENGTH(TRIM(Nombre)) > 0),
+    ADD CONSTRAINT sucursalTelefono_valido CHECK (Telefono ~ '^[0-9]{10,15}$'),
+    ADD CONSTRAINT sucursalCalle_valido CHECK (LENGTH(TRIM(Calle)) > 0),
+    ADD CONSTRAINT sucursalNumInterior_valido CHECK (NumInterior > 0),
+    ADD CONSTRAINT sucursalNumEXterior_valido CHECK (NumExterior > 0)
+	ADD CONSTRAINT sucursalColonia_valido CHECK (LENGTH(TRIM(Colonia)) > 0),
+	ADD CONSTRAINT sucursalEstado_valido CHECK (LENGTH(TRIM(Estado)) > 0);
 
 
 -- Ya debe de estar definida Sucursal antes de los Empleados.
@@ -26,6 +41,11 @@ CREATE TABLE Horario (
     IDSucursal INT ,
     Dia VARCHAR(9) NOT NULL
 );
+
+ALTER TABLE Horario 
+	ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal),
+	ADD CONSTRAINT  Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal);
+
 
 -- 3# GERENTE
 CREATE TABLE Gerente(
@@ -436,7 +456,18 @@ CREATE TABLE RegistroPartida(
 	Fecha DATE NOT NULL,
 	Hora TIMETZ NOT NULL,	
 	Puntuacion INT NOT NULL
-);
+);	
+
+ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_PK
+PRIMARY KEY (IDRegistro);
+
+ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
+FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina);
+ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK02T
+FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta);
+
+ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
+CHECK (Puntuacion >= 0);
 
 
 -- 25# CANJE
@@ -498,6 +529,11 @@ CREATE TABLE Guardar (
     CantidadInicial INT NOT NULL
 );
 
+ALTER TABLE Guardar 
+	ADD CONSTRAINT Guardar_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
+	ADD CONSTRAINT Guardar_FK02P FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio),
+	ADD CONSTRAINT Guardar_DOM01 CHECK (CantidadInicial >= 0);
+
 
 -- 28# INCLUIR
 -- NOTA
@@ -517,44 +553,32 @@ ALTER TABLE Incluir
 		REFERENCES Canje(IDCanjeo),
 	ALTER COLUMN Cantidad SET NOT NULL,
 	ADD CONSTRAINT Incluir_Cantidad_Valida CHECK (Cantidad >= 1);
+
+-- 29# MANTENIMIENTO
+CREATE TABLE Mantenimiento(
+	IDMantenimiento INT,
+	CURPTecnico CHAR(18),
+	IDMaquina INT,
+	Hora TIME,
+	Fecha DATE,
+	TipoMantenimiento VARCHAR(30),
+	Descripcion VARCHAR(300)
+);
 	
-	
-
--- Restricciones:
-
-
------ RegistroPartida
-ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
-CHECK (Puntuacion >= 0);
------ Guardar
-ALTER TABLE Guardar ADD CONSTRAINT Guardar_DOM01
-CHECK (CantidadInicial >= 0);
-
--- Entidad
------ RegistroPartida
-ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_PK
-PRIMARY KEY (IDRegistro);
+ALTER TABLE Mantenimiento
+	ADD CONSTRAINT Mantenimiento_PK PRIMARY KEY (IDMantenimiento),
+	ALTER COLUMN CURPTecnico SET NOT NULL,
+	ADD CONSTRAINT Mantenimiento_FK01C FOREIGN KEY (CURPTecnico)
+		REFERENCES Mantenimiento(CURPTecnico),
+	ALTER COLUMN IDMaquina SET NOT NULL,
+	ADD CONSTRAINT Mantenimiento_FK02I FOREIGN KEY (IDMaquina)
+		REFERENCES Maquina(IDMaquina),
+    ALTER COLUMN Hora SET NOT NULL,
+    ALTER COLUMN Fecha SET NOT NULL,
+    ALTER COLUMN TipoMantenimiento SET NOT NULL,
+    ALTER COLUMN Descripcion SET NOT NULL,
+    ADD CONSTRAINT idMantenimiento_valido CHECK (IDMantenimiento >= 0);
 
 
------ Horario
-ALTER TABLE Horario ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal);
-
--- Referencial
-
------ RegistroPartida
-ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
-FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina);
-ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK02T
-FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta);
-
------ Horario
-ALTER TABLE Horario ADD CONSTRAINT  Horario_FK01S
-FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal);
-
------ Guardar
-ALTER TABLE Guardar ADD CONSTRAINT Guardar_FK01S 
-FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal);
-ALTER TABLE Guardar ADD CONSTRAINT Guardar_FK02P 
-FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio);
 
 
