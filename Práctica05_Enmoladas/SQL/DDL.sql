@@ -76,9 +76,9 @@ ALTER TABLE Gerente
     ALTER COLUMN FechaNacimientoGerente SET NOT NULL,
     ALTER COLUMN SalarioGerente SET NOT NULL,
     ALTER COLUMN CedulaProfesional SET NOT NULL,
-			ADD CONSTRAINT gerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
-			ADD CONSTRAINT gerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
-			ADD CONSTRAINT gerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0);
+	ADD CONSTRAINT gerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
+	ADD CONSTRAINT gerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
+	ADD CONSTRAINT gerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0);
 
 
 -- 4# TELEFONO GERENTE
@@ -138,10 +138,11 @@ ALTER TABLE EncargadoPremios
     ALTER COLUMN FechaNacimientoEncPremios SET NOT NULL,
     ALTER COLUMN FechaContratacionEncPremios SET NOT NULL,
     ALTER COLUMN SalarioEncPremios SET NOT NULL,
-    ALTER COLUMN EntradaEncPremios SET NOT NULL
-			ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
-			ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
-			ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios > 0);
+    ALTER COLUMN EntradaEncPremios SET NOT NULL,
+    ALTER COLUMN SalidaEncPremios SET NOT NULL,
+	ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
+	ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
+	ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios > 0);
 
 
 -- 7# TELEFONO ENCARGADO PREMIOS
@@ -152,8 +153,7 @@ CREATE TABLE TelefonoEncPremios(
 
 ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (TelefonoEncPremios),
-    ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios)
-        REFERENCES EncargadoPremios(CURPEncPremios),
+    ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN TelefonoEncPremios SET NOT NULL,
     ALTER COLUMN CURPEncPremios SET NOT NULL;
 
@@ -166,8 +166,7 @@ CREATE TABLE CorreoEncPremios(
 
 ALTER TABLE CorreoEncPremios
     ADD CONSTRAINT CorreoEncPremiosPK PRIMARY KEY (CorreoEncPremios),
-    ADD CONSTRAINT CorreoEncPremiosKF FOREIGN KEY (CURPEncPremios)
-        REFERENCES EncargadoPremios(CURPEncPremios),
+    ADD CONSTRAINT CorreoEncPremiosKF FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN CorreoEncPremios SET NOT NULL,
     ALTER COLUMN CURPEncPremios SET NOT NULL;
 
@@ -203,9 +202,9 @@ ALTER TABLE Cajero
     ALTER COLUMN SalarioCajero SET NOT NULL,
     ALTER COLUMN EntradaCajero SET NOT NULL,
     ALTER COLUMN SalidaCajero SET NOT NULL
-			ADD CONSTRAINT CajeroNombre_valido CHECK (NombreCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreCajero)) > 0),
-			ADD CONSTRAINT CajeroApellidoP_valido CHECK (ApellidoPaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoCajero)) > 0),
-			ADD CONSTRAINT CajeroApellidoM_valido CHECK (ApellidoMaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoCajero > 0);
+	ADD CONSTRAINT CajeroNombre_valido CHECK (NombreCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreCajero)) > 0),
+	ADD CONSTRAINT CajeroApellidoP_valido CHECK (ApellidoPaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoCajero)) > 0),
+	ADD CONSTRAINT CajeroApellidoM_valido CHECK (ApellidoMaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoCajero > 0);
 
 
 -- 10# TELEFONO CAJERO
@@ -265,8 +264,8 @@ ALTER TABLE Tecnico
     ALTER COLUMN FechaContratacionTecnico SET NOT NULL,
     ALTER COLUMN Especialidad SET NOT NULL
     ADD CONSTRAINT TecnicoNombre_valido CHECK (NombreTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreTecnico)) > 0),
-			ADD CONSTRAINT TecnicoApellidoP_valido CHECK (ApellidoPaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoTecnico)) > 0),
-			ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico > 0);
+	ADD CONSTRAINT TecnicoApellidoP_valido CHECK (ApellidoPaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoTecnico)) > 0),
+	ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico > 0);
 
 
 -- 13# TELEFONO TECNICO
@@ -335,8 +334,8 @@ ALTER TABLE Cliente
     ),-- Lo comento igual para ver. "12 years" es para que al menos 12 años desde hoy, ergo no sobre el año calendario
         -- sino sobre un intervalo de 1 año.
 	ADD CONSTRAINT ClienteNombre_valido CHECK (Nombre ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
-			ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
-			ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM > 0)
+	ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
+	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM > 0)
 
     
  -- 17# TARJETA
