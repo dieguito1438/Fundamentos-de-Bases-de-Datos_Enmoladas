@@ -447,12 +447,11 @@ ALTER TABLE Premio
 	
 
 -- 24# REGISTRO PARTIDA
--- NOTA
--- Antes de RegistroPartida debe estar Tarjeta y Maquina
+
 CREATE TABLE RegistroPartida(
-	IDRegistro INT NOT NULL,
-	IDMaquina INT NOT NULL,
-	NoTarjeta INT NOT NULL,
+	IDRegistro INT,
+	IDMaquina INT NOT NULL UNIQUE,
+	NoTarjeta INT NOT NULL UNIQUE,
 	Fecha DATE NOT NULL,
 	Hora TIMETZ NOT NULL,	
 	Puntuacion INT NOT NULL
