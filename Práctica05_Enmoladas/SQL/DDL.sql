@@ -329,8 +329,9 @@ ALTER TABLE TelefonoCliente
 
 ALTER TABLE CorreoCliente
     ADD CONSTRAINT chk_correo_formato CHECK (
-        CorreoCliente ~ '^[^@\s]+@[^@\s]+$' -- Uno supondría que aquí debería discutirse. 
-    );-- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
+        CorreoCliente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
+    );-- Uno supondría que aquí debería discutirse. 
+    -- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
 
 ----- RegistroPartida
 ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
