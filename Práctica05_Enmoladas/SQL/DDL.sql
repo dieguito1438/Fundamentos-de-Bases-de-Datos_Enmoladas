@@ -367,8 +367,8 @@ CREATE TABLE Tarjeta (
 );
 
 ALTER TABLE Tarjeta
-	ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta);
-
+    ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta),
+    ADD CONSTRAINT NoTarjeta_Positivo CHECK (NoTarjeta >= 0);
 
  -- 18# PERTENECER
 CREATE TABLE Pertenecer (
@@ -476,6 +476,7 @@ CREATE TABLE Premio(
 
 ALTER TABLE Premio
 	ADD CONSTRAINT Premio_PK PRIMARY KEY (IDPremio),
+    ADD CONSTRAINT IDPremio_Positivo CHECK (IDPremio >= 0),
 	ALTER COLUMN Nombre SET NOT NULL,
 	ADD CONSTRAINT Nombre_Premio_Minimamente_Válido CHECK (TRIM(Nombre) <> ''),
 	ALTER COLUMN RangoEdad SET NOT NULL,
@@ -521,6 +522,7 @@ CREATE TABLE Canje(
 
 ALTER TABLE Canje
 	ADD CONSTRAINT Canje_PK PRIMARY KEY (IDCanjeo),
+    ADD CONSTRAINT IDCanjeo_Positivo CHECK (IDCanjeo >= 0),
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Canje_FK01T FOREIGN KEY (NoTarjeta) 
 		REFERENCES Tarjeta(NoTarjeta),
