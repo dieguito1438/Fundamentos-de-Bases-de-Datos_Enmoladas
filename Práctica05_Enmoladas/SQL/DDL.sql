@@ -5,7 +5,7 @@
 CREATE TABLE Sucursal (
     IDSucursal INT ,
     Nombre VARCHAR(100),
-    Telefono CHAR(15),
+    Telefono VARCHAR(15),
     Calle VARCHAR(150),
     NumInterior INT,
     NumExterior INT,
@@ -89,7 +89,7 @@ ALTER TABLE Gerente
 -- 4# TELEFONO GERENTE
 CREATE TABLE TelefonoGerente(
     CURPGerente CHAR(18),
-    TelefonoGerente CHAR(10)
+    TelefonoGerente VARCHAR(10)
 );
 
 ALTER TABLE TelefonoGerente
@@ -97,7 +97,7 @@ ALTER TABLE TelefonoGerente
     ADD CONSTRAINT TelefonoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
     ALTER COLUMN CURPGerente SET NOT NULL,
-	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}+$');
+	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}$');
 
 
 -- 5# CORREO GERENTE
@@ -159,14 +159,14 @@ ALTER TABLE EncargadoPremios
 -- 7# TELEFONO ENCARGADO PREMIOS
 CREATE TABLE TelefonoEncPremios(
     CURPEncPremios CHAR(18),
-    TelefonoEncPremios CHAR(10)
+    TelefonoEncPremios VARCHAR(10)
 );
 
 ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (TelefonoEncPremios),
     ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN CURPEncPremios SET NOT NULL,
-	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}+$');
+	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}$');
 
 
 -- 8# CORREO ENCARGADO PREMIOS
@@ -226,7 +226,7 @@ ALTER TABLE Cajero
 -- 10# TELEFONO CAJERO
 CREATE TABLE TelefonoCajero(
     CURPCajero CHAR(18),
-    TelefonoCajero CHAR(10)    
+    TelefonoCajero VARCHAR(10)    
 );
 
 ALTER TABLE TelefonoCajero 
@@ -234,7 +234,7 @@ ALTER TABLE TelefonoCajero
     ADD CONSTRAINT TelefonoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
     ALTER COLUMN CURPCajero SET NOT NULL,
-	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}+$');
+	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}$');
 
 
 -- 11# CORREO CAJERO
@@ -293,7 +293,7 @@ ALTER TABLE Tecnico
 -- 13# TELEFONO TECNICO
 CREATE TABLE TelefonoTecnico(
     CURPTecnico CHAR(18),
-    TelefonoTecnico CHAR(10)
+    TelefonoTecnico VARCHAR(10)
 );
 
 
@@ -302,7 +302,7 @@ ALTER TABLE TelefonoTecnico
     ADD CONSTRAINT TelefonoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
     ALTER COLUMN CURPTecnico SET NOT NULL,
-	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}+$');
+	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}$');
 
 
 -- 14# CORREO TECNICO
@@ -415,14 +415,14 @@ ALTER TABLE CorreoCliente
  -- 20# TELEFONO CLIENTE
 CREATE TABLE TelefonoCliente (
 	IDCliente INT,
-	TelefonoCliente CHAR(10)
+	TelefonoCliente VARCHAR(10)
 );
 
 ALTER TABLE TelefonoCliente
 	ADD CONSTRAINT pk_telefonocliente PRIMARY KEY (IDCliente, TelefonoCliente), --SE AGREGAN COMO PRIMARY KEY PERO TAMBIEN COMO FOREIGN KEY.
 	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
 		REFERENCES Cliente(IDCliente),
-    ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}+$'); 
+    ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
 
 
 -- 21# JUEGO
