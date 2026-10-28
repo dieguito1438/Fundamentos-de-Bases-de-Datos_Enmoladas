@@ -371,8 +371,8 @@ CREATE TABLE Tarjeta (
 );
 
 ALTER TABLE Tarjeta
-	ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta);
-
+    ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta),
+    ADD CONSTRAINT NoTarjeta_Positivo CHECK (NoTarjeta >= 0);
 
  -- 18# PERTENECER
 CREATE TABLE Pertenecer (
