@@ -1,4 +1,4 @@
-CREATE DATABASE puellaGames;
+--CREATE DATABASE puellaGames;
 
 
 -- 1# SUCURSAL
@@ -45,7 +45,7 @@ CREATE TABLE Horario (
 ALTER TABLE Horario 
 	ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal),
 	ADD CONSTRAINT Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
-	ADD CONSTRAINT HorarioDia_chk CHECK (Dia IN('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'));
+	ADD CONSTRAINT HorarioDia_chk CHECK (Dia IN('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'));
 
 
 -- 3# GERENTE
@@ -360,9 +360,9 @@ ALTER TABLE Cliente
         FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years' -- Creo es la única instancia de esto. 
     ),-- Lo comento igual para ver. "12 years" es para que al menos 12 años desde hoy, ergo no sobre el año calendario
         -- sino sobre un intervalo de 1 año.
-	ADD CONSTRAINT ClienteNombre_valido CHECK (Nombre ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
+	ADD CONSTRAINT ClienteNombre_valido CHECK (Nombre ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(Nombre)) > 0),
 	ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
-	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM)) > 0)
+	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM)) > 0);
 
     
  -- 17# TARJETA
@@ -606,10 +606,10 @@ CREATE TABLE Mantenimiento(
 	
 ALTER TABLE Mantenimiento
 	ADD CONSTRAINT Mantenimiento_PK PRIMARY KEY (IDMantenimiento),
-	ALTER COLUMN CURPTecnico SET NOT NULL UNIQUE,
+	ALTER COLUMN CURPTecnico SET NOT NULL,
 	ADD CONSTRAINT Mantenimiento_FK01C FOREIGN KEY (CURPTecnico)
 		REFERENCES Tecnico(CURPTecnico),
-	ALTER COLUMN IDMaquina SET NOT NULL UNIQUE,
+	ALTER COLUMN IDMaquina SET NOT NULL,
 	ADD CONSTRAINT Mantenimiento_FK02I FOREIGN KEY (IDMaquina)
 		REFERENCES Maquina(IDMaquina),
     ALTER COLUMN Hora SET NOT NULL,
@@ -617,7 +617,6 @@ ALTER TABLE Mantenimiento
     ALTER COLUMN TipoMantenimiento SET NOT NULL,
     ALTER COLUMN Descripcion SET NOT NULL,
     ADD CONSTRAINT idMantenimiento_valido CHECK (IDMantenimiento >= 0);
-
 
 
 
