@@ -97,7 +97,7 @@ ALTER TABLE TelefonoGerente
     ADD CONSTRAINT TelefonoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
     ALTER COLUMN CURPGerente SET NOT NULL,
-	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}$');
+	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}+$');
 
 
 -- 5# CORREO GERENTE
@@ -166,7 +166,7 @@ ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (TelefonoEncPremios),
     ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN CURPEncPremios SET NOT NULL,
-	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}$');
+	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}+$');
 
 
 -- 8# CORREO ENCARGADO PREMIOS
@@ -234,7 +234,7 @@ ALTER TABLE TelefonoCajero
     ADD CONSTRAINT TelefonoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
     ALTER COLUMN CURPCajero SET NOT NULL,
-	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}$');
+	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}+$');
 
 
 -- 11# CORREO CAJERO
@@ -426,7 +426,7 @@ ALTER TABLE TelefonoCliente
 	ADD CONSTRAINT pk_telefonocliente PRIMARY KEY (IDCliente, TelefonoCliente), --SE AGREGAN COMO PRIMARY KEY PERO TAMBIEN COMO FOREIGN KEY.
 	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
 		REFERENCES Cliente(IDCliente),
-    ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
+    ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}+$'); 
 
 
 -- 21# JUEGO
