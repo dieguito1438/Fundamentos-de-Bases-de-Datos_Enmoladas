@@ -480,6 +480,7 @@ CREATE TABLE Premio(
 
 ALTER TABLE Premio
 	ADD CONSTRAINT Premio_PK PRIMARY KEY (IDPremio),
+    ADD CONSTRAINT IDPremio_Positivo CHECK (IDPremio >= 0),
 	ALTER COLUMN Nombre SET NOT NULL,
 	ADD CONSTRAINT Nombre_Premio_Minimamente_Válido CHECK (TRIM(Nombre) <> ''),
 	ALTER COLUMN RangoEdad SET NOT NULL,
