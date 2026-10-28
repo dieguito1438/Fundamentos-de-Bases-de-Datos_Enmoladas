@@ -110,7 +110,7 @@ ALTER TABLE CorreoGerente
     ADD CONSTRAINT CorreoGerentePK PRIMARY KEY (CorreoGerente),
     ADD CONSTRAINT CorreoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
-    ALTER COLUMN CorreoGerente SET NOT NULL,
+    ALTER COLUMN CURPGerente SET NOT NULL,
     ADD CONSTRAINT GerenteCorreo_chk CHECK (
         CorreoGerente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
@@ -247,7 +247,6 @@ ALTER TABLE CorreoCajero
     ADD CONSTRAINT CorreoCajeroPK PRIMARY KEY (CorreoCajero),
     ADD CONSTRAINT CorreoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
-    ALTER COLUMN CorreoCajero SET NOT NULL,
     ALTER COLUMN CURPCajero SET NOT NULL,
     ADD CONSTRAINT CajeroCorreo_chk CHECK (
         CorreoCajero ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
@@ -302,7 +301,6 @@ ALTER TABLE TelefonoTecnico
     ADD CONSTRAINT TelefonoTecnicoPK PRIMARY KEY (TelefonoTecnico),
     ADD CONSTRAINT TelefonoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
-    ALTER COLUMN TelefonoTecnico SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL,
 	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}+$');
 
@@ -318,7 +316,6 @@ ALTER TABLE CorreoTecnico
     ADD CONSTRAINT CorreoTecnicoPK PRIMARY KEY (CorreoTecnico),
     ADD CONSTRAINT CorreoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
-    ALTER COLUMN CorreoTecnico SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL,
     ADD CONSTRAINT TecnicoCorreo_chk CHECK (
         CorreoTecnico ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
@@ -335,7 +332,6 @@ ALTER TABLE Certificacion
     ADD CONSTRAINT CertificacionPK PRIMARY KEY (Certificacion),
     ADD CONSTRAINT CertificacionFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
-    ALTER COLUMN Certificacion SET NOT NULL,
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
 
@@ -491,14 +487,19 @@ ALTER TABLE Premio
 
 CREATE TABLE RegistroPartida(
 	IDRegistro INT,
-	IDMaquina INT NOT NULL UNIQUE,
-	NoTarjeta INT NOT NULL UNIQUE,
-	Fecha DATE NOT NULL,
-	Hora TIME NOT NULL,	
-	Puntuacion INT NOT NULL
+	IDMaquina INT,
+	NoTarjeta INT,
+	Fecha DATE,
+	Hora TIME,	
+	Puntuacion INT
 );	
 
 ALTER TABLE RegistroPartida 
+	ALTER COLUMN IDMaquina SET NOT NULL,
+	ALTER COLUMN NoTarjeta SET NOT NULL,
+	ALTER COLUMN Fecha SET NOT NULL,
+	ALTER COLUMN Hora SET NOT NULL,
+	ALTER COLUMN Puntuacion SET NOT NULL,
 	ADD CONSTRAINT RegistroPartida_PK PRIMARY KEY (IDRegistro),
 	ADD CONSTRAINT  RegistroPartida_FK01M FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina),
 	ADD CONSTRAINT  RegistroPartida_FK02T FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta),
