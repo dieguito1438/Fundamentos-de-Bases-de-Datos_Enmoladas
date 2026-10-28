@@ -5,7 +5,7 @@ CREATE DATABASE puellaGames;
 CREATE TABLE Sucursal (
     IDSucursal INT ,
     Nombre VARCHAR(100),
-    Telefono INT,
+    Telefono CHAR(15),
     Calle VARCHAR(150),
     NumInterior INT,
     NumExterior INT,
@@ -14,20 +14,20 @@ CREATE TABLE Sucursal (
 );
 
 ALTER TABLE Sucursal 
-	ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal)
+	ADD CONSTRAINT Sucursal_PK PRIMARY KEY (IDSucursal),
     ALTER COLUMN Nombre SET NOT NULL,
     ALTER COLUMN Telefono SET NOT NULL,
     ALTER COLUMN Calle SET NOT NULL,
-    ALTER COLUMN NumInterior SET NOT NULL,
+    ALTER COLUMN NumExterior SET NOT NULL,
     -- NumInterior puede ser null en caso de que no tenga uno, la direccion de la sucursal
-    ALTER COLUMN Colonia SET NOT NULL,
-    ALTER COLUMN Estado SET NOT NULL;
+    ALTER COLUMN Colonia SET NOT NULL, 
+    ALTER COLUMN Estado SET NOT NULL,
     ADD CONSTRAINT idSucursal_valido CHECK (IDSucursal >= 0),
-    ADD CONSTRAINT sucursalNombre_valido CHECK (Nombre ~ '^[^0-9]+$' AND LENGTH(TRIM(Nombre)) > 0),
+    ADD CONSTRAINT sucursalNombre_valido CHECK (Nombre ~ '^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ \-]+$' AND LENGTH(TRIM(Nombre)) > 0),
     ADD CONSTRAINT sucursalTelefono_valido CHECK (Telefono ~ '^[0-9]{10,15}$'),
     ADD CONSTRAINT sucursalCalle_valido CHECK (LENGTH(TRIM(Calle)) > 0),
     ADD CONSTRAINT sucursalNumInterior_valido CHECK (NumInterior > 0),
-    ADD CONSTRAINT sucursalNumEXterior_valido CHECK (NumExterior > 0)
+    ADD CONSTRAINT sucursalNumEXterior_valido CHECK (NumExterior > 0),
 	ADD CONSTRAINT sucursalColonia_valido CHECK (LENGTH(TRIM(Colonia)) > 0),
 	ADD CONSTRAINT sucursalEstado_valido CHECK (LENGTH(TRIM(Estado)) > 0);
 
@@ -36,15 +36,16 @@ ALTER TABLE Sucursal
 
 -- 2# HORARIO
 CREATE TABLE Horario (
-    HorarioInicio TIMETZ ,
-    HorarioFinal TIMETZ ,
+    HorarioInicio TIME ,
+    HorarioFinal TIME ,
     IDSucursal INT ,
     Dia VARCHAR(9) NOT NULL
 );
 
 ALTER TABLE Horario 
 	ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal),
-	ADD CONSTRAINT  Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal);
+	ADD CONSTRAINT Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
+	ADD CONSTRAINT HorarioDia_chk CHECK (Dia IN(‘Lunes’, ‘Martes’, ‘Miércoles’, ‘Jueves’, ‘Viernes’, ‘Sabado’, ‘Domingo’));
 
 
 -- 3# GERENTE
@@ -78,7 +79,11 @@ ALTER TABLE Gerente
     ALTER COLUMN CedulaProfesional SET NOT NULL,
 	ADD CONSTRAINT gerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
 	ADD CONSTRAINT gerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
-	ADD CONSTRAINT gerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0);
+	ADD CONSTRAINT gerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0),
+	ADD CONSTRAINT gerenteCurp_valido CHECK (CURPGerente ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT RFCGerente_valido CHECK (RFCGerente ~ '^[A-Z0-9]{12,13}$'),
+	ADD CONSTRAINT gerenteFNac_valido CHECK (FechaNacimientoGerente <= CURRENT_DATE),
+	ADD CONSTRAINT gerenteFCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente AND FechaContratacionGerente <= CURRENT_DATE);
 
 
 -- 4# TELEFONO GERENTE
@@ -92,7 +97,8 @@ ALTER TABLE TelefonoGerente
     ADD CONSTRAINT TelefonoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
     ALTER COLUMN TelefonoGerente SET NOT NULL,
-    ALTER COLUMN CURPGerente SET NOT NULL;
+    ALTER COLUMN CURPGerente SET NOT NULL,
+	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}+$');
 
 
 -- 5# CORREO GERENTE
@@ -106,7 +112,10 @@ ALTER TABLE CorreoGerente
     ADD CONSTRAINT CorreoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
     ALTER COLUMN CorreoGerente SET NOT NULL,
-    ALTER COLUMN CURPGerente SET NOT NULL;
+    ALTER COLUMN CURPGerente SET NOT NULL,
+    ADD CONSTRAINT GerenteCorreo_chk CHECK (
+        CorreoGerente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
+    );
 
 
 -- 6# ENCARGADO PREMIOS
@@ -142,7 +151,11 @@ ALTER TABLE EncargadoPremios
     ALTER COLUMN SalidaEncPremios SET NOT NULL,
 	ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
 	ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
-	ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios > 0);
+	ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios)) > 0),
+	ADD CONSTRAINT encPremiosCurp_valido CHECK (CURPEncPremios ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT RFCEncPremios_valido CHECK (RFCEncPremios ~ '^[A-Z0-9]{12,13}$'),
+	ADD CONSTRAINT encPremiosFNac_valido CHECK (FechaNacimientoEncPremios <= CURRENT_DATE),
+	ADD CONSTRAINT encPremiosFCont_valido CHECK (FechaContratacionEncPremios > FechaNacimientoEncPremios AND FechaContratacionEncPremios <= CURRENT_DATE);
 
 
 -- 7# TELEFONO ENCARGADO PREMIOS
@@ -155,7 +168,8 @@ ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (TelefonoEncPremios),
     ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN TelefonoEncPremios SET NOT NULL,
-    ALTER COLUMN CURPEncPremios SET NOT NULL;
+    ALTER COLUMN CURPEncPremios SET NOT NULL,
+	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}+$');
 
 
 -- 8# CORREO ENCARGADO PREMIOS
@@ -168,7 +182,10 @@ ALTER TABLE CorreoEncPremios
     ADD CONSTRAINT CorreoEncPremiosPK PRIMARY KEY (CorreoEncPremios),
     ADD CONSTRAINT CorreoEncPremiosKF FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN CorreoEncPremios SET NOT NULL,
-    ALTER COLUMN CURPEncPremios SET NOT NULL;
+    ALTER COLUMN CURPEncPremios SET NOT NULL,
+    ADD CONSTRAINT EncPremiosCorreo_chk CHECK (
+        CorreoEncPremios ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
+    );
 
 
 -- 9# CAJERO
@@ -201,10 +218,13 @@ ALTER TABLE Cajero
     ALTER COLUMN FechaContratacionCajero SET NOT NULL,
     ALTER COLUMN SalarioCajero SET NOT NULL,
     ALTER COLUMN EntradaCajero SET NOT NULL,
-    ALTER COLUMN SalidaCajero SET NOT NULL
 	ADD CONSTRAINT CajeroNombre_valido CHECK (NombreCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreCajero)) > 0),
 	ADD CONSTRAINT CajeroApellidoP_valido CHECK (ApellidoPaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoCajero)) > 0),
-	ADD CONSTRAINT CajeroApellidoM_valido CHECK (ApellidoMaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoCajero > 0);
+	ADD CONSTRAINT CajeroApellidoM_valido CHECK (ApellidoMaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoCajero)) > 0),
+	ADD CONSTRAINT cajeroCurp_valido CHECK (CURPCajero ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT RFCCajero_valido CHECK (RFCCajero ~ '^[A-Z0-9]{12,13}$'),
+	ADD CONSTRAINT cajeroFNac_valido CHECK (FechaNacimientoCajero <= CURRENT_DATE),
+	ADD CONSTRAINT cajeroFCont_valido CHECK (FechaContratacionCajero > FechaNacimientoCajero AND FechaContratacionCajero <= CURRENT_DATE);
 
 
 -- 10# TELEFONO CAJERO
@@ -218,13 +238,14 @@ ALTER TABLE TelefonoCajero
     ADD CONSTRAINT TelefonoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
     ALTER COLUMN TelefonoCajero SET NOT NULL,
-    ALTER COLUMN CURPCajero SET NOT NULL;
+    ALTER COLUMN CURPCajero SET NOT NULL,
+	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}+$');
 
 
 -- 11# CORREO CAJERO
 CREATE TABLE CorreoCajero(
     CURPCajero CHAR(18),
-    CorreoCajero CHAR(10)
+    CorreoCajero CHAR(50)
 );
 
 ALTER TABLE CorreoCajero
@@ -232,7 +253,10 @@ ALTER TABLE CorreoCajero
     ADD CONSTRAINT CorreoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
     ALTER COLUMN CorreoCajero SET NOT NULL,
-    ALTER COLUMN CURPCajero SET NOT NULL;
+    ALTER COLUMN CURPCajero SET NOT NULL,
+    ADD CONSTRAINT CajeroCorreo_chk CHECK (
+        CorreoCajero ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
+    );
 
 
 -- 12# TECNICO
@@ -262,10 +286,14 @@ ALTER TABLE Tecnico
     ALTER COLUMN ApellidoMaternoTecnico SET NOT NULL,
     ALTER COLUMN FechaNacimientoTecnico SET NOT NULL,
     ALTER COLUMN FechaContratacionTecnico SET NOT NULL,
-    ALTER COLUMN Especialidad SET NOT NULL
+    ALTER COLUMN Especialidad SET NOT NULL,
     ADD CONSTRAINT TecnicoNombre_valido CHECK (NombreTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreTecnico)) > 0),
 	ADD CONSTRAINT TecnicoApellidoP_valido CHECK (ApellidoPaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoTecnico)) > 0),
-	ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico > 0);
+	ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico)) > 0),
+	ADD CONSTRAINT tecnicoCurp_valido CHECK (CURPTecnico ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT RFCTecnico_valido CHECK (RFCTecnico ~ '^[A-Z0-9]{12,13}$'),
+	ADD CONSTRAINT tecnicoFNac_valido CHECK (FechaNacimientoTecnico <= CURRENT_DATE),
+	ADD CONSTRAINT tecnicoFCont_valido CHECK (FechaContratacionTecnico > FechaNacimientoTecnico AND FechaContratacionTecnico <= CURRENT_DATE);
 
 
 -- 13# TELEFONO TECNICO
@@ -280,7 +308,8 @@ ALTER TABLE TelefonoTecnico
     ADD CONSTRAINT TelefonoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
     ALTER COLUMN TelefonoTecnico SET NOT NULL,
-    ALTER COLUMN CURPTecnico SET NOT NULL;
+    ALTER COLUMN CURPTecnico SET NOT NULL,
+	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}+$');
 
 
 -- 14# CORREO TECNICO
@@ -295,7 +324,10 @@ ALTER TABLE CorreoTecnico
     ADD CONSTRAINT CorreoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
     ALTER COLUMN CorreoTecnico SET NOT NULL,
-    ALTER COLUMN CURPTecnico SET NOT NULL;
+    ALTER COLUMN CURPTecnico SET NOT NULL,
+    ADD CONSTRAINT TecnicoCorreo_chk CHECK (
+        CorreoTecnico ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
+    );
 
 
 -- 15# CERTIFICACION
@@ -335,7 +367,7 @@ ALTER TABLE Cliente
         -- sino sobre un intervalo de 1 año.
 	ADD CONSTRAINT ClienteNombre_valido CHECK (Nombre ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
 	ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
-	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM > 0)
+	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM)) > 0)
 
     
  -- 17# TARJETA
@@ -457,7 +489,7 @@ ALTER TABLE Premio
 	ALTER COLUMN RangoEdad SET NOT NULL,
 	ADD CONSTRAINT Premio_Rango_Edad_Valido CHECK (RangoEdad IN ('Infantil', 'Juvenil', 'Adulto')),
 	ALTER COLUMN ValorAproximado SET NOT NULL,
-	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0);
+	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0 AND ValorAproximado < 10000);
 	
 
 -- 24# REGISTRO PARTIDA
@@ -467,20 +499,16 @@ CREATE TABLE RegistroPartida(
 	IDMaquina INT NOT NULL UNIQUE,
 	NoTarjeta INT NOT NULL UNIQUE,
 	Fecha DATE NOT NULL,
-	Hora TIMETZ NOT NULL,	
+	Hora TIME NOT NULL,	
 	Puntuacion INT NOT NULL
 );	
 
-ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_PK
-PRIMARY KEY (IDRegistro);
-
-ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK01M
-FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina);
-ALTER TABLE RegistroPartida ADD CONSTRAINT  RegistroPartida_FK02T
-FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta);
-
-ALTER TABLE RegistroPartida ADD CONSTRAINT RegistroPartida_DOM01
-CHECK (Puntuacion >= 0);
+ALTER TABLE RegistroPartida 
+	ADD CONSTRAINT RegistroPartida_PK PRIMARY KEY (IDRegistro),
+	ADD CONSTRAINT  RegistroPartida_FK01M FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina),
+	ADD CONSTRAINT  RegistroPartida_FK02T FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta),
+	ADD CONSTRAINT RegistroPartida_DOM01 CHECK (Puntuacion >= 0),
+	ADD CONSTRAINT RegistroPartida_DOM02 CHECK (Fecha <= CURRENT_DATE);
 
 
 -- 25# CANJE
@@ -537,12 +565,15 @@ ALTER TABLE Recarga
 -- NOTA
 -- Antes de Guardar debe estar Sucursal y Premio.
 CREATE TABLE Guardar (
-    IDSucursal INT NOT NULL,
-    IDPremio INT NOT NULL,
-    CantidadInicial INT NOT NULL
+    IDSucursal INT,
+    IDPremio INT,
+    CantidadInicial INT
 );
 
 ALTER TABLE Guardar 
+	ALTER COLUMN IDSucursal SET NOT NULL UNIQUE,
+	ALTER COLUMN IDPremio SET NOT NULL UNIQUE,
+	ALTER COLUMN CantidadInicial SET NOT NULL UNIQUE,
 	ADD CONSTRAINT Guardar_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
 	ADD CONSTRAINT Guardar_FK02P FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio),
 	ADD CONSTRAINT Guardar_DOM01 CHECK (CantidadInicial >= 0);
@@ -572,7 +603,7 @@ CREATE TABLE Mantenimiento(
 	IDMantenimiento INT,
 	CURPTecnico CHAR(18),
 	IDMaquina INT,
-	Hora TIMETZ,
+	Hora TIME,
 	Fecha DATE,
 	TipoMantenimiento VARCHAR(30),
 	Descripcion VARCHAR(300)
@@ -582,7 +613,7 @@ ALTER TABLE Mantenimiento
 	ADD CONSTRAINT Mantenimiento_PK PRIMARY KEY (IDMantenimiento),
 	ALTER COLUMN CURPTecnico SET NOT NULL UNIQUE,
 	ADD CONSTRAINT Mantenimiento_FK01C FOREIGN KEY (CURPTecnico)
-		REFERENCES Mantenimiento(CURPTecnico),
+		REFERENCES Tecnico(CURPTecnico),
 	ALTER COLUMN IDMaquina SET NOT NULL UNIQUE,
 	ADD CONSTRAINT Mantenimiento_FK02I FOREIGN KEY (IDMaquina)
 		REFERENCES Maquina(IDMaquina),
