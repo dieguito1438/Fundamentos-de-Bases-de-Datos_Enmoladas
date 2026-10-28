@@ -4,7 +4,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="PV7yCHLQH8GxHx53pPTK-1" parent="1" style="whiteSpace=wrap;html=1;align=center;fontStyle=1;strokeWidth=3;" value="Práctica 3&lt;div&gt;Enmoladas&lt;/div&gt;" vertex="1">
+        <mxCell id="PV7yCHLQH8GxHx53pPTK-1" parent="1" style="whiteSpace=wrap;html=1;align=center;fontStyle=1;strokeWidth=3;" value="Práctica 5&lt;div&gt;Enmoladas&lt;/div&gt;" vertex="1">
           <mxGeometry height="100" width="310" x="230" y="-1000" as="geometry" />
         </mxCell>
         <mxCell id="kt3s6kKQZPL4cFMGx4if-2" parent="1" style="whiteSpace=wrap;html=1;align=center;fontStyle=0;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;b&gt;Empleado&lt;/b&gt;" vertex="1">
@@ -782,6 +782,15 @@
         </mxCell>
         <mxCell id="KRwLObMKmWjnmjAOdMK7-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;fillColor=light-dark(#54FFBA,#9577A3);strokeColor=light-dark(#26a269, #9577A3);strokeWidth=2;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fontStyle=0;dashed=1;" value="CantidadPremiosTotal" vertex="1">
           <mxGeometry height="40" width="137" x="1818" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="F2-jYWkJ9LXLpueGn5Ck-1" edge="1" parent="1" source="F2-jYWkJ9LXLpueGn5Ck-2" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fontStyle=1;labelBackgroundColor=default;endArrow=none;endFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="pjic1OjhgQp5il2Nr8-K-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1491" y="-739" as="sourcePoint" />
+            <mxPoint x="1454" y="-739" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="F2-jYWkJ9LXLpueGn5Ck-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" value="Dia" vertex="1">
+          <mxGeometry height="40" width="100" x="1482" y="-766" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
