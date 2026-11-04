@@ -364,6 +364,12 @@ ALTER TABLE Cliente
 	ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
 	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM)) > 0);
 
+COMMENT ON TABLE Cliente IS 'Tabla que almacena la información de los clientes del sistema.';
+COMMENT ON COLUMN Cliente.IDCliente IS 'Identificador único del cliente.';
+COMMENT ON COLUMN Cliente.Nombre IS 'Nombre del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Cliente.ApellidoP IS 'Apellido paterno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Cliente.ApellidoM IS 'Apellido materno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Cliente.FechaNacimiento IS 'Fecha de nacimiento del cliente. Debe tener al menos 12 años';
     
  -- 17# TARJETA
 CREATE TABLE Tarjeta (
@@ -373,6 +379,11 @@ CREATE TABLE Tarjeta (
 ALTER TABLE Tarjeta
     ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta),
     ADD CONSTRAINT NoTarjeta_Positivo CHECK (NoTarjeta >= 0);
+
+COMMENT ON TABLE Tarjeta IS 'Tabla que almacena la información de las tarjetas de los clientes.';
+COMMENT ON COLUMN Tarjeta.NoTarjeta IS 'Número de tarjeta único. Debe ser un número entero positivo.';
+COMMENT ON CONSTRAINT Tarjeta_PK ON Tarjeta IS 'Clave primaria de la tabla Tarjeta.';
+
 
  -- 18# PERTENECER
 CREATE TABLE Pertenecer (
@@ -398,6 +409,14 @@ ALTER TABLE Pertenecer
         FechaNacimiento >= '1909-01-01' AND 
         FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years'
     );
+
+COMMENT ON TABLE Pertenecer IS 'Tabla que relaciona clientes con sus tarjetas.';
+COMMENT ON COLUMN Pertenecer.IDCliente IS 'Identificador del cliente.';
+COMMENT ON COLUMN Pertenecer.NoTarjeta IS 'Número de tarjeta asociado al cliente.';
+COMMENT ON COLUMN Pertenecer.Nombre IS 'Nombre del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Pertenecer.ApellidoP IS 'Apellido paterno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Pertenecer.ApellidoM IS 'Apellido materno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Pertenecer.FechaNacimiento IS 'Fecha de nacimiento del cliente. Debe tener al menos 12 años.';
     
     
  -- 19# CORREO CLIENTE
@@ -415,6 +434,10 @@ ALTER TABLE CorreoCliente
     );-- Uno supondría que aquí debería discutirse. 
     -- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
        
+COMMENT ON TABLE CorreoCliente IS 'Tabla que almacena los correos electrónicos de los clientes.';
+COMMENT ON COLUMN CorreoCliente.IDCliente IS 'Identificador del cliente.';
+COMMENT ON COLUMN CorreoCliente.CorreoCliente IS 'Correo electrónico del cliente. Debe tener un formato válido de correo electrónico.';
+
     
  -- 20# TELEFONO CLIENTE
 CREATE TABLE TelefonoCliente (
@@ -427,6 +450,10 @@ ALTER TABLE TelefonoCliente
 	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
 		REFERENCES Cliente(IDCliente),
     ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
+
+COMMENT ON TABLE TelefonoCliente IS 'Tabla que almacena los números de teléfono de los clientes.';
+COMMENT ON COLUMN TelefonoCliente.IDCliente IS 'Identificador del cliente.';
+COMMENT ON COLUMN TelefonoCliente.TelefonoCliente IS 'Número de teléfono del cliente. Debe tener 10 dígitos.';
 
 
 -- 21# JUEGO
