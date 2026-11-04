@@ -494,7 +494,7 @@ CREATE TABLE CorreoCliente (
 ALTER TABLE CorreoCliente
 	ADD CONSTRAINT pk_correocliente PRIMARY KEY (IDCliente, CorreoCliente), 
 	ADD CONSTRAINT fk_correocliente_cliente FOREIGN KEY (IDCliente) 
-		REFERENCES Cliente(IDCliente) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES Cliente(IDCliente) ON DELETE CASCADE,
     ADD CONSTRAINT chk_correo_formato CHECK (
         CorreoCliente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );-- Uno supondría que aquí debería discutirse. 
@@ -517,7 +517,7 @@ CREATE TABLE TelefonoCliente (
 ALTER TABLE TelefonoCliente
 	ADD CONSTRAINT pk_telefonocliente PRIMARY KEY (IDCliente, TelefonoCliente),
 	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
-		REFERENCES Cliente(IDCliente) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES Cliente(IDCliente) ON DELETE CASCADE,
     ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
 
 COMMENT ON TABLE TelefonoCliente IS 'Tabla que almacena los números de teléfono de los clientes.';
