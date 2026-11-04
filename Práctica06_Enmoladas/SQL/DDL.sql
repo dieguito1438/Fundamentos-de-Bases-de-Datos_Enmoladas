@@ -544,7 +544,7 @@ ALTER TABLE Maquina
 		ON UPDATE CASCADE,
 	ADD CONSTRAINT Maquina_FK02J FOREIGN KEY (IDJuego) 
 		REFERENCES Juego (IDJuego)
-		ON DELETE NO ACTION -- Integridad referencial. 
+		ON DELETE SET NULL -- Integridad referencial. 
 		ON UPDATE CASCADE,
 	ALTER COLUMN EstadoMaquina SET NOT NULL,
 	ADD CONSTRAINT Estado_Maquina_Valido CHECK (EstadoMaquina IN ('Activo', 'FueraDeServicio', 'Mantenimiento'));
