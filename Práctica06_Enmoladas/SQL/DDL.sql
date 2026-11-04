@@ -458,7 +458,7 @@ CREATE TABLE Pertenecer (
 ALTER TABLE Pertenecer 
 	ADD CONSTRAINT uq_pertenecer UNIQUE (IDCliente, NoTarjeta), -- Ahora si ya es PK lo siento :(
 	ADD CONSTRAINT fk_pertenecer_cliente FOREIGN KEY (IDCliente) 
-		REFERENCES Cliente(IDCliente) ON DELETE CASCADE ON UPDATE CASCADE,
+		REFERENCES Cliente(IDCliente) ON DELETE CASCADE,
 	ADD CONSTRAINT fk_pertenecer_tarjeta FOREIGN KEY (NoTarjeta) 
 		REFERENCES Tarjeta(NoTarjeta) ON DELETE CASCADE ON UPDATE CASCADE,
 	ALTER COLUMN Nombre SET NOT NULL,
