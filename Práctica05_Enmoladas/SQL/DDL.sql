@@ -31,6 +31,8 @@ ALTER TABLE Sucursal
 	ADD CONSTRAINT sucursalColonia_valido CHECK (LENGTH(TRIM(Colonia)) > 0),
 	ADD CONSTRAINT sucursalEstado_valido CHECK (LENGTH(TRIM(Estado)) > 0);
 
+-- Comentarios
+
 
 -- Ya debe de estar definida Sucursal antes de los Empleados.
 
@@ -39,13 +41,15 @@ CREATE TABLE Horario (
     HorarioInicio TIME ,
     HorarioFinal TIME ,
     IDSucursal INT ,
-    Dia VARCHAR(9) NOT NULL
+    Dia VARCHAR(9)
 );
 
 ALTER TABLE Horario 
 	ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal, Dia),
 	ADD CONSTRAINT Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
 	ADD CONSTRAINT HorarioDia_chk CHECK (Dia IN('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'));
+
+-- Comentarios
 
 
 -- 3# GERENTE
@@ -84,6 +88,8 @@ ALTER TABLE Gerente
 	ADD CONSTRAINT RFCGerente_valido CHECK (RFCGerente ~ '^[A-Z0-9]{12,13}$'),
 	ADD CONSTRAINT gerenteFCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente);
 
+-- Comentarios
+
 
 -- 4# TELEFONO GERENTE
 CREATE TABLE TelefonoGerente(
@@ -97,6 +103,8 @@ ALTER TABLE TelefonoGerente
         REFERENCES Gerente(CURPGerente),
     ALTER COLUMN CURPGerente SET NOT NULL,
 	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}$');
+
+-- Comentarios
 
 
 -- 5# CORREO GERENTE
@@ -113,6 +121,8 @@ ALTER TABLE CorreoGerente
     ADD CONSTRAINT GerenteCorreo_chk CHECK (
         CorreoGerente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
+
+-- Comentarios
 
 
 -- 6# ENCARGADO PREMIOS
@@ -153,6 +163,8 @@ ALTER TABLE EncargadoPremios
 	ADD CONSTRAINT RFCEncPremios_valido CHECK (RFCEncPremios ~ '^[A-Z0-9]{12,13}$'),
 	ADD CONSTRAINT encPremiosFCont_valido CHECK (FechaContratacionEncPremios > FechaNacimientoEncPremios);
 
+-- Comentarios
+
 
 -- 7# TELEFONO ENCARGADO PREMIOS
 CREATE TABLE TelefonoEncPremios(
@@ -165,6 +177,8 @@ ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT Telefono_CURPEncPremios_FK01E FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
     ALTER COLUMN CURPEncPremios SET NOT NULL,
 	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}$');
+
+-- Comentarios
 
 
 -- 8# CORREO ENCARGADO PREMIOS
@@ -180,6 +194,8 @@ ALTER TABLE CorreoEncPremios
     ADD CONSTRAINT EncPremiosCorreo_chk CHECK (
         CorreoEncPremios ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
+
+-- Comentarios
 
 
 -- 9# CAJERO
@@ -219,6 +235,8 @@ ALTER TABLE Cajero
 	ADD CONSTRAINT RFCCajero_valido CHECK (RFCCajero ~ '^[A-Z0-9]{12,13}$'),
 	ADD CONSTRAINT cajeroFCont_valido CHECK (FechaContratacionCajero > FechaNacimientoCajero);
 
+-- Comentarios
+
 
 -- 10# TELEFONO CAJERO
 CREATE TABLE TelefonoCajero(
@@ -232,6 +250,8 @@ ALTER TABLE TelefonoCajero
         REFERENCES Cajero(CURPCajero),
     ALTER COLUMN CURPCajero SET NOT NULL,
 	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}$');
+
+-- Comentarios
 
 
 -- 11# CORREO CAJERO
@@ -248,6 +268,8 @@ ALTER TABLE CorreoCajero
     ADD CONSTRAINT CajeroCorreo_chk CHECK (
         CorreoCajero ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
+
+-- Comentarios
 
 
 -- 12# TECNICO
@@ -285,6 +307,8 @@ ALTER TABLE Tecnico
 	ADD CONSTRAINT RFCTecnico_valido CHECK (RFCTecnico ~ '^[A-Z0-9]{12,13}$'),
 	ADD CONSTRAINT tecnicoFCont_valido CHECK (FechaContratacionTecnico > FechaNacimientoTecnico);
 
+-- Comentarios
+
 
 -- 13# TELEFONO TECNICO
 CREATE TABLE TelefonoTecnico(
@@ -299,6 +323,8 @@ ALTER TABLE TelefonoTecnico
         REFERENCES Tecnico(CURPTecnico),
     ALTER COLUMN CURPTecnico SET NOT NULL,
 	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}$');
+
+-- Comentarios
 
 
 -- 14# CORREO TECNICO
@@ -317,6 +343,8 @@ ALTER TABLE CorreoTecnico
         CorreoTecnico ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
 
+-- Comentarios
+
 
 -- 15# CERTIFICACION
 CREATE TABLE Certificacion(
@@ -330,6 +358,7 @@ ALTER TABLE Certificacion
         REFERENCES Tecnico(CURPTecnico),
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
+-- Comentarios
 
 
 -- 16# CLIENTE
@@ -357,6 +386,8 @@ ALTER TABLE Cliente
 	ADD CONSTRAINT ClienteApellidoP_valido CHECK (ApellidoP ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoP)) > 0),
 	ADD CONSTRAINT ClienteApellidoM_valido CHECK (ApellidoM ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoM)) > 0);
 
+-- Comentarios
+
     
  -- 17# TARJETA
 CREATE TABLE Tarjeta (
@@ -366,6 +397,8 @@ CREATE TABLE Tarjeta (
 ALTER TABLE Tarjeta
     ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta),
     ADD CONSTRAINT NoTarjeta_Positivo CHECK (NoTarjeta >= 0);
+
+-- Comentarios
 
  -- 18# PERTENECER
 CREATE TABLE Pertenecer (
@@ -392,7 +425,9 @@ ALTER TABLE Pertenecer
         FechaNacimiento >= '1909-01-01' AND 
         FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years'
     );
-    
+  
+-- Comentarios
+  
     
  -- 19# CORREO CLIENTE
 CREATE TABLE CorreoCliente (
@@ -408,7 +443,9 @@ ALTER TABLE CorreoCliente
         CorreoCliente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );-- Uno supondría que aquí debería discutirse. 
     -- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
-       
+   
+-- Comentarios
+    
     
  -- 20# TELEFONO CLIENTE
 CREATE TABLE TelefonoCliente (
@@ -421,6 +458,8 @@ ALTER TABLE TelefonoCliente
 	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
 		REFERENCES Cliente(IDCliente),
     ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
+
+-- Comentarios
 
 
 -- 21# JUEGO
@@ -440,6 +479,8 @@ ALTER TABLE Juego
 	ADD CONSTRAINT Costo_Juego_Valido CHECK (Costo >= 0 AND Costo % 10 = 0), 
 	ALTER COLUMN TipoJuego SET NOT NULL, 
 	ADD CONSTRAINT Tipo_Juego_Valido CHECK (TipoJuego IN ('Destreza','Disparos', 'Velocidad' , 'Ritmo'));
+
+-- Comentarios
 
 
 -- 22# MAQUINA
@@ -464,6 +505,8 @@ ALTER TABLE Maquina
 	ALTER COLUMN EstadoMaquina SET NOT NULL,
 	ADD CONSTRAINT Estado_Maquina_Valido CHECK (EstadoMaquina IN ('Activo', 'FueraDeServicio', 'Mantenimiento'));
 
+-- Comentarios
+
 
 -- 23# PREMIO
 CREATE TABLE Premio(
@@ -483,6 +526,8 @@ ALTER TABLE Premio
 	ALTER COLUMN ValorAproximado SET NOT NULL,
 	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0 AND ValorAproximado < 10000);
 	
+-- Comentarios
+
 
 -- 24# REGISTRO PARTIDA
 
@@ -508,6 +553,8 @@ ALTER TABLE RegistroPartida
 	ADD CONSTRAINT RegistroPartida_DOM01 CHECK (Puntuacion >= 0),
 	ADD CONSTRAINT RegistroPartida_DOM02 CHECK (Fecha <= CURRENT_DATE);
 
+-- Comentarios
+
 
 -- 25# CANJE
 -- NOTA
@@ -531,6 +578,8 @@ ALTER TABLE Canje
 	 	REFERENCES EncargadoPremios(CURPEncPremios), 
 	ALTER COLUMN Fecha SET NOT NULL, 
 	ALTER COLUMN Hora SET NOT NULL;
+
+-- Comentarios
 
 	
 -- 26# RECARGA
@@ -559,6 +608,8 @@ ALTER TABLE Recarga
 	ALTER COLUMN MetodoAbono SET NOT NULL,
 	ADD CONSTRAINT Recarga_MetodoAbono_Valido CHECK ( MetodoAbono IN ('Efectivo', 'TarjetaDebito','TarjetaCredito', 'Paypal'));
 
+-- Comentarios
+
 
 -- 27# GUARDAR
 -- NOTA
@@ -576,6 +627,8 @@ ALTER TABLE Guardar
 	ADD CONSTRAINT Guardar_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
 	ADD CONSTRAINT Guardar_FK02P FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio),
 	ADD CONSTRAINT Guardar_DOM01 CHECK (CantidadInicial >= 0);
+
+-- Comentarios
 
 
 -- 28# INCLUIR
@@ -596,6 +649,8 @@ ALTER TABLE Incluir
 		REFERENCES Canje(IDCanjeo),
 	ALTER COLUMN Cantidad SET NOT NULL,
 	ADD CONSTRAINT Incluir_Cantidad_Valida CHECK (Cantidad >= 1);
+
+-- Comentarios
 
 -- 29# MANTENIMIENTO
 CREATE TABLE Mantenimiento(
@@ -621,6 +676,8 @@ ALTER TABLE Mantenimiento
     ALTER COLUMN Fecha SET NOT NULL,
     ALTER COLUMN TipoMantenimiento SET NOT NULL,
     ALTER COLUMN Descripcion SET NOT NULL;
+
+-- Comentarios
 
 
 
