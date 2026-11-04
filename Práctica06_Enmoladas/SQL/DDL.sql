@@ -43,16 +43,16 @@ COMMENT ON COLUMN Sucursal.NumExterior IS 'Numero Exterior donde esta ubicada la
 COMMENT ON COLUMN Sucursal.Colonia IS 'Colonia donde esta ubicada la Sucursal';
 COMMENT ON COLUMN Sucursal.Estado IS 'Estado donde esta ubicada la Sucursal';
 
-COMMENT ON CONSTRAINT Sucursal_PK IS 'Restriccion de Entidad para la tabla Sucursal';
+COMMENT ON CONSTRAINT Sucursal_PK ON Sucursal IS 'Restriccion de Entidad para la tabla Sucursal';
 
-COMMENT ON CONSTRAINT idSucursal_valido IS 'Restriccion de dominio para el atributo IDSucursal de la tabla Sucursal, tal que sea un numero mayor o igual a 0';
-COMMENT ON CONSTRAINT sucursalNombre_valido IS 'Restriccion de dominio para el atributo Nombre de la tabla Sucursal, tal que estee formado por letras, espacios y guiones ademas de no estar vacio';
-COMMENT ON CONSTRAINT sucursalTelefono_valido IS 'Restriccion de dominio para el atributo Telefono de la tabla Sucursal, tal que estee formado unicamente por numeros y tenga una longitud de entre 10 y 15 digitos';
-COMMENT ON CONSTRAINT sucursalCalle_valido IS 'Restriccion de dominio para el atributo Calle de la tabla Sucursal, tal que estee formado por letras, espacios y guiones ademas de no estar vacio';
-COMMENT ON CONSTRAINT sucursalNumInterior_valido IS 'Restriccion de dominio para el atributo NumInterior de la tabla Sucursal, tal que sea un numero mayor o igual a 0';
-COMMENT ON CONSTRAINT sucursalNumEXterior_valido IS 'Restriccion de dominio para el atributo NumExterior de la tabla Sucursal, tal que sea un numero mayor o igual a 0';
-COMMENT ON CONSTRAINT sucursalColonia_valido IS 'Restriccion de dominio para el atributo Colonia de la tabla Sucursal, tal que no este vacio ni formado por solo espacios';
-COMMENT ON CONSTRAINT sucursalEstado_valido IS 'Restriccion de dominio para el atributo Estado de la tabla Sucursal, tal que no este vacio ni formado por solo espacios';
+COMMENT ON CONSTRAINT idSucursal_valido ON Sucursal IS 'Restriccion de dominio para el atributo IDSucursal de la tabla Sucursal, tal que sea un numero mayor o igual a 0';
+COMMENT ON CONSTRAINT sucursalNombre_valido ON Sucursal IS 'Restriccion de dominio para el atributo Nombre de la tabla Sucursal, tal que estee formado por letras, espacios y guiones ademas de no estar vacio';
+COMMENT ON CONSTRAINT sucursalTelefono_valido ON Sucursal IS 'Restriccion de dominio para el atributo Telefono de la tabla Sucursal, tal que estee formado unicamente por numeros y tenga una longitud de entre 10 y 15 digitos';
+COMMENT ON CONSTRAINT sucursalCalle_valido ON Sucursal IS 'Restriccion de dominio para el atributo Calle de la tabla Sucursal, tal que estee formado por letras, espacios y guiones ademas de no estar vacio';
+COMMENT ON CONSTRAINT sucursalNumInterior_valido ON Sucursal IS 'Restriccion de dominio para el atributo NumInterior de la tabla Sucursal, tal que sea un numero mayor o igual a 0';
+COMMENT ON CONSTRAINT sucursalNumEXterior_valido ON Sucursal IS 'Restriccion de dominio para el atributo NumExterior de la tabla Sucursal, tal que sea un numero mayor o igual a 0';
+COMMENT ON CONSTRAINT sucursalColonia_valido ON Sucursal IS 'Restriccion de dominio para el atributo Colonia de la tabla Sucursal, tal que no este vacio ni formado por solo espacios';
+COMMENT ON CONSTRAINT sucursalEstado_valido ON Sucursal IS 'Restriccion de dominio para el atributo Estado de la tabla Sucursal, tal que no este vacio ni formado por solo espacios';
 
 
 -- Ya debe de estar definida Sucursal antes de los Empleados.
@@ -79,10 +79,10 @@ COMMENT ON COLUMN Horario.HorarioFinal IS 'Horario Final de cierre de la Sucursa
 COMMENT ON COLUMN Horario.IDSucursal IS 'ID de la sucursal a la que pertenece el horario';
 COMMENT ON COLUMN Horario.Dia IS 'Dia de la semana al que pertenece el horario';
 
-COMMENT ON CONSTRAINT Horario_PK IS 'Restriccion de Entidad para la tabla Horario';
-COMMENT ON CONSTRAINT Horario_FK01S IS 'Restriccion de integridad referencial para la tabla Horario';
+COMMENT ON CONSTRAINT Horario_PK ON Horario IS 'Restriccion de Entidad para la tabla Horario';
+COMMENT ON CONSTRAINT Horario_FK01S ON Horario IS 'Restriccion de integridad referencial para la tabla Horario';
 
-COMMENT ON CONSTRAINT HorarioDia_chk IS 'Restriccion de dominio para el atributo Dia de la tabla Horario, tal que solo se acepten dias de la semana';
+COMMENT ON CONSTRAINT HorarioDia_chk ON Horario IS 'Restriccion de dominio para el atributo Dia de la tabla Horario, tal que solo se acepten dias de la semana';
 
 
 
@@ -510,7 +510,19 @@ ALTER TABLE Juego
 	ADD CONSTRAINT Tipo_Juego_Valido CHECK (TipoJuego IN ('Destreza','Disparos', 'Velocidad' , 'Ritmo'));
 
 -- Comentarios
+COMMENT ON TABLE Juego IS 'Tabla que almacena la información de un juego';
 
+COMMENT ON COLUMN Juego.IDJuego IS 'Identificador único de cada juego que posee PuellaGames.';
+COMMENT ON COLUMN Juego.Nombre IS 'Título o nombre del juego.';
+COMMENT ON COLUMN Juego.Costo IS 'Costo para jugar el juego.';
+COMMENT ON COLUMN Juego.TipoJuego IS 'El tipo del juego: Destreza, Disparos, Velocidad, Ritmo';
+
+COMMENT ON CONSTRAINT Juego_PK ON Juego IS 'La llave primaria del Juego.';
+
+COMMENT ON CONSTRAINT IDJuego_Positivo ON Juego IS 'El identificador del juego es un entero no negativo.';
+COMMENT ON CONSTRAINT Nombre_Juego_Minimamente_Valido ON Juego IS 'El nombre del juego no es una cadena de puros espacios';
+COMMENT ON CONSTRAINT Costo_Juego_Valido ON Juego IS 'El costo del juego es un entero no negativo multiplo de 10.';
+COMMENT ON CONSTRAINT Tipo_Juego_Valido ON Juego IS 'El tipo de juego, pertenece a alguno de los tipos válidos.';
 
 -- 22# MAQUINA
 --NOTA
@@ -527,14 +539,30 @@ ALTER TABLE Maquina
 	ADD CONSTRAINT IDMaquina_valida CHECK (IDMaquina >= 0),
 	ALTER COLUMN IDSucursal SET NOT NULL,
 	ADD CONSTRAINT Maquina_FK01S FOREIGN KEY (IDSucursal) 
-		REFERENCES Sucursal (IDSucursal), 
-	ALTER COLUMN IDJuego SET NOT NULL,
+		REFERENCES Sucursal (IDSucursal)  
+		ON DELETE SET DEFAULT -- Integridad referencial. 
+		ON UPDATE CASCADE,
 	ADD CONSTRAINT Maquina_FK02J FOREIGN KEY (IDJuego) 
-		REFERENCES Juego (IDJuego),
+		REFERENCES Juego (IDJuego)
+		ON DELETE NO ACTION -- Integridad referencial. 
+		ON UPDATE CASCADE,
 	ALTER COLUMN EstadoMaquina SET NOT NULL,
 	ADD CONSTRAINT Estado_Maquina_Valido CHECK (EstadoMaquina IN ('Activo', 'FueraDeServicio', 'Mantenimiento'));
 
 -- Comentarios
+COMMENT ON TABLE Maquina IS 'Tabla que almacena la información de una máquina';
+
+COMMENT ON COLUMN Maquina.IDMaquina IS 'Identificador de cualquier máquina que PuellaGames posee.';
+COMMENT ON COLUMN Maquina.IDSucursal IS 'Identificador de la sucursal a la que pertenece la máquina.';
+COMMENT ON COLUMN Maquina.IDJuego IS 'Identificador del juego que posee la máquina.';
+COMMENT ON COLUMN Maquina.EstadoMaquina IS 'El estado actual de la máquina: Activo, FueraDeServicio, Mantenimiento.';
+
+COMMENT ON CONSTRAINT Maquina_PK ON Maquina IS 'La llave primaria de la tabla Maquina.';
+
+COMMENT ON CONSTRAINT IDMaquina_valida ON Maquina IS 'Dice si el ID de una máquina es un entero no negativo.' ;
+COMMENT ON CONSTRAINT Maquina_FK01S ON Maquina IS 'Llave foránea N0. 1 de máquina: Tomada de la tabla Sucursal.';
+COMMENT ON CONSTRAINT Maquina_FK02J ON Maquina IS 'Llave foránea NO. 2 de máquina: Tomada de la tabla Juego.';
+COMMENT ON CONSTRAINT Estado_Maquina_Valido ON Maquina IS 'El estado de la máquina dado, pertenece a uno de los estados válidos.';
 
 
 -- 23# PREMIO
@@ -666,10 +694,10 @@ COMMENT ON COLUMN Guardar.IDSucursal IS 'Identificador de la Sucursal en la que 
 COMMENT ON COLUMN Guardar.IDPremio IS 'Identificador del Premio que se busca guardar';
 COMMENT ON COLUMN Guardar.CantidadInicial IS 'Cantidad de premios que se buscan guardar';
 
-COMMENT ON CONSTRAINT Guardar_FK01S ON Guardar.IDSucursal IS 'Llave foránea a la tabla Sucursal';
-COMMENT ON CONSTRAINT Guardar_FK02P ON Guardar.IDPremio IS 'Llave foránea a la tabla Premio';
+COMMENT ON CONSTRAINT Guardar_FK01S ON Guardar IS 'Llave foránea a la tabla Sucursal';
+COMMENT ON CONSTRAINT Guardar_FK02P ON Guardar IS 'Llave foránea a la tabla Premio';
 
-COMMENT ON CONSTRAINT Guardar_DOM01 ON Guardar.CantidadInicial IS 'La cantidad inicial de premios debe ser mayor o igual a cero'
+COMMENT ON CONSTRAINT Guardar_DOM01 ON Guardar IS 'La cantidad inicial de premios debe ser mayor o igual a cero';
 
 -- 28# INCLUIR
 -- NOTA
@@ -705,7 +733,7 @@ CREATE TABLE Mantenimiento(
 	
 ALTER TABLE Mantenimiento
 	ADD CONSTRAINT Mantenimiento_PK PRIMARY KEY (IDMantenimiento),
-    ADD CONSTRAINT IDMantenimiento_valido CHECK (IDMantenimiento >= 0),
+    ADD CONSTRAINT IDMantenimiento_Valido CHECK (IDMantenimiento >= 0),
 	ALTER COLUMN CURPTecnico SET NOT NULL,
 	ADD CONSTRAINT Mantenimiento_FK01C FOREIGN KEY (CURPTecnico)
 		REFERENCES Tecnico(CURPTecnico)
@@ -723,19 +751,20 @@ ALTER TABLE Mantenimiento
     ALTER COLUMN Descripcion TYPE TEXT;
 
 -- Comentarios
-COMMENT ON TABLE Mantenimiento IS 'Tabla que representa las Maquinas en Mantenimiento designado a un Tecnico'
+COMMENT ON TABLE Mantenimiento IS 'Tabla que representa las Maquinas en Mantenimiento designado a un Tecnico';
 
-COMMENT ON COLUMN Mantenimiento.IDMantenimiento IS 'Identificador de Maquina en Mantenimiento'
-COMMENT ON COLUMN Mantenimiento.CURPTecnico IS 'Identificador del Tecnico que realiza el mantenimiento'
-COMMENT ON COLUMN Mantenimiento.IDMaquina IS 'Identificador de la Maquina que se encuentra en mantenimiento'
-COMMENT ON COLUMN Mantenimiento.Hora IS 'Hora en la que se realiza el mantenimiento'
-COMMENT ON COLUMN Mantenimiento.Fecha IS 'Fecha en la que se realiza el mantenimiento'
-COMMENT ON COLUMN Mantenimiento.TipoMantenimiento IS 'Tipo de mantenimiento que se realiza'
-COMMENT ON COLUMN Mantenimiento.Descripcion IS 'Descripcion del mantenimiento que se realiza'
+COMMENT ON COLUMN Mantenimiento.IDMantenimiento IS 'Identificador del reporte de mantenimiento';
+COMMENT ON COLUMN Mantenimiento.CURPTecnico IS 'Identificador del Tecnico que realiza el mantenimiento';
+COMMENT ON COLUMN Mantenimiento.IDMaquina IS 'Identificador de la Maquina que se encuentra en mantenimiento';
+COMMENT ON COLUMN Mantenimiento.Hora IS 'Hora en la que se realiza el mantenimiento';
+COMMENT ON COLUMN Mantenimiento.Fecha IS 'Fecha en la que se realiza el mantenimiento';
+COMMENT ON COLUMN Mantenimiento.TipoMantenimiento IS 'Tipo de mantenimiento que se realiza';
+COMMENT ON COLUMN Mantenimiento.Descripcion IS 'Descripcion del mantenimiento que se realiza';
 
-COMMENT ON CONSTRAINT Mantenimiento_PK ON Mantenimiento.IDMantenimiento IS 'Llave primaria de la tabla Mantenimiento'
-COMMENT ON CONSTRAINT Mantenimiento_FK01C ON Mantenimiento.CURPTecnico IS 'Llave foránea a la tabla Tecnico'
-COMMENT ON CONSTRAINT Mantenimiento_FK02I ON Mantenimiento.IDMaquina IS 'Llave foránea a la tabla Maquina'
+COMMENT ON CONSTRAINT Mantenimiento_PK ON Mantenimiento IS 'Llave primaria de la tabla Mantenimiento';
 
-COMMENT ON CONSTRAINT Mantenimiento_Valido ON Mantenimiento.IDMantenimiento IS 'Identificador de Maquina en Mantenimiento debe ser mayor o igual a cero'
+COMMENT ON CONSTRAINT IDMantenimiento_Valido ON Mantenimiento IS 'Identificador de Maquina en Mantenimiento debe ser mayor o igual a cero';
+COMMENT ON CONSTRAINT Mantenimiento_FK01C ON Mantenimiento IS 'Llave foránea a la tabla Tecnico';
+COMMENT ON CONSTRAINT Mantenimiento_FK02I ON Mantenimiento IS 'Llave foránea a la tabla Maquina';
+
 
