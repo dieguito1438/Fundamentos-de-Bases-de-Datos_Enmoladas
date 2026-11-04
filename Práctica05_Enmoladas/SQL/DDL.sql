@@ -677,6 +677,8 @@ ALTER TABLE Mantenimiento
     ALTER COLUMN TipoMantenimiento SET NOT NULL,
     ALTER COLUMN Descripcion SET NOT NULL;
 
+ALTER TABLE Mantenimiento 
+    ALTER COLUMN Descripcion TYPE TEXT;
 -- Comentarios
 
 
