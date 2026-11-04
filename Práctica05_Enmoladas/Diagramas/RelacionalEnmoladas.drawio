@@ -1065,7 +1065,7 @@
             <mxRectangle height="30" width="60" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="vIK4AmDdX8sn7fTEddmp-220" parent="vIK4AmDdX8sn7fTEddmp-218" style="shape=partialRectangle;connectable=0;fillColor=#d5e8d4;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;html=1;whiteSpace=wrap;strokeColor=#82b366;strokeWidth=2;" value="Descripción: varchar(300)" vertex="1">
+        <mxCell id="vIK4AmDdX8sn7fTEddmp-220" parent="vIK4AmDdX8sn7fTEddmp-218" style="shape=partialRectangle;connectable=0;fillColor=#d5e8d4;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;html=1;whiteSpace=wrap;strokeColor=#82b366;strokeWidth=2;" value="Descripción: text" vertex="1">
           <mxGeometry height="30" width="200" x="60" as="geometry">
             <mxRectangle height="30" width="200" as="alternateBounds" />
           </mxGeometry>
