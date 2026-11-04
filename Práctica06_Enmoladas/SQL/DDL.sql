@@ -106,6 +106,7 @@ ALTER TABLE Gerente
     ADD CONSTRAINT RFCGerente_unico UNIQUE (RFCGerente),
     ADD CONSTRAINT CedulaGerente_unico UNIQUE (CedulaProfesional),
     ADD CONSTRAINT SalarioGerente_valido CHECK (SalarioGerente > 0),
+    ALTER COLUMN IDSucursal SET NOT NULL,
     ALTER COLUMN RFCGerente SET NOT NULL,
     ALTER COLUMN NombreGerente SET NOT NULL,
     ALTER COLUMN ApellidoPaternoGerente SET NOT NULL,
@@ -114,12 +115,12 @@ ALTER TABLE Gerente
     ALTER COLUMN FechaNacimientoGerente SET NOT NULL,
     ALTER COLUMN SalarioGerente SET NOT NULL,
     ALTER COLUMN CedulaProfesional SET NOT NULL,
-	ADD CONSTRAINT gerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
-	ADD CONSTRAINT gerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
-	ADD CONSTRAINT gerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0),
-	ADD CONSTRAINT gerenteCurp_valido CHECK (CURPGerente ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT GerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
+	ADD CONSTRAINT GerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
+	ADD CONSTRAINT GerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0),
+	ADD CONSTRAINT GerenteCurp_valido CHECK (CURPGerente ~ '^[A-Z0-9]{18}$'),
 	ADD CONSTRAINT RFCGerente_valido CHECK (RFCGerente ~ '^[A-Z0-9]{12,13}$'),
-	ADD CONSTRAINT gerenteFCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente);
+	ADD CONSTRAINT GerenteFCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente);
 
 -- Comentarios
 
@@ -127,14 +128,13 @@ ALTER TABLE Gerente
 -- 4# TELEFONO GERENTE
 CREATE TABLE TelefonoGerente(
     CURPGerente CHAR(18),
-    TelefonoGerente VARCHAR(10)
+    TelefonoGerente CHAR(10)
 );
 
 ALTER TABLE TelefonoGerente
-    ADD CONSTRAINT TelefonoGerentePK PRIMARY KEY (TelefonoGerente),
-    ADD CONSTRAINT Telefono_CURPGerente_FK01G FOREIGN KEY (CURPGerente)
+    ADD CONSTRAINT TelefonoGerentePK PRIMARY KEY (CURPGerente, TelefonoGerente),
+    ADD CONSTRAINT TelefonoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
-    ALTER COLUMN CURPGerente SET NOT NULL,
 	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}$');
 
 -- Comentarios
@@ -147,11 +147,10 @@ CREATE TABLE CorreoGerente(
 );
 
 ALTER TABLE CorreoGerente
-    ADD CONSTRAINT CorreoGerentePK PRIMARY KEY (CorreoGerente),
-    ADD CONSTRAINT Correo_CURPGerente_FK01G FOREIGN KEY (CURPGerente)
+    ADD CONSTRAINT CorreoGerentePK PRIMARY KEY (CURPGerente, CorreoGerente),
+    ADD CONSTRAINT CorreoGerenteFK FOREIGN KEY (CURPGerente)
         REFERENCES Gerente(CURPGerente),
-    ALTER COLUMN CURPGerente SET NOT NULL,
-    ADD CONSTRAINT GerenteCorreo_chk CHECK (
+    ADD CONSTRAINT GerenteCorreo_valido CHECK (
         CorreoGerente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
 
@@ -192,9 +191,9 @@ ALTER TABLE EncargadoPremios
 	ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
 	ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
 	ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios)) > 0),
-	ADD CONSTRAINT encPremiosCurp_valido CHECK (CURPEncPremios ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT EncPremiosCurp_valido CHECK (CURPEncPremios ~ '^[A-Z0-9]{18}$'),
 	ADD CONSTRAINT RFCEncPremios_valido CHECK (RFCEncPremios ~ '^[A-Z0-9]{12,13}$'),
-	ADD CONSTRAINT encPremiosFCont_valido CHECK (FechaContratacionEncPremios > FechaNacimientoEncPremios);
+	ADD CONSTRAINT EncPremiosFCont_valido CHECK (FechaContratacionEncPremios > FechaNacimientoEncPremios);
 
 -- Comentarios
 
@@ -202,13 +201,13 @@ ALTER TABLE EncargadoPremios
 -- 7# TELEFONO ENCARGADO PREMIOS
 CREATE TABLE TelefonoEncPremios(
     CURPEncPremios CHAR(18),
-    TelefonoEncPremios VARCHAR(10)
+    TelefonoEncPremios CHAR(10)
 );
 
 ALTER TABLE TelefonoEncPremios
-    ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (TelefonoEncPremios),
-    ADD CONSTRAINT Telefono_CURPEncPremios_FK01E FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
-    ALTER COLUMN CURPEncPremios SET NOT NULL,
+    ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (CURPEncPremios, TelefonoEncPremios),
+    ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios) 
+        REFERENCES EncargadoPremios(CURPEncPremios),
 	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}$');
 
 -- Comentarios
@@ -221,12 +220,10 @@ CREATE TABLE CorreoEncPremios(
 );
 
 ALTER TABLE CorreoEncPremios
-    ADD CONSTRAINT CorreoEncPremiosPK PRIMARY KEY (CorreoEncPremios),
-    ADD CONSTRAINT Correo_CURPEncPremios_FK01E FOREIGN KEY (CURPEncPremios) REFERENCES EncargadoPremios(CURPEncPremios),
-    ALTER COLUMN CURPEncPremios SET NOT NULL,
-    ADD CONSTRAINT EncPremiosCorreo_chk CHECK (
-        CorreoEncPremios ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
-    );
+    ADD CONSTRAINT CorreoEncPremiosPK PRIMARY KEY (CURPEncPremios,  CorreoEncPremios),
+    ADD CONSTRAINT CorreoEncPremiosFK FOREIGN KEY (CURPEncPremios) 
+        REFERENCES EncargadoPremios(CURPEncPremios),
+    ADD CONSTRAINT EncPremiosCorreo_valido CHECK (CorreoEncPremios ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
 -- Comentarios
 
@@ -261,12 +258,13 @@ ALTER TABLE Cajero
     ALTER COLUMN FechaContratacionCajero SET NOT NULL,
     ALTER COLUMN SalarioCajero SET NOT NULL,
     ALTER COLUMN EntradaCajero SET NOT NULL,
+    ALTER COLUMN SalidaCajero SET NOT NULL,
 	ADD CONSTRAINT CajeroNombre_valido CHECK (NombreCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreCajero)) > 0),
 	ADD CONSTRAINT CajeroApellidoP_valido CHECK (ApellidoPaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoCajero)) > 0),
 	ADD CONSTRAINT CajeroApellidoM_valido CHECK (ApellidoMaternoCajero ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoCajero)) > 0),
-	ADD CONSTRAINT cajeroCurp_valido CHECK (CURPCajero ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT CajeroCurp_valido CHECK (CURPCajero ~ '^[A-Z0-9]{18}$'),
 	ADD CONSTRAINT RFCCajero_valido CHECK (RFCCajero ~ '^[A-Z0-9]{12,13}$'),
-	ADD CONSTRAINT cajeroFCont_valido CHECK (FechaContratacionCajero > FechaNacimientoCajero);
+	ADD CONSTRAINT CajeroFCont_valido CHECK (FechaContratacionCajero > FechaNacimientoCajero);
 
 -- Comentarios
 
@@ -274,14 +272,13 @@ ALTER TABLE Cajero
 -- 10# TELEFONO CAJERO
 CREATE TABLE TelefonoCajero(
     CURPCajero CHAR(18),
-    TelefonoCajero VARCHAR(10)    
+    TelefonoCajero CHAR(10)    
 );
 
 ALTER TABLE TelefonoCajero 
-    ADD CONSTRAINT TelefonoCajeroPK PRIMARY KEY (TelefonoCajero),
-    ADD CONSTRAINT Telefono_CURPCajero_FK01C FOREIGN KEY (CURPCajero)
+    ADD CONSTRAINT TelefonoCajeroPK PRIMARY KEY (CURPCajero, TelefonoCajero),
+    ADD CONSTRAINT TelefonoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
-    ALTER COLUMN CURPCajero SET NOT NULL,
 	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}$');
 
 -- Comentarios
@@ -294,10 +291,9 @@ CREATE TABLE CorreoCajero(
 );
 
 ALTER TABLE CorreoCajero
-    ADD CONSTRAINT CorreoCajeroPK PRIMARY KEY (CorreoCajero),
-    ADD CONSTRAINT Correo_CURPCajero_FK01C FOREIGN KEY (CURPCajero)
+    ADD CONSTRAINT CorreoCajeroPK PRIMARY KEY (CURPCajero, CorreoCajero),
+    ADD CONSTRAINT CorreoCajeroFK FOREIGN KEY (CURPCajero)
         REFERENCES Cajero(CURPCajero),
-    ALTER COLUMN CURPCajero SET NOT NULL,
     ADD CONSTRAINT CajeroCorreo_chk CHECK (
         CorreoCajero ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
@@ -332,13 +328,14 @@ ALTER TABLE Tecnico
     ALTER COLUMN ApellidoMaternoTecnico SET NOT NULL,
     ALTER COLUMN FechaNacimientoTecnico SET NOT NULL,
     ALTER COLUMN FechaContratacionTecnico SET NOT NULL,
+    ALTER COLUMN SalarioTecnico SET NOT NULL,
     ALTER COLUMN Especialidad SET NOT NULL,
     ADD CONSTRAINT TecnicoNombre_valido CHECK (NombreTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreTecnico)) > 0),
 	ADD CONSTRAINT TecnicoApellidoP_valido CHECK (ApellidoPaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoTecnico)) > 0),
 	ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico)) > 0),
-	ADD CONSTRAINT tecnicoCurp_valido CHECK (CURPTecnico ~ '^[A-Z0-9]{18}$'),
+	ADD CONSTRAINT TecnicoCurp_valido CHECK (CURPTecnico ~ '^[A-Z0-9]{18}$'),
 	ADD CONSTRAINT RFCTecnico_valido CHECK (RFCTecnico ~ '^[A-Z0-9]{12,13}$'),
-	ADD CONSTRAINT tecnicoFCont_valido CHECK (FechaContratacionTecnico > FechaNacimientoTecnico);
+	ADD CONSTRAINT TecnicoFCont_valido CHECK (FechaContratacionTecnico > FechaNacimientoTecnico);
 
 -- Comentarios
 
@@ -346,15 +343,14 @@ ALTER TABLE Tecnico
 -- 13# TELEFONO TECNICO
 CREATE TABLE TelefonoTecnico(
     CURPTecnico CHAR(18),
-    TelefonoTecnico VARCHAR(10)
+    TelefonoTecnico CHAR(10)
 );
 
 
 ALTER TABLE TelefonoTecnico
-    ADD CONSTRAINT TelefonoTecnicoPK PRIMARY KEY (TelefonoTecnico),
-    ADD CONSTRAINT Telefono_CURPTecnico_FK01T FOREIGN KEY (CURPTecnico)
+    ADD CONSTRAINT TelefonoTecnicoPK PRIMARY KEY (CURPTecnico, TelefonoTecnico),
+    ADD CONSTRAINT TelefonoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
-    ALTER COLUMN CURPTecnico SET NOT NULL,
 	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}$');
 
 -- Comentarios
@@ -368,11 +364,10 @@ CREATE TABLE CorreoTecnico(
 
 
 ALTER TABLE CorreoTecnico 
-    ADD CONSTRAINT CorreoTecnicoPK PRIMARY KEY (CorreoTecnico),
-    ADD CONSTRAINT Correo_CURPCajero_FK01T FOREIGN KEY (CURPTecnico)
+    ADD CONSTRAINT CorreoTecnicoPK PRIMARY KEY (CURPTecnico, CorreoTecnico),
+    ADD CONSTRAINT CorreoTecnicoFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
-    ALTER COLUMN CURPTecnico SET NOT NULL,
-    ADD CONSTRAINT TecnicoCorreo_chk CHECK (
+    ADD CONSTRAINT TecnicoCorreo_valido CHECK (
         CorreoTecnico ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
 
@@ -386,7 +381,7 @@ CREATE TABLE Certificacion(
 );
 
 ALTER TABLE Certificacion
-    ADD CONSTRAINT CertificacionPK PRIMARY KEY (Certificacion),
+    ADD CONSTRAINT CertificacionPK PRIMARY KEY (CURPTecnico, Certificacion),
     ADD CONSTRAINT CertificacionFK FOREIGN KEY (CURPTecnico)
         REFERENCES Tecnico(CURPTecnico),
     ALTER COLUMN CURPTecnico SET NOT NULL;
