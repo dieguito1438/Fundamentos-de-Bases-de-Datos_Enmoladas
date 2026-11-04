@@ -67,7 +67,8 @@ CREATE TABLE Horario (
 
 ALTER TABLE Horario 
 	ADD CONSTRAINT Horario_PK PRIMARY KEY (IDSucursal, HorarioInicio, HorarioFinal, Dia),
-	ADD CONSTRAINT Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
+	ADD CONSTRAINT Horario_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal)
+		ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT HorarioDia_chk CHECK (Dia IN('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'));
 
 -- Comentarios
@@ -652,8 +653,10 @@ ALTER TABLE Guardar
 	ALTER COLUMN IDSucursal SET NOT NULL,
 	ALTER COLUMN IDPremio SET NOT NULL,
 	ALTER COLUMN CantidadInicial SET NOT NULL,
-	ADD CONSTRAINT Guardar_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal),
-	ADD CONSTRAINT Guardar_FK02P FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio),
+	ADD CONSTRAINT Guardar_FK01S FOREIGN KEY (IDSucursal) REFERENCES Sucursal(IDSucursal)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	ADD CONSTRAINT Guardar_FK02P FOREIGN KEY (IDPremio) REFERENCES Premio(IDPremio)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	ADD CONSTRAINT Guardar_DOM01 CHECK (CantidadInicial >= 0);
 
 -- Comentarios
@@ -705,10 +708,12 @@ ALTER TABLE Mantenimiento
     ADD CONSTRAINT IDMantenimiento_valido CHECK (IDMantenimiento >= 0),
 	ALTER COLUMN CURPTecnico SET NOT NULL,
 	ADD CONSTRAINT Mantenimiento_FK01C FOREIGN KEY (CURPTecnico)
-		REFERENCES Tecnico(CURPTecnico),
+		REFERENCES Tecnico(CURPTecnico)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN IDMaquina SET NOT NULL,
 	ADD CONSTRAINT Mantenimiento_FK02I FOREIGN KEY (IDMaquina)
-		REFERENCES Maquina(IDMaquina),
+		REFERENCES Maquina(IDMaquina)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
     ALTER COLUMN Hora SET NOT NULL,
     ALTER COLUMN Fecha SET NOT NULL,
     ALTER COLUMN TipoMantenimiento SET NOT NULL,
@@ -716,7 +721,21 @@ ALTER TABLE Mantenimiento
 
 ALTER TABLE Mantenimiento 
     ALTER COLUMN Descripcion TYPE TEXT;
+
 -- Comentarios
+COMMENT ON TABLE Mantenimiento IS 'Tabla que representa las Maquinas en Mantenimiento designado a un Tecnico'
 
+COMMENT ON COLUMN Mantenimiento.IDMantenimiento IS 'Identificador de Maquina en Mantenimiento'
+COMMENT ON COLUMN Mantenimiento.CURPTecnico IS 'Identificador del Tecnico que realiza el mantenimiento'
+COMMENT ON COLUMN Mantenimiento.IDMaquina IS 'Identificador de la Maquina que se encuentra en mantenimiento'
+COMMENT ON COLUMN Mantenimiento.Hora IS 'Hora en la que se realiza el mantenimiento'
+COMMENT ON COLUMN Mantenimiento.Fecha IS 'Fecha en la que se realiza el mantenimiento'
+COMMENT ON COLUMN Mantenimiento.TipoMantenimiento IS 'Tipo de mantenimiento que se realiza'
+COMMENT ON COLUMN Mantenimiento.Descripcion IS 'Descripcion del mantenimiento que se realiza'
 
+COMMENT ON CONSTRAINT Mantenimiento_PK ON Mantenimiento.IDMantenimiento IS 'Llave primaria de la tabla Mantenimiento'
+COMMENT ON CONSTRAINT Mantenimiento_FK01C ON Mantenimiento.CURPTecnico IS 'Llave foránea a la tabla Tecnico'
+COMMENT ON CONSTRAINT Mantenimiento_FK02I ON Mantenimiento.IDMaquina IS 'Llave foránea a la tabla Maquina'
+
+COMMENT ON CONSTRAINT Mantenimiento_Valido ON Mantenimiento.IDMantenimiento IS 'Identificador de Maquina en Mantenimiento debe ser mayor o igual a cero'
 
