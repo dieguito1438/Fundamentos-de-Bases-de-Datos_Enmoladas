@@ -411,7 +411,7 @@ CREATE TABLE Pertenecer (
 );
 
 ALTER TABLE Pertenecer 
-	ADD CONSTRAINT pk_pertenecer PRIMARY KEY (IDCliente, NoTarjeta), --SE AGREGAN COMO PRIMARY KEY PERO TAMBIEN COMO FOREIGN KEY. NO DEBERÍAN SER SOLO FOREIGN KEY y usar UNIQUE?
+	ADD CONSTRAINT uq_pertenecer UNIQUE (IDCliente, NoTarjeta), -- Ahora si ya es PK lo siento :(
 	ADD CONSTRAINT fk_pertenecer_cliente FOREIGN KEY (IDCliente) 
 		REFERENCES Cliente(IDCliente),
 	ADD CONSTRAINT fk_pertenecer_tarjeta FOREIGN KEY (NoTarjeta) 
@@ -677,6 +677,8 @@ ALTER TABLE Mantenimiento
     ALTER COLUMN TipoMantenimiento SET NOT NULL,
     ALTER COLUMN Descripcion SET NOT NULL;
 
+ALTER TABLE Mantenimiento 
+    ALTER COLUMN Descripcion TYPE TEXT;
 -- Comentarios
 
 
