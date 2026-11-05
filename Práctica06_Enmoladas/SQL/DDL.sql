@@ -698,12 +698,14 @@ ALTER TABLE Canje
     ADD CONSTRAINT IDCanjeo_Positivo CHECK (IDCanjeo >= 0),
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Canje_FK01T FOREIGN KEY (NoTarjeta) 
-		REFERENCES Tarjeta(NoTarjeta),
-       ON DELETE RESTRICT ON UPDATE CASCADE,
+		REFERENCES Tarjeta(NoTarjeta)
+	   ON DELETE RESTRICT 
+	   ON UPDATE CASCADE,
 	ALTER COLUMN CURPEncPremios SET NOT NULL,
 	ADD CONSTRAINT Canje_FK02E FOREIGN KEY (CURPEncPremios) 
-	 	REFERENCES EncargadoPremios(CURPEncPremios), 
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+	 	REFERENCES EncargadoPremios(CURPEncPremios)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE,
 	ALTER COLUMN Fecha SET NOT NULL, 
 	ALTER COLUMN Hora SET NOT NULL;
     
@@ -737,12 +739,14 @@ CREATE TABLE Recarga(
 ALTER TABLE Recarga
 	ALTER COLUMN CURPCajero SET NOT NULL,
 	ADD CONSTRAINT Recarga_FK01C FOREIGN KEY (CURPCajero) 
-		REFERENCES Cajero(CURPCajero),
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+		REFERENCES Cajero(CURPCajero)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE,
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Recarga_FK02T FOREIGN KEY (NoTarjeta) 
-		REFERENCES Tarjeta(NoTarjeta),
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+		REFERENCES Tarjeta(NoTarjeta)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE,
 	ALTER COLUMN Fecha SET NOT NULL,
 	ALTER COLUMN Hora SET NOT NULL,
 	ALTER COLUMN Monto SET NOT NULL,
@@ -760,10 +764,10 @@ COMMENT ON COLUMN Recarga.Hora Is 'Hora en la que se realizo la Recarga';
 COMMENT ON COLUMN Recarga.Monto Is 'Total del monto Abonado en la Recarga';
 COMMENT ON COLUMN Recarga.MetodoAbono IS 'Forma de pago durante la recarga. Son Efectivo, Debito, Credito o Paypal';
 
-COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga 'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
-COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga 'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
-COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga 'El monto debe ser un valor positivo multiplo de 10';
-COMMENT ON CONSTRAINT Recarga_MetodoAbono_Valido ON Recarga 'La forma de pago tiene que corresponder con una de las disponibles';
+COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga IS'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
+COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga IS'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
+COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga IS 'El monto debe ser un valor positivo multiplo de 10';
+COMMENT ON CONSTRAINT Recarga_MetodoAbono_Valido ON Recarga IS 'La forma de pago tiene que corresponder con una de las disponibles';
 COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga IS 'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
 COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga IS 'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
 COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga IS 'El monto debe ser un valor positivo multiplo de 10';
@@ -813,12 +817,14 @@ CREATE TABLE Incluir(
 ALTER TABLE Incluir
 	ALTER COLUMN IDPremio SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK01P FOREIGN KEY (IDPremio)
-		REFERENCES Premio(IDPremio),
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+		REFERENCES Premio(IDPremio)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE,
 	ALTER COLUMN IDCanjeo SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK02C FOREIGN KEY (IDCanjeo)
-		REFERENCES Canje(IDCanjeo),
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+		REFERENCES Canje(IDCanjeo)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE,
 	ALTER COLUMN Cantidad SET NOT NULL,
 	ADD CONSTRAINT Incluir_Cantidad_Valida CHECK (Cantidad >= 1);
 
