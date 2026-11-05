@@ -114,7 +114,7 @@ ALTER TABLE Gerente
     ADD CONSTRAINT GerenteFechaCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente),
     ADD CONSTRAINT SalarioGerente_valido CHECK (SalarioGerente > 0),
     ADD CONSTRAINT CedulaGerente_unico UNIQUE (CedulaProfesional),
-    ADD CONSTRAINT CedulaGerente_valido CHECK (CedulaProfesional ~ '^[0-9]{6,8}$')
+    ADD CONSTRAINT CedulaGerente_valido CHECK (CedulaProfesional ~ '^[0-9]{6,8}$'),
     ALTER COLUMN IDSucursal SET NOT NULL,
     ALTER COLUMN RFCGerente SET NOT NULL,
     ALTER COLUMN NombreGerente SET NOT NULL,
@@ -140,18 +140,18 @@ COMMENT ON COLUMN Gerente.FechaNacimientoGerente IS 'Fecha de nacimiento del Ger
 COMMENT ON COLUMN Gerente.SalarioGerente IS 'Salario del Gerente';
 COMMENT ON COLUMN Gerente.CedulaProfesional IS 'Cedula profesional del Gerente';
 
-COMMENT ON CONSTRAINT GerentePK IS 'Restricción de Entidad para la tabla Gerente';
-COMMENT ON CONSTRAINT GerenteCurp_valido IS 'Restricción de Dominio para el atributo CURPGerente de la tabla Gerente. Nos asegura que solo contenga letras mayusculas, números, y que su longitud sea de 18 caracteres';
-COMMENT ON CONSTRAINT GerenteFK IS 'Restricción de Integridad referencial para la tabla Gerente';
-COMMENT ON CONSTRAINT RFCGerente_unico IS 'Restricción de Dominio para el atributo RFCGerente de la tabla Gerente. No se pueden repetir los RFC ya que son unicos'
-COMMENT ON CONSTRAINT RFCGerente_valido IS 'Restricción de Dominio para el atributo RFCGerente de la tabla Gerente. Nos asegura que no este formado por espacios blancos y con letras mayusculas sin caracteres especiales';
-COMMENT ON CONSTRAINT GerenteNombre_valido IS 'Restricción de Dominio para el atributo NombreGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
-COMMENT ON CONSTRAINT GerenteApellidoP_valido IS 'Restricción de Dominio para el atributo ApellidoPaternoGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
-COMMENT ON CONSTRAINT GerenteApellidoM_valido IS 'Restricción de Dominio para el atributo ApellidoMaternoGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
-COMMENT ON CONSTRAINT GerenteFechaCont_valido IS 'Restricción de Dominio para el atributo FechaContrataciónGerente de la tabla Gerente. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
-COMMENT ON CONSTRAINT SalarioGerente_valido IS 'Restricción de Dominio para el atributo SalarioGerente de la tabla Gerente. Nos asegura que el salario sea un número positivo';
-COMMENT ON CONSTRAINT CedulaGerente_unico IS 'Restricción de dominio para el atributo CedulaProfesional de la tabla Gerente. Nos asegura que la cédula no se repita entre empleados';
-COMMENT ON CONSTRAINT CedulaGerente_valido IS 'Restricción de dominio para el atributo CedulaProfesional de la tabla Gerente. Nos asegura que solo contenga números con longitud entre 6 y 8 caracteres';
+COMMENT ON CONSTRAINT GerentePK ON Gerente IS 'Restricción de Entidad para la tabla Gerente';
+COMMENT ON CONSTRAINT GerenteCurp_valido ON Gerente IS 'Restricción de Dominio para el atributo CURPGerente de la tabla Gerente. Nos asegura que solo contenga letras mayusculas, números, y que su longitud sea de 18 caracteres';
+COMMENT ON CONSTRAINT GerenteFK ON Gerente IS 'Restricción de Integridad referencial para la tabla Gerente';
+COMMENT ON CONSTRAINT RFCGerente_unico ON Gerente IS 'Restricción de Dominio para el atributo RFCGerente de la tabla Gerente. No se pueden repetir los RFC ya que son unicos';
+COMMENT ON CONSTRAINT RFCGerente_valido ON Gerente IS 'Restricción de Dominio para el atributo RFCGerente de la tabla Gerente. Nos asegura que no este formado por espacios blancos y con letras mayusculas sin caracteres especiales';
+COMMENT ON CONSTRAINT GerenteNombre_valido ON Gerente IS 'Restricción de Dominio para el atributo NombreGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
+COMMENT ON CONSTRAINT GerenteApellidoP_valido ON Gerente IS 'Restricción de Dominio para el atributo ApellidoPaternoGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
+COMMENT ON CONSTRAINT GerenteApellidoM_valido ON Gerente IS 'Restricción de Dominio para el atributo ApellidoMaternoGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
+COMMENT ON CONSTRAINT GerenteFechaCont_valido ON Gerente IS 'Restricción de Dominio para el atributo FechaContrataciónGerente de la tabla Gerente. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
+COMMENT ON CONSTRAINT SalarioGerente_valido ON Gerente IS 'Restricción de Dominio para el atributo SalarioGerente de la tabla Gerente. Nos asegura que el salario sea un número positivo';
+COMMENT ON CONSTRAINT CedulaGerente_unico ON Gerente IS 'Restricción de dominio para el atributo CedulaProfesional de la tabla Gerente. Nos asegura que la cédula no se repita entre empleados';
+COMMENT ON CONSTRAINT CedulaGerente_valido ON Gerente IS 'Restricción de dominio para el atributo CedulaProfesional de la tabla Gerente. Nos asegura que solo contenga números con longitud entre 6 y 8 caracteres';
 
 
 -- 4# TELEFONO GERENTE
@@ -174,9 +174,9 @@ COMMENT ON TABLE TelefonoGerente IS 'Tabla que representa los numeros de Teléfo
 COMMENT ON COLUMN TelefonoGerente.TelefonoGerente IS 'Número de Telefono del Gerente';
 COMMENT ON COLUMN TelefonoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el número de Teléfono';
 
-COMMENT ON CONSTRAINT TelefonoGerentePK IS 'Restricción de Entidad para la tabla TelefonoGerente';
-COMMENT ON CONSTRAINT TelefonoCajeroFK IS 'Restricción de Integridad referencial para la tabla TelefonoGerente';
-COMMENT ON CONSTRAINT GerenteTelefono_valido IS 'Restricción de dominio para el atributo TelefonoGerente de la tabla TelefonoGerente. Nos asegura que solo contenga números del 0 al 9 como caracteres';
+COMMENT ON CONSTRAINT TelefonoGerentePK ON TelefonoGerente IS 'Restricción de Entidad para la tabla TelefonoGerente';
+COMMENT ON CONSTRAINT TelefonoGerenteFK ON TelefonoGerente IS 'Restricción de Integridad referencial para la tabla TelefonoGerente';
+COMMENT ON CONSTRAINT GerenteTelefono_valido ON TelefonoGerente IS 'Restricción de dominio para el atributo TelefonoGerente de la tabla TelefonoGerente. Nos asegura que solo contenga números del 0 al 9 como caracteres';
 
 
 -- 5# CORREO GERENTE
@@ -201,9 +201,9 @@ COMMENT ON TABLE CorreoGerente IS 'Tabla que representa los Correos electronicos
 COMMENT ON COLUMN CorreoGerente.CorreoGerente IS 'Correo del Gerente';
 COMMENT ON COLUMN CorreoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el Correo electronico';
 
-COMMENT ON CONSTRAINT CorreoGerentePK IS 'Restricción de Entidad para la tabla CorreoGerente';
-COMMENT ON CONSTRAINT CorreoGerenteFK IS 'Restricción de Integridad referencial para la tabla CorreoGerente';
-COMMENT ON CONSTRAINT GerenteCorreo_valido IS 'Restricción de Dominio para el atributo CorreoGerente de la tabla CorreoGerente. Nos asegura que la dirección de correo sea valida al incluir caracteres especiales más el separador @ para el dominio del correo';
+COMMENT ON CONSTRAINT CorreoGerentePK ON CorreoGerente IS 'Restricción de Entidad para la tabla CorreoGerente';
+COMMENT ON CONSTRAINT CorreoGerenteFK ON CorreoGerente IS 'Restricción de Integridad referencial para la tabla CorreoGerente';
+COMMENT ON CONSTRAINT GerenteCorreo_valido ON CorreoGerente IS 'Restricción de Dominio para el atributo CorreoGerente de la tabla CorreoGerente. Nos asegura que la dirección de correo sea valida al incluir caracteres especiales más el separador @ para el dominio del correo';
 
 
 -- 6# ENCARGADO PREMIOS
@@ -261,16 +261,16 @@ COMMENT ON COLUMN EncargadoPremios.SalarioEncPremios IS 'Salario del Encargado d
 COMMENT ON COLUMN EncargadoPremios.EntradaEncPremios IS 'Hora de entrada del Encargado de Premios';
 COMMENT ON COLUMN EncargadoPremios.SalidaEncPremios IS 'Hora de salida del Encargado Premios';
 
-COMMENT ON CONSTRAINT EncPremiosPK IS 'Restricción de Entidad para la tabla EncargadoPremios';
-COMMENT ON CONSTRAINT EncPremiosCurp_valido IS 'Restricción de Dominio para el atributo CURPEncPremios de la tabla EncargadoPremios. Nos asegura que solo contenga letras mayusculas y números con una longitud de 18 en sus caracteres';
-COMMENT ON CONSTRAINT EncPremiosFK IS 'Restricción de Integridad referencial para la tabla EncargadoPremios';
-COMMENT ON CONSTRAINT RFCEncPremios_unico IS 'Restricción de Dominio para el atributo RFCEncPremios de la tabla EncargadoPremios. No se pueden repetir los RFC ya que son únicos';
-COMMENT ON CONSTRAINT RFCEncPremios_valido IS 'Restricción de Dominio para el atributo RFCEncPremios de la tabla EncargadoPremios. Nos asegura que solo contenga letras mayusculas, numeros, y que tenga una longitud de 12 a 13 caracteres';
-COMMENT ON CONSTRAINT EncPremiosNombre_valido IS 'Restricción de Dominio para el atributo NombreEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
-COMMENT ON CONSTRAINT EncPremiosApellidoP_valido IS 'Restricción de Dominio para el atributo ApellidoPaternoEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
-COMMENT ON CONSTRAINT EncPremiosApellidoM_valido IS 'Restricción de Dominio para el atributo ApellidoMaternoEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
-COMMENT ON CONSTRAINT EncPremiosFechaCont_valido IS 'Restricción de Dominio para el atributo FechaContraracionEncPremios de la tabla EncagradoPremios. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
-COMMENT ON CONSTRAINT SalarioEncPremios_valido IS 'Restricción de Dominio para el atributo SalarioEncPremios de la tabla EncargadoPremios. Nos asegura que el salario sea un número positivo';
+COMMENT ON CONSTRAINT EncPremiosPK ON EncargadoPremios IS 'Restricción de Entidad para la tabla EncargadoPremios';
+COMMENT ON CONSTRAINT EncPremiosCurp_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo CURPEncPremios de la tabla EncargadoPremios. Nos asegura que solo contenga letras mayusculas y números con una longitud de 18 en sus caracteres';
+COMMENT ON CONSTRAINT EncPremiosFK ON EncargadoPremios IS 'Restricción de Integridad referencial para la tabla EncargadoPremios';
+COMMENT ON CONSTRAINT RFCEncPremios_unico ON EncargadoPremios IS 'Restricción de Dominio para el atributo RFCEncPremios de la tabla EncargadoPremios. No se pueden repetir los RFC ya que son únicos';
+COMMENT ON CONSTRAINT RFCEncPremios_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo RFCEncPremios de la tabla EncargadoPremios. Nos asegura que solo contenga letras mayusculas, numeros, y que tenga una longitud de 12 a 13 caracteres';
+COMMENT ON CONSTRAINT EncPremiosNombre_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo NombreEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
+COMMENT ON CONSTRAINT EncPremiosApellidoP_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo ApellidoPaternoEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
+COMMENT ON CONSTRAINT EncPremiosApellidoM_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo ApellidoMaternoEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
+COMMENT ON CONSTRAINT EncPremiosFechaCont_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo FechaContraracionEncPremios de la tabla EncagradoPremios. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
+COMMENT ON CONSTRAINT SalarioEncPremios_valido ON EncargadoPremios IS 'Restricción de Dominio para el atributo SalarioEncPremios de la tabla EncargadoPremios. Nos asegura que el salario sea un número positivo';
 
 
 -- 7# TELEFONO ENCARGADO PREMIOS
@@ -293,9 +293,9 @@ COMMENT ON TABLE TelefonoEncPremios IS 'Tabla que representa los números de Tel
 COMMENT ON COLUMN TelefonoEncPremios.TelefonoEncPremios IS 'Número de Teléfono del Encargado de Premios';
 COMMENT ON COLUMN TelefonoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el número de Telefono';
 
-COMMENT ON CONSTRAINT TelefonoEncPremiosPK IS 'Restricción de Entidad para la tabla TelefonoEncPremios';
-COMMENT ON CONSTRAINT TelefonoEncPremiosFK IS 'Restricción de Integridad referencial para la tabla TelefonoEncPremios';
-COMMENT ON CONSTRAINT EncPremiosTelefono_valido IS 'Restricción de Dominio para el atributo TelefonoEncPremios de la tabla TelefonoEncPremios. Nos asegura que solo contenga los números del 0 al 9 y cuya longitud de sus caracteres sea 10';
+COMMENT ON CONSTRAINT TelefonoEncPremiosPK ON TelefonoEncPremios IS 'Restricción de Entidad para la tabla TelefonoEncPremios';
+COMMENT ON CONSTRAINT TelefonoEncPremiosFK ON TelefonoEncPremios IS 'Restricción de Integridad referencial para la tabla TelefonoEncPremios';
+COMMENT ON CONSTRAINT EncPremiosTelefono_valido ON TelefonoEncPremios IS 'Restricción de Dominio para el atributo TelefonoEncPremios de la tabla TelefonoEncPremios. Nos asegura que solo contenga los números del 0 al 9 y cuya longitud de sus caracteres sea 10';
 
 -- 8# CORREO ENCARGADO PREMIOS
 CREATE TABLE CorreoEncPremios(
@@ -317,9 +317,9 @@ COMMENT ON TABLE CorreoEncPremios IS 'Tabla que representa los Correos electroni
 COMMENT ON COLUMN CorreoEncPremios.CorreoEncPremios IS 'Correo del Encargado de Premios';
 COMMENT ON COLUMN CorreoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el Correo electronico';
 
-COMMENT ON CONSTRAINT CorreoEncPremiosPK IS 'Restricción de Entidad para la tabla CorreoEncPremios';
-COMMENT ON CONSTRAINT CorreoEncPremiosFK IS 'Restricción de Integridad referencial para la tabla CorreoEncPremios';
-COMMENT ON CONSTRAINT EncPremiosCorreo_valido IS 'Restricción de Dominio para el atributo CorreoEncPremios de la tabla CorreoEncPremios. Nos asegura que la dirección de correo electronico sea válida al incluir caracteres especiales mas el separador @ para el dominio del correo';
+COMMENT ON CONSTRAINT CorreoEncPremiosPK ON CorreoEncPremios IS 'Restricción de Entidad para la tabla CorreoEncPremios';
+COMMENT ON CONSTRAINT CorreoEncPremiosFK ON CorreoEncPremios IS 'Restricción de Integridad referencial para la tabla CorreoEncPremios';
+COMMENT ON CONSTRAINT EncPremiosCorreo_valido ON CorreoEncPremios IS 'Restricción de Dominio para el atributo CorreoEncPremios de la tabla CorreoEncPremios. Nos asegura que la dirección de correo electronico sea válida al incluir caracteres especiales mas el separador @ para el dominio del correo';
 
 
 -- 9# CAJERO
@@ -363,7 +363,7 @@ ALTER TABLE Cajero
 
 -- Comentarios
 
-COMMENT ON TABLE Cajero IS 'Tabla que representa a los Cajeros'
+COMMENT ON TABLE Cajero IS 'Tabla que representa a los Cajeros';
 
 COMMENT ON COLUMN Cajero.CURPCajero IS 'CURP del Cajero';
 COMMENT ON COLUMN Cajero.IDSucursal IS 'Identificador unico de la Sucursal donde trabaja el Cajero';
@@ -377,16 +377,16 @@ COMMENT ON COLUMN Cajero.SalarioCajero IS 'Salario del Cajero';
 COMMENT ON COLUMN Cajero.EntradaCajero IS 'Hora de entrada del Cajero';
 COMMENT ON COLUMN Cajero.SalidaCajero IS 'Hora de salida del Cajero.';
 
-COMMENT ON CONSTRAINT CajeroPK IS 'Restricción de Entidad para la tabla Cajero';
-COMMENT ON CONSTRAINT CajeroCurp_valido IS 'Restricción de Dominio para el atributo CURPCajero de la tabla Cajero. Nos asegura que solo contenga letras mayusculas y números, ademas que la longitud total sea de 18 caracteres';
-COMMENT ON CONSTRAINT CajeroFK IS 'Restricción de Integridad referencial para la tabla Cajero';
-COMMENT ON CONSTRAINT RFCCajero_unico IS 'Restricción de Dominio para el atributo RFCCajero de la tabla Cajero. No se pueden repetir los RFC ya que son unicos';
-COMMENT ON CONSTRAINT RFCCajero_valido IS 'Restricción de Dominio para el atributo RFCCajero de la tabla Cajero. Nos asgeura que solo contenga letras mayusculas, números, y que la longitud total sea de 12 a 13 caracteres'
-COMMENT ON CONSTRAINT CajeroNombre_valido IS 'Restricción de Dominio para el atributo NombreCajero de la tabla Cajero. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
-COMMENT ON CONSTRAINT CajeroApellidoP_valido IS 'Restricción de Dominio para el atributo ApellidoPaternoCajero de la tabla Cajero. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
-COMMENT ON CONSTRAINT CajeroApellidoM_valido IS 'Restricción de Dominio para el atributo ApellidoMaternoCajero de la tabla Cajero. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las vocales asentuadas estan permitidas';
-COMMENT ON CONSTRAINT CajeroFechaCont_valido IS 'Restricción de Dominio para el atributo FechaContratacionCajero de la tabla Cajero. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
-COMMENT ON CONSTRAINT SalarioCajero_valido IS 'Restricción de Dominio para el atributo SalarioCajero de la tabla Cajero. Nos asegura que el salario sea un número positivo';
+COMMENT ON CONSTRAINT CajeroPK ON Cajero IS 'Restricción de Entidad para la tabla Cajero';
+COMMENT ON CONSTRAINT CajeroCurp_valido ON Cajero IS 'Restricción de Dominio para el atributo CURPCajero de la tabla Cajero. Nos asegura que solo contenga letras mayusculas y números, ademas que la longitud total sea de 18 caracteres';
+COMMENT ON CONSTRAINT CajeroFK ON Cajero IS 'Restricción de Integridad referencial para la tabla Cajero';
+COMMENT ON CONSTRAINT RFCCajero_unico ON Cajero IS 'Restricción de Dominio para el atributo RFCCajero de la tabla Cajero. No se pueden repetir los RFC ya que son unicos';
+COMMENT ON CONSTRAINT RFCCajero_valido ON Cajero IS 'Restricción de Dominio para el atributo RFCCajero de la tabla Cajero. Nos asgeura que solo contenga letras mayusculas, números, y que la longitud total sea de 12 a 13 caracteres';
+COMMENT ON CONSTRAINT CajeroNombre_valido ON Cajero IS 'Restricción de Dominio para el atributo NombreCajero de la tabla Cajero. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT CajeroApellidoP_valido ON Cajero IS 'Restricción de Dominio para el atributo ApellidoPaternoCajero de la tabla Cajero. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT CajeroApellidoM_valido ON Cajero IS 'Restricción de Dominio para el atributo ApellidoMaternoCajero de la tabla Cajero. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT CajeroFechaCont_valido ON Cajero IS 'Restricción de Dominio para el atributo FechaContratacionCajero de la tabla Cajero. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
+COMMENT ON CONSTRAINT SalarioCajero_valido ON Cajero IS 'Restricción de Dominio para el atributo SalarioCajero de la tabla Cajero. Nos asegura que el salario sea un número positivo';
 
 
 -- 10# TELEFONO CAJERO
@@ -409,9 +409,9 @@ COMMENT ON TABLE TelefonoCajero IS 'Tabla que representa los números de Teléfo
 COMMENT ON COLUMN TelefonoCajero.TelefonoCajero IS 'Número de Teléfono del Cajero';
 COMMENT ON COLUMN TelefonoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el número de Teléfono';
 
-COMMENT ON CONSTRAINT TelefonoCajeroPK IS 'Restricción de Entidad de la tabla TelefonoCajero';
-COMMENT ON CONSTRAINT TelefonoCajeroFK IS 'Restricción de Integridad referencial de la tabla TelefonoCajero';
-COMMENT ON CONSTRAINT CajeroTelefono_valido IS 'Restricción de Dominio para el atributo de TelefonoCajero de la tabla TelefonoCajero. Nos asegura que solo contenga los números del 0 al 9 y que su longitud total sea de 10 caracteres';
+COMMENT ON CONSTRAINT TelefonoCajeroPK ON TelefonoCajero IS 'Restricción de Entidad de la tabla TelefonoCajero';
+COMMENT ON CONSTRAINT TelefonoCajeroFK ON TelefonoCajero IS 'Restricción de Integridad referencial de la tabla TelefonoCajero';
+COMMENT ON CONSTRAINT CajeroTelefono_valido ON TelefonoCajero IS 'Restricción de Dominio para el atributo de TelefonoCajero de la tabla TelefonoCajero. Nos asegura que solo contenga los números del 0 al 9 y que su longitud total sea de 10 caracteres';
 
 
 -- 11# CORREO CAJERO
@@ -436,9 +436,9 @@ COMMENT ON TABLE CorreoCajero IS 'Tabla que representa los Correos electronicos 
 COMMENT ON COLUMN CorreoCajero.CorreoCajero IS 'Correo electronico del Cajero';
 COMMENT ON COLUMN CorreoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el Correo electronico';
 
-COMMENT ON CONSTRAINT CorreoCajeroPK IS 'Restricción de Entidad para la tabla CorreoCajero';
-COMMENT ON CONSTRAINT CorreoCajeroFK IS 'Restricción de Integridad Referencial para la tabla CorreoCajero';
-COMMENT ON CONSTRAINT CajeroCorreo_valido IS 'Restricción de Dominio para el atributo CorreoCajero de la tabla CorreoCajero. Nos asegura que la dirección de correo electronico sea valida al añadir caracteres especiales más el separador @ para el dominio del correo electronico';
+COMMENT ON CONSTRAINT CorreoCajeroPK ON CorreoCajero IS 'Restricción de Entidad para la tabla CorreoCajero';
+COMMENT ON CONSTRAINT CorreoCajeroFK ON CorreoCajero IS 'Restricción de Integridad Referencial para la tabla CorreoCajero';
+COMMENT ON CONSTRAINT CajeroCorreo_valido ON CorreoCajero IS 'Restricción de Dominio para el atributo CorreoCajero de la tabla CorreoCajero. Nos asegura que la dirección de correo electronico sea valida al añadir caracteres especiales más el separador @ para el dominio del correo electronico';
 
 
 -- 12# TECNICO
@@ -466,7 +466,7 @@ ALTER TABLE Tecnico
     ADD CONSTRAINT TecnicoNombre_valido CHECK (NombreTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreTecnico)) > 0),
 	ADD CONSTRAINT TecnicoApellidoP_valido CHECK (ApellidoPaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoTecnico)) > 0),
 	ADD CONSTRAINT TecnicoApellidoM_valido CHECK (ApellidoMaternoTecnico ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoTecnico)) > 0),
-    ADD CONSTRAINT TecnicoFechaCont_valido CHECK (FechaContratacionTecnico > FechaNacimientoTecnico)
+    ADD CONSTRAINT TecnicoFechaCont_valido CHECK (FechaContratacionTecnico > FechaNacimientoTecnico),
     ADD CONSTRAINT SalarioTecnico_valido CHECK (SalarioTecnico > 0),
     ALTER COLUMN IDSucursal SET NOT NULL,
     ALTER COLUMN RFCTecnico SET NOT NULL,
@@ -493,16 +493,16 @@ COMMENT ON COLUMN Tecnico.FechaContratacionTecnico IS 'Fecha de contratación de
 COMMENT ON COLUMN Tecnico.SalarioTecnico IS 'Salario del Técnico';
 COMMENT ON COLUMN Tecnico.Especialidad IS 'Especialidad del Técnico';
 
-COMMENT ON CONSTRAINT TecnicoPK IS 'Restricción de Entidad para la tabla Tecnico';
-COMMENT ON CONSTRAINT TecnicoCurp_valido IS 'Restricción de Dominio para el atributo CURPTecnico de la tabla Tecnico. Nos asegura que solo contenga letras mayusculas, números, y que su longitud total sea de 18 caracteres';
-COMMENT ON CONSTRAINT TecnicoFK IS 'Restricción de Integridad referencial de la tabla Tecnico';
-COMMENT ON CONSTRAINT RFCTecnico_unico IS 'Restricción de Dominio para el atributo RFCTecnico de la tabla Tecnico. No se pueden repetir los RFC ya que son unicos';
-COMMENT ON CONSTRAINT RFCTecnico_valido IS 'Restricción de Dominio para el atributo RFCTecnico de la tabla Tecnico. Nos asegura que solo contenga letras mayusculas, números, y que la longitud total sea entre 12 y 13 cqaracteres';
-COMMENT ON CONSTRAINT TecnicoNombre_valido IS 'Restricción de Dominio para el atributo NombreTecnico de la tabla Tecnico. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
-COMMENT ON CONSTRAINT TecnicoApellidoP_valido IS 'Restricción de Dominio para el atributo ApellidoPaternoTecnico de la tabla Tecnico. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
-COMMENT ON CONSTRAINT TecnicoApellidoM_valido IS 'Restricción de Dominio para el atributo ApellidoMaternoTecnico de la tabla Tecnico. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
-COMMENT ON CONSTRAINT TecnicoFechaCont_valido IS 'Restricción de Dominio para el atributo FechaContratacionTecnico de la tabla Tecnico. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
-COMMENT ON CONSTRAINT SalarioTecnico_valido IS 'Restricción de Dominio para el atributo SalarioTecnico de la tabla Tecnico. Nos asegura que el salario sea un número positivo';
+COMMENT ON CONSTRAINT TecnicoPK ON Tecnico IS 'Restricción de Entidad para la tabla Tecnico';
+COMMENT ON CONSTRAINT TecnicoCurp_valido ON Tecnico IS 'Restricción de Dominio para el atributo CURPTecnico de la tabla Tecnico. Nos asegura que solo contenga letras mayusculas, números, y que su longitud total sea de 18 caracteres';
+COMMENT ON CONSTRAINT TecnicoFK ON Tecnico IS 'Restricción de Integridad referencial de la tabla Tecnico';
+COMMENT ON CONSTRAINT RFCTecnico_unico ON Tecnico IS 'Restricción de Dominio para el atributo RFCTecnico de la tabla Tecnico. No se pueden repetir los RFC ya que son unicos';
+COMMENT ON CONSTRAINT RFCTecnico_valido ON Tecnico IS 'Restricción de Dominio para el atributo RFCTecnico de la tabla Tecnico. Nos asegura que solo contenga letras mayusculas, números, y que la longitud total sea entre 12 y 13 cqaracteres';
+COMMENT ON CONSTRAINT TecnicoNombre_valido ON Tecnico IS 'Restricción de Dominio para el atributo NombreTecnico de la tabla Tecnico. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT TecnicoApellidoP_valido ON Tecnico IS 'Restricción de Dominio para el atributo ApellidoPaternoTecnico de la tabla Tecnico. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT TecnicoApellidoM_valido ON Tecnico IS 'Restricción de Dominio para el atributo ApellidoMaternoTecnico de la tabla Tecnico. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT TecnicoFechaCont_valido ON Tecnico IS 'Restricción de Dominio para el atributo FechaContratacionTecnico de la tabla Tecnico. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
+COMMENT ON CONSTRAINT SalarioTecnico_valido ON Tecnico IS 'Restricción de Dominio para el atributo SalarioTecnico de la tabla Tecnico. Nos asegura que el salario sea un número positivo';
 
 
 -- 13# TELEFONO TECNICO
@@ -526,9 +526,9 @@ COMMENT ON TABLE TelefonoTecnico IS 'Tabla que representa los números de Teléf
 COMMENT ON COLUMN TelefonoTecnico.TelefonoTecnico IS 'Número de Teléfono del Técnico';
 COMMENT ON COLUMN TelefonoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el número de Teléfono';
 
-COMMENT ON CONSTRAINT TelefonoTecnicoPK IS 'Restricción de Entidad para la tabla TelefonoTecnico';
-COMMENT ON CONSTRAINT TelefonoTecnicoFK IS 'Restricción de Integridad referencial para la tabla TelefonoTecnico';
-COMMENT ON CONSTRAINT TecnicoTelefono_valido IS 'Restricción de Dominio para el atributo TelefonoTecnico de la tabla TelefonoTecnico. Nos asegura que solo contenga los números del 0 al 9 y que su longitud total sea de 10 digitos';
+COMMENT ON CONSTRAINT TelefonoTecnicoPK ON TelefonoTecnico IS 'Restricción de Entidad para la tabla TelefonoTecnico';
+COMMENT ON CONSTRAINT TelefonoTecnicoFK ON TelefonoTecnico IS 'Restricción de Integridad referencial para la tabla TelefonoTecnico';
+COMMENT ON CONSTRAINT TecnicoTelefono_valido ON TelefonoTecnico IS 'Restricción de Dominio para el atributo TelefonoTecnico de la tabla TelefonoTecnico. Nos asegura que solo contenga los números del 0 al 9 y que su longitud total sea de 10 digitos';
 
 
 -- 14# CORREO TECNICO
@@ -554,9 +554,9 @@ COMMENT ON TABLE CorreoTecnico IS 'Tabla que representa los Correos electronicos
 COMMENT ON COLUMN CorreoTecnico.CorreoTecnico IS 'Correo electronico del Técnico';
 COMMENT ON COLUMN CorreoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el Correo electronico';
 
-COMMENT ON CONSTRAINT CorreoTecnicoPK IS 'Restricción de Entidad para la tabla CorreoTecnico';
-COMMENT ON CONSTRAINT CorreoTecnicoFK IS 'Restricción de Integridad referencial para la tabla CorreoTecnico';
-COMMENT ON CONSTRAINT TecnicoCorreo_valido IS 'Restricción de Dominio para el atributo CorreoTecnico de la tabla CorreoTecnico. Nos asegura que la direccción de correo electronico sea valido aceptando caracteres especiales más el separador @ para el dominio del correo electronico';
+COMMENT ON CONSTRAINT CorreoTecnicoPK ON CorreoTecnico IS 'Restricción de Entidad para la tabla CorreoTecnico';
+COMMENT ON CONSTRAINT CorreoTecnicoFK ON CorreoTecnico IS 'Restricción de Integridad referencial para la tabla CorreoTecnico';
+COMMENT ON CONSTRAINT TecnicoCorreo_valido ON CorreoTecnico IS 'Restricción de Dominio para el atributo CorreoTecnico de la tabla CorreoTecnico. Nos asegura que la direccción de correo electronico sea valido aceptando caracteres especiales más el separador @ para el dominio del correo electronico';
 
 
 -- 15# CERTIFICACION
@@ -580,9 +580,9 @@ COMMENT ON TABLE Certificacion IS 'Tabla que representa las Certificaciones de l
 COMMENT ON COLUMN Certificacion.Certificacion IS 'Certificación realizada por el Técnico';
 COMMENT ON COLUMN Certificacion.CURPTecnico IS 'CURP del Técnico al que está asociada la certificación';
 
-COMMENT ON CONSTRAINT CertificacionPK IS 'Restricción de Entidad para la tabla Certificacion';
-COMMENT ON CONSTRAINT CertificacionFK IS 'Restricción de Integridad referencial para la tabla Certificación';
-COMMENT ON CONSTRAINT Certificacion_valida IS 'Restricción de Dominio para el atributo Certificacion de la tabla Certificacion. Nos asegura que no este formado por espacios en blanco y no contenga caracteres especiales, las vocales asentuadas estan permitidas';
+COMMENT ON CONSTRAINT CertificacionPK ON Certificacion IS 'Restricción de Entidad para la tabla Certificacion';
+COMMENT ON CONSTRAINT CertificacionFK ON Certificacion IS 'Restricción de Integridad referencial para la tabla Certificación';
+COMMENT ON CONSTRAINT Certificacion_valida ON Certificacion IS 'Restricción de Dominio para el atributo Certificacion de la tabla Certificacion. Nos asegura que no este formado por espacios en blanco y no contenga caracteres especiales, las vocales asentuadas estan permitidas';
 
 
 -- 16# CLIENTE
