@@ -102,8 +102,9 @@ CREATE TABLE Gerente(
 
 ALTER TABLE Gerente
     ADD CONSTRAINT GerentePK PRIMARY KEY (CURPGerente),
-    ADD CONSTRAINT GerenteFK FOREIGN KEY (IDSucursal)
-        REFERENCES Sucursal(IDSucursal),
+    ADD CONSTRAINT GerenteFK FOREIGN KEY (IDSucursal) 
+        REFERENCES Sucursal(IDSucursal)
+        ON DELETE CASCADE,
     ADD CONSTRAINT RFCGerente_unico UNIQUE (RFCGerente),
     ADD CONSTRAINT CedulaGerente_unico UNIQUE (CedulaProfesional),
     ADD CONSTRAINT SalarioGerente_valido CHECK (SalarioGerente > 0),
@@ -125,6 +126,19 @@ ALTER TABLE Gerente
 
 -- Comentarios
 
+COMMENT ON TABLE Gerente IS 'Tabla que representa a los Gerentes';
+
+COMMENT ON CONSTRAINT Gerente.CURPGerente IS 'Curp del Gerente';
+COMMENT ON CONSTRAINT Gerente.IDSucursal IS 'Identificador unico de la Sucursal en la que trabaja el Gerente';
+COMMENT ON CONSTRAINT Gerente.RFCGerente IS 'RFC del Gerente';
+COMMENT ON CONSTRAINT Gerente.NombreGerente IS 'Nombre de pila del Gerente';
+COMMENT ON CONSTRAINT Gerente.ApellidoPaternoGerente IS 'Apellido paterno del Gerente';
+COMMENT ON CONSTRAINT Gerente.ApellidoMaternoGerente IS 'Apellido materno del Gerente';
+COMMENT ON CONSTRAINT Gerente.FechaContratacionGerente IS 'Fecha de contratación del Gerente';
+COMMENT ON CONSTRAINT Gerente.FechaNacimientoGerente IS 'Fecha de nacimiento del Gerente';
+COMMENT ON CONSTRAINT Gerente.SalarioGerente IS 'Salario del Gerente';
+COMMENT ON CONSTRAINT Gerente.CedulaProfesional IS 'Cedula profesional del Gerente';
+
 
 -- 4# TELEFONO GERENTE
 CREATE TABLE TelefonoGerente(
@@ -135,10 +149,16 @@ CREATE TABLE TelefonoGerente(
 ALTER TABLE TelefonoGerente
     ADD CONSTRAINT TelefonoGerentePK PRIMARY KEY (CURPGerente, TelefonoGerente),
     ADD CONSTRAINT TelefonoGerenteFK FOREIGN KEY (CURPGerente)
-        REFERENCES Gerente(CURPGerente),
+        REFERENCES Gerente(CURPGerente)
+        ON DELETE CASCADE,
 	ADD CONSTRAINT GerenteTelefono_valido CHECK (TelefonoGerente ~ '^[0-9]{10}$');
 
 -- Comentarios
+
+COMMENT ON TABLE TelefonoGerente IS 'Tabla que representa los numeros de Teléfono de los gerentes';
+
+COMMENT ON CONSTRAINT TelefonoGerente.TelefonoGerente IS 'Número de Telefono del Gerente';
+COMMENT ON CONSTRAINT TelefonoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el número de Teléfono';
 
 
 -- 5# CORREO GERENTE
@@ -150,12 +170,18 @@ CREATE TABLE CorreoGerente(
 ALTER TABLE CorreoGerente
     ADD CONSTRAINT CorreoGerentePK PRIMARY KEY (CURPGerente, CorreoGerente),
     ADD CONSTRAINT CorreoGerenteFK FOREIGN KEY (CURPGerente)
-        REFERENCES Gerente(CURPGerente),
+        REFERENCES Gerente(CURPGerente)
+        ON DELETE CASCADE,
     ADD CONSTRAINT GerenteCorreo_valido CHECK (
         CorreoGerente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
 
 -- Comentarios
+
+COMMENT ON TABLE CorreoGerente IS 'Tabla que representa los Correos electronicos de los gerentes';
+
+COMMENT ON CONSTRAINT CorreoGerente.CorreoGerente IS 'Correo del Gerente';
+COMMENT ON CONSTRAINT CorreoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el Correo electronico';
 
 
 -- 6# ENCARGADO PREMIOS
@@ -176,7 +202,8 @@ CREATE TABLE EncargadoPremios(
 ALTER TABLE EncargadoPremios
     ADD CONSTRAINT EncPremiosPK PRIMARY KEY (CURPEncPremios),
     ADD CONSTRAINT EncPremiosFK FOREIGN KEY (IDSucursal)
-        REFERENCES Sucursal(IDSucursal),
+        REFERENCES Sucursal(IDSucursal)
+        ON DELETE CASCADE,
     ADD CONSTRAINT RFCEncPremios_unico UNIQUE (RFCEncPremios),
     ADD CONSTRAINT SalarioEncPremios_valido CHECK (SalarioEncPremios > 0),
     ALTER COLUMN IDSucursal SET NOT NULL,
@@ -198,6 +225,20 @@ ALTER TABLE EncargadoPremios
 
 -- Comentarios
 
+COMMENT ON TABLE EncargadoPremios IS 'Tabla que representa a los Encargados de los Premios';
+
+COMMENT ON CONSTRAINT EncargadoPremios.CURPEncPremios IS 'CURP del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.IDSucursal IS 'Identificador unico de la Sucursal en la que trabaja el Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.RFCEncPremios IS 'RFC del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.NombreEncPremios IS 'Nombre de pila del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.ApellidoPaternoEncPremios IS 'Apellido paterno del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.ApellidoMaternoEncPremios IS 'Apellido materno del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.FechaNacimientoEncPremios IS 'Fecha de nacimiento del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.FechaContratacionEncPremios IS 'Fecha de contratación del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.SalarioEncPremios IS 'Salario del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.EntradaEncPremios IS 'Hora de entrada del Encargado de Premios';
+COMMENT ON CONSTRAINT EncargadoPremios.SalidaEncPremios IS 'Hora de salida del Encargado Premios';
+
 
 -- 7# TELEFONO ENCARGADO PREMIOS
 CREATE TABLE TelefonoEncPremios(
@@ -208,11 +249,16 @@ CREATE TABLE TelefonoEncPremios(
 ALTER TABLE TelefonoEncPremios
     ADD CONSTRAINT TelefonoEncPremiosPK PRIMARY KEY (CURPEncPremios, TelefonoEncPremios),
     ADD CONSTRAINT TelefonoEncPremiosFK FOREIGN KEY (CURPEncPremios) 
-        REFERENCES EncargadoPremios(CURPEncPremios),
+        REFERENCES EncargadoPremios(CURPEncPremios)
+        ON DELETE CASCADE,
 	ADD CONSTRAINT EncPremiosTelefono_valido CHECK (TelefonoEncPremios ~ '^[0-9]{10}$');
 
 -- Comentarios
 
+COMMENT ON TABLE TelefonoEncPremios IS 'Tabla que representa los números de Teléfono de los Encargados de Premios';
+
+COMMENT ON CONSTRAINT TelefonoEncPremios.TelefonoEncPremios IS 'Número de Teléfono del Encargado de Premios';
+COMMENT ON CONSTRAINT TelefonoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el número de Telefono';
 
 -- 8# CORREO ENCARGADO PREMIOS
 CREATE TABLE CorreoEncPremios(
@@ -223,10 +269,16 @@ CREATE TABLE CorreoEncPremios(
 ALTER TABLE CorreoEncPremios
     ADD CONSTRAINT CorreoEncPremiosPK PRIMARY KEY (CURPEncPremios,  CorreoEncPremios),
     ADD CONSTRAINT CorreoEncPremiosFK FOREIGN KEY (CURPEncPremios) 
-        REFERENCES EncargadoPremios(CURPEncPremios),
+        REFERENCES EncargadoPremios(CURPEncPremios)
+        ON DELETE CASCADE,
     ADD CONSTRAINT EncPremiosCorreo_valido CHECK (CorreoEncPremios ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
 -- Comentarios
+
+COMMENT ON TABLE CorreoEncPremios IS 'Tabla que representa los Correos electronicos de los Encargados de Premios';
+
+COMMENT ON CONSTRAINT CorreoEncPremios.CorreoEncPremios IS 'Correo del Encargado de Premios';
+COMMENT ON CONSTRAINT CorreoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el Correo electronico';
 
 
 -- 9# CAJERO
@@ -247,7 +299,8 @@ CREATE TABLE Cajero(
 ALTER TABLE Cajero
     ADD CONSTRAINT CajeroPK PRIMARY KEY (CURPCajero),
     ADD CONSTRAINT CajeroFK FOREIGN KEY (IDSucursal)
-        REFERENCES Sucursal(IDSucursal),
+        REFERENCES Sucursal(IDSucursal)
+        ON DELETE CASCADE,
     ADD CONSTRAINT RFCCajero_unico UNIQUE (RFCCajero),
     ADD CONSTRAINT SalarioCajero_valido CHECK (SalarioCajero > 0),
     ALTER COLUMN IDSucursal SET NOT NULL,
@@ -269,6 +322,20 @@ ALTER TABLE Cajero
 
 -- Comentarios
 
+COMMENT ON TABLE Cajero IS 'Tabla que representa a los Cajeros'
+
+COMMENT ON CONSTRAINT Cajero.CURPCajero IS 'CURP del Cajero';
+COMMENT ON CONSTRAINT Cajero.IDSucursal IS 'Identificador unico de la Sucursal donde trabaja el Cajero';
+COMMENT ON CONSTRAINT Cajero.RFCCajero IS 'CURP del Cajero';
+COMMENT ON CONSTRAINT Cajero.NombreCajero IS 'Nombre de pila del Cajero';
+COMMENT ON CONSTRAINT Cajero.ApellidoPaternoCajero IS 'Apellido paterno del Cajero';
+COMMENT ON CONSTRAINT Cajero.ApellidoMaternoCajero IS 'Apellido materno del Cajero';
+COMMENT ON CONSTRAINT Cajero.FechaNacimientoCajero IS 'Fecha de nacimiento del Cajero';
+COMMENT ON CONSTRAINT Cajero.FechaContratacionCajero IS 'Fecha de contratación del Cajero';
+COMMENT ON CONSTRAINT Cajero.SalarioCajero IS 'Salario del Cajero';
+COMMENT ON CONSTRAINT Cajero.EntradaCajero IS 'Hora de entrada del Cajero';
+COMMENT ON CONSTRAINT Cajero.SalidaCajero IS 'Hora de salida del Cajero.';
+
 
 -- 10# TELEFONO CAJERO
 CREATE TABLE TelefonoCajero(
@@ -279,10 +346,16 @@ CREATE TABLE TelefonoCajero(
 ALTER TABLE TelefonoCajero 
     ADD CONSTRAINT TelefonoCajeroPK PRIMARY KEY (CURPCajero, TelefonoCajero),
     ADD CONSTRAINT TelefonoCajeroFK FOREIGN KEY (CURPCajero)
-        REFERENCES Cajero(CURPCajero),
+        REFERENCES Cajero(CURPCajero)
+        ON DELETE CASCADE,
 	ADD CONSTRAINT CajeroTelefono_valido CHECK (TelefonoCajero ~ '^[0-9]{10}$');
 
 -- Comentarios
+
+COMMENT ON TABLE TelefonoCajero IS 'Tabla que representa los números de Teléfono de los Cajeros';
+
+COMMENT ON CONSTRAINT TelefonoCajero.TelefonoCajero IS 'Número de Teléfono del Cajero';
+COMMENT ON CONSTRAINT TelefonoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el número de Teléfono';
 
 
 -- 11# CORREO CAJERO
@@ -294,12 +367,18 @@ CREATE TABLE CorreoCajero(
 ALTER TABLE CorreoCajero
     ADD CONSTRAINT CorreoCajeroPK PRIMARY KEY (CURPCajero, CorreoCajero),
     ADD CONSTRAINT CorreoCajeroFK FOREIGN KEY (CURPCajero)
-        REFERENCES Cajero(CURPCajero),
+        REFERENCES Cajero(CURPCajero)
+        ON DELETE CASCADE,
     ADD CONSTRAINT CajeroCorreo_chk CHECK (
         CorreoCajero ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
 
 -- Comentarios
+
+COMMENT ON TABLE CorreoCajero IS 'Tabla que representa los Correos electronicos de los Cajeros';
+
+COMMENT ON CONSTRAINT CorreoCajero.CorreoCajero IS 'Correo electronico del Cajero';
+COMMENT ON CONSTRAINT CorreoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el Correo electronico';
 
 
 -- 12# TECNICO
@@ -319,7 +398,8 @@ CREATE TABLE Tecnico(
 ALTER TABLE Tecnico
     ADD CONSTRAINT TecnicoPK PRIMARY KEY (CURPTecnico),
     ADD CONSTRAINT TecnicoFK FOREIGN KEY (IDSucursal)
-        REFERENCES Sucursal(IDSucursal),
+        REFERENCES Sucursal(IDSucursal)
+        ON DELETE CASCADE,
     ADD CONSTRAINT RFCTecnico_unico UNIQUE (RFCTecnico),
     ADD CONSTRAINT SalarioTecnico_valido CHECK (SalarioTecnico > 0),
     ALTER COLUMN IDSucursal SET NOT NULL,
@@ -340,6 +420,19 @@ ALTER TABLE Tecnico
 
 -- Comentarios
 
+COMMENT ON TABLE Tecnico IS 'Tabla que representa a los Tecnicos';
+
+COMMENT ON CONSTRAINT Tecnico.CURPTecnico IS 'CURP del Técnico';
+COMMENT ON CONSTRAINT Tecnico.IDSucursal IS 'Identificador único de la Sucursal donde trabaja el Técnico';
+COMMENT ON CONSTRAINT Tecnico.RFCTecnico IS 'RFC del Técnico';
+COMMENT ON CONSTRAINT Tecnico.NombreTecnico IS 'Nombre de pila del Técnico';
+COMMENT ON CONSTRAINT Tecnico.ApellidoPaternoTecnico IS 'Apellido paterno del Técnico';
+COMMENT ON CONSTRAINT Tecnico.ApellidoMaternoTecnico IS 'Apellido materno del Técnico';
+COMMENT ON CONSTRAINT Tecnico.FechaNacimientoTecnico IS 'Fecha de nacimiento del Técnico';
+COMMENT ON CONSTRAINT Tecnico.FechaContratacionTecnico IS 'Fecha de contratación del Técnico';
+COMMENT ON CONSTRAINT Tecnico.SalarioTecnico IS 'Salario del Técnico';
+COMMENT ON CONSTRAINT Tecnico.Especialidad IS 'Especialidad del Técnico';
+
 
 -- 13# TELEFONO TECNICO
 CREATE TABLE TelefonoTecnico(
@@ -351,10 +444,16 @@ CREATE TABLE TelefonoTecnico(
 ALTER TABLE TelefonoTecnico
     ADD CONSTRAINT TelefonoTecnicoPK PRIMARY KEY (CURPTecnico, TelefonoTecnico),
     ADD CONSTRAINT TelefonoTecnicoFK FOREIGN KEY (CURPTecnico)
-        REFERENCES Tecnico(CURPTecnico),
+        REFERENCES Tecnico(CURPTecnico)
+        ON DELETE CASCADE,
 	ADD CONSTRAINT TecnicoTelefono_valido CHECK (TelefonoTecnico ~ '^[0-9]{10}$');
 
 -- Comentarios
+
+COMMENT ON TABLE TelefonoTecnico IS 'Tabla que representa los números de Teléfono de los Técnicos';
+
+COMMENT ON CONSTRAINT TelefonoTecnico.TelefonoTecnico IS 'Número de Teléfono del Técnico';
+COMMENT ON CONSTRAINT TelefonoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el número de Teléfono';
 
 
 -- 14# CORREO TECNICO
@@ -367,13 +466,18 @@ CREATE TABLE CorreoTecnico(
 ALTER TABLE CorreoTecnico 
     ADD CONSTRAINT CorreoTecnicoPK PRIMARY KEY (CURPTecnico, CorreoTecnico),
     ADD CONSTRAINT CorreoTecnicoFK FOREIGN KEY (CURPTecnico)
-        REFERENCES Tecnico(CURPTecnico),
+        REFERENCES Tecnico(CURPTecnico)
+        ON DELETE CASCADE,
     ADD CONSTRAINT TecnicoCorreo_valido CHECK (
         CorreoTecnico ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );
 
 -- Comentarios
 
+COMMENT ON TABLE CorreoTecnico IS 'Tabla que representa los Correos electronicos de los Técnicos';
+
+COMMENT ON CONSTRAINT CorreoTecnico.CorreoTecnico IS 'Correo electronico del Técnico';
+COMMENT ON CONSTRAINT CorreoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el Correo electronico';
 
 -- 15# CERTIFICACION
 CREATE TABLE Certificacion(
@@ -384,11 +488,16 @@ CREATE TABLE Certificacion(
 ALTER TABLE Certificacion
     ADD CONSTRAINT CertificacionPK PRIMARY KEY (CURPTecnico, Certificacion),
     ADD CONSTRAINT CertificacionFK FOREIGN KEY (CURPTecnico)
-        REFERENCES Tecnico(CURPTecnico),
+        REFERENCES Tecnico(CURPTecnico)
+        ON DELETE CASCADE,
     ALTER COLUMN CURPTecnico SET NOT NULL;
 
 -- Comentarios
 
+COMMENT ON TABLE Certificacion IS 'Tabla que representa las Certificaciones de los Técnicos';
+
+COMMENT ON CONSTRAINT Certificacion.Certificacion IS 'Certificación realizada por el Técnico';
+COMMENT ON CONSTRAINT Certificacion.CURPTecnico IS 'CURP del Técnico al que está asociada la certificación';
 
 -- 16# CLIENTE
 CREATE TABLE Cliente (
