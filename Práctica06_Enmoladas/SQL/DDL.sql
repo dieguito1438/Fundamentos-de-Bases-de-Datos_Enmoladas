@@ -619,7 +619,9 @@ ALTER TABLE Premio
 	ALTER COLUMN RangoEdad SET NOT NULL,
 	ADD CONSTRAINT Premio_Rango_Edad_Valido CHECK (RangoEdad IN ('Infantil', 'Juvenil', 'Adulto')),
 	ALTER COLUMN ValorAproximado SET NOT NULL,
-	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0 AND ValorAproximado < 10000);
+	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0 AND ValorAproximado < 10000);    
+
+-- Comentarios
 
 COMMENT ON TABLE Premio IS 'Almacena la información de los premios registrados en una Sucursal';
 COMMENT ON COLUMN Premio.IDPremio IS 'Identificador del Premio';
@@ -632,7 +634,6 @@ COMMENT ON CONSTRAINT Nombre_Premio_Minimamente_Válido ON Premio IS 'El nombre 
 COMMENT ON CONSTRAINT Premio_Rango_Edad_Valido ON Premio IS 'El dominio de los valores son <Infantil,Juvenil,Adulto>';
 COMMENT ON CONSTRAINT Premio_Valor_Valido ON Premio IS 'El valor Aproximado del premio es positivo y no supera los 10,000$';
 	
--- Comentarios
 
 
 -- 24# REGISTRO PARTIDA
@@ -679,18 +680,22 @@ ALTER TABLE Canje
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Canje_FK01T FOREIGN KEY (NoTarjeta) 
 		REFERENCES Tarjeta(NoTarjeta),
+       ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN CURPEncPremios SET NOT NULL,
 	ADD CONSTRAINT Canje_FK02E FOREIGN KEY (CURPEncPremios) 
 	 	REFERENCES EncargadoPremios(CURPEncPremios), 
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN Fecha SET NOT NULL, 
 	ALTER COLUMN Hora SET NOT NULL;
+    
+--Comentarios
 
 COMMENT ON TABLE Canje IS 'Registra la infomación del Canje de un premio';
 COMMENT ON COLUMN Canje.IDCanjeo IS 'Identificador del Canje';
 COMMENT ON COLUMN Canje.NoTarjeta IS 'Número de Tarjeta del Cliente asociado al Canje';
 COMMENT ON COLUMN Canje.CURPEncPremios IS 'Curp del Encargado de Premios que realiza el Canje';
-COMMENT ON COLUMN Canje.DATE IS 'Fecha registrada durante el Canje';
-COMMENT ON COLUMN Canje.TIME IS 'Hora registrada durante el Canje';
+COMMENT ON COLUMN Canje.Fecha IS 'Fecha registrada durante el Canje';
+COMMENT ON COLUMN Canje.Hora IS 'Hora registrada durante el Canje';
 
 COMMENT ON CONSTRAINT Canje_PK ON Canje IS 'El identificador del Canje es único';
 COMMENT ON CONSTRAINT IDCanjeo_Positivo ON Canje IS 'El identificador debe poseer una etiqueta positiva';
@@ -714,9 +719,11 @@ ALTER TABLE Recarga
 	ALTER COLUMN CURPCajero SET NOT NULL,
 	ADD CONSTRAINT Recarga_FK01C FOREIGN KEY (CURPCajero) 
 		REFERENCES Cajero(CURPCajero),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Recarga_FK02T FOREIGN KEY (NoTarjeta) 
 		REFERENCES Tarjeta(NoTarjeta),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN Fecha SET NOT NULL,
 	ALTER COLUMN Hora SET NOT NULL,
 	ALTER COLUMN Monto SET NOT NULL,
@@ -724,17 +731,25 @@ ALTER TABLE Recarga
 	ALTER COLUMN MetodoAbono SET NOT NULL,
 	ADD CONSTRAINT Recarga_MetodoAbono_Valido CHECK ( MetodoAbono IN ('Efectivo', 'TarjetaDebito','TarjetaCredito', 'Paypal'));
 
+--Comentarios
+
 COMMENT ON TABLE Recarga IS 'Registra la información de una Recarga monetaria hacia una Tarjeta';
 COMMENT ON COLUMN Recarga.CURPCajero IS 'Curp del Cajero';
 COMMENT ON COLUMN Recarga.NoTarjeta IS 'Número de la Tarjeta';
-COMMENT ON COLUMN Recarga.DATE IS 'Fecha en la que se realizo la Recarga';
-COMMENT ON COLUMN Recarga.Time Is 'Hora en la que se realizo la Recarga';
+COMMENT ON COLUMN Recarga.Fecha IS 'Fecha en la que se realizo la Recarga';
+COMMENT ON COLUMN Recarga.Hora Is 'Hora en la que se realizo la Recarga';
 COMMENT ON COLUMN Recarga.Monto Is 'Total del monto Abonado en la Recarga';
 COMMENT ON COLUMN Recarga.MetodoAbono IS 'Forma de pago durante la recarga. Son Efectivo, Debito, Credito o Paypal';
+
 COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga 'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
 COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga 'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
 COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga 'El monto debe ser un valor positivo multiplo de 10';
 COMMENT ON CONSTRAINT Recarga_MetodoAbono_Valido ON Recarga 'La forma de pago tiene que corresponder con una de las disponibles';
+COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga IS 'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
+COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga IS 'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
+COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga IS 'El monto debe ser un valor positivo multiplo de 10';
+COMMENT ON CONSTRAINT Recarga_MetodoAbono_Valido ON Recarga IS 'La forma de pago tiene que corresponder con una de las disponibles';
+
 
 -- 27# GUARDAR
 -- NOTA
@@ -780,18 +795,22 @@ ALTER TABLE Incluir
 	ALTER COLUMN IDPremio SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK01P FOREIGN KEY (IDPremio)
 		REFERENCES Premio(IDPremio),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN IDCanjeo SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK02C FOREIGN KEY (IDCanjeo)
 		REFERENCES Canje(IDCanjeo),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN Cantidad SET NOT NULL,
 	ADD CONSTRAINT Incluir_Cantidad_Valida CHECK (Cantidad >= 1);
 
-COMMENT ON TABLE Incluir 'Tabla que representa que un Canje Incuye un Premio';
+-- Comentarios
+
+COMMENT ON TABLE Incluir Is 'Tabla que representa que un Canje Incuye un Premio';
 COMMENT ON COLUMN Incluir.IDPremio IS 'Identificador único del premio';
 COMMENT ON COLUMN Incluir.IDCanjeo IS 'Identificador único del Canje';
 COMMENT ON COLUMN Incluir.Cantidad Is 'Cantidad de premios que incluye el Canje';
-COMMENT ON CONSTRAINT Incluir_FK01P ON Incluir IS 'Establece la relación entre la tabla Incluye y premio, Un premio es Incluido e Un canje';
-COMMENT ON CONSTRAINT Incluir_FK02C ON Incluir IS 'Establece la relación entre la tabla Incluye y cajero, Un canje es Incluido para un premio';
+COMMENT ON CONSTRAINT Incluir_FK01P ON Incluir IS 'Establece la relación entre la tabla Incluye y premio, Un premio es Incluido en un canje';
+COMMENT ON CONSTRAINT Incluir_FK02C ON Incluir IS 'Establece la relación entre la tabla Incluye y canje, Un canje es Incluido para un premio';
 COMMENT ON CONSTRAINT Incluir_Cantidad_Valida ON  Incluir IS 'Debe haber al menos un premio pára realizar el Canje';
 
 
