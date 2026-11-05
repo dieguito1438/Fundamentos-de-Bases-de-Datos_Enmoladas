@@ -417,7 +417,20 @@ ALTER TABLE Cliente
 
 -- Comentarios
 
-    
+COMMENT ON TABLE Cliente IS 'Tabla que almacena la información de los clientes del sistema.';
+COMMENT ON COLUMN Cliente.IDCliente IS 'Identificador único del cliente.';
+COMMENT ON COLUMN Cliente.Nombre IS 'Nombre del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Cliente.ApellidoP IS 'Apellido paterno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Cliente.ApellidoM IS 'Apellido materno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Cliente.FechaNacimiento IS 'Fecha de nacimiento del cliente. Debe tener al menos 12 años';
+COMMENT ON CONSTRAINT pk_cliente ON Cliente IS 'Llave primaria de la tabla Cliente.';
+COMMENT ON CONSTRAINT IDCliente_Valida ON Cliente IS 'Ve que el ID del cliente sea un número entero positivo.';
+COMMENT ON CONSTRAINT chk_fecha_nacimiento ON Cliente IS 'Ve que la fecha de nacimiento del cliente sea válida y que tenga al menos 12 años.';
+COMMENT ON CONSTRAINT ClienteNombre_valido ON Cliente IS 'Ve que el nombre del cliente contenga solo letras y espacios, y que no esté vacío.';
+COMMENT ON CONSTRAINT ClienteApellidoP_valido ON Cliente IS 'Ve que el apellido paterno del cliente contenga solo letras y espacios, y que no esté vacío.';
+COMMENT ON CONSTRAINT ClienteApellidoM_valido ON Cliente IS 'Ve que el apellido materno del cliente contenga solo letras y espacios, y que no esté vacío.';
+
+
  -- 17# TARJETA
 CREATE TABLE Tarjeta (
     NoTarjeta INT
@@ -427,7 +440,10 @@ ALTER TABLE Tarjeta
     ADD CONSTRAINT Tarjeta_PK PRIMARY KEY (NoTarjeta),
     ADD CONSTRAINT NoTarjeta_Positivo CHECK (NoTarjeta >= 0);
 
--- Comentarios
+COMMENT ON TABLE Tarjeta IS 'Tabla que almacena la información de las tarjetas de los clientes.';
+COMMENT ON COLUMN Tarjeta.NoTarjeta IS 'Número de tarjeta único. Debe ser un número entero positivo.';
+COMMENT ON CONSTRAINT Tarjeta_PK ON Tarjeta IS 'Clave primaria de la tabla Tarjeta.';
+COMMENT ON CONSTRAINT NoTarjeta_Positivo ON Tarjeta IS 'Verifica que el número de tarjeta sea un número entero positivo.';
 
  -- 18# PERTENECER
 CREATE TABLE Pertenecer (
@@ -442,9 +458,9 @@ CREATE TABLE Pertenecer (
 ALTER TABLE Pertenecer 
 	ADD CONSTRAINT uq_pertenecer UNIQUE (IDCliente, NoTarjeta), -- Ahora si ya es PK lo siento :(
 	ADD CONSTRAINT fk_pertenecer_cliente FOREIGN KEY (IDCliente) 
-		REFERENCES Cliente(IDCliente),
+		REFERENCES Cliente(IDCliente) ON DELETE CASCADE,
 	ADD CONSTRAINT fk_pertenecer_tarjeta FOREIGN KEY (NoTarjeta) 
-		REFERENCES Tarjeta(NoTarjeta),
+		REFERENCES Tarjeta(NoTarjeta) ON DELETE CASCADE ON UPDATE CASCADE,
 	ALTER COLUMN Nombre SET NOT NULL,
 	ADD CONSTRAINT Pertenecer_Nombre_Valido CHECK (Nombre ~'^[A-Za-z-ÁÉÍÓÚÜÑáéíóúüñ ]+$' AND LENGTH(TRIM(Nombre)) > 0),
 	ALTER COLUMN ApellidoP SET NOT NULL,
@@ -454,9 +470,20 @@ ALTER TABLE Pertenecer
         FechaNacimiento >= '1909-01-01' AND 
         FechaNacimiento <= CURRENT_DATE - INTERVAL '12 years'
     );
-  
--- Comentarios
-  
+
+COMMENT ON TABLE Pertenecer IS 'Tabla que relaciona clientes con sus tarjetas.';
+COMMENT ON COLUMN Pertenecer.IDCliente IS 'Identificador del cliente.';
+COMMENT ON COLUMN Pertenecer.NoTarjeta IS 'Número de tarjeta asociado al cliente.';
+COMMENT ON COLUMN Pertenecer.Nombre IS 'Nombre del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Pertenecer.ApellidoP IS 'Apellido paterno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Pertenecer.ApellidoM IS 'Apellido materno del cliente. Máximo 100 caracteres. Solo letras y espacios.';
+COMMENT ON COLUMN Pertenecer.FechaNacimiento IS 'Fecha de nacimiento del cliente. Debe tener al menos 12 años.';
+
+COMMENT ON CONSTRAINT uq_pertenecer ON Pertenecer IS 'Ve que la combinación de IDCliente y NoTarjeta sea única.';
+COMMENT ON CONSTRAINT fk_pertenecer_cliente ON Pertenecer IS 'Llave foránea que referencia a la tabla Cliente.';
+COMMENT ON CONSTRAINT fk_pertenecer_tarjeta ON Pertenecer IS 'Llave foránea que referencia a la tabla Tarjeta.';
+COMMENT ON CONSTRAINT Pertenecer_Nombre_Valido ON Pertenecer IS 'Ve que el nombre del cliente contenga solo letras y espacios, y que no esté vacío.';
+COMMENT ON CONSTRAINT chk_fecha_nacimiento ON Pertenecer IS 'Ve que la fecha de nacimiento del cliente sea válida y que tenga al menos 12 años.';
     
  -- 19# CORREO CLIENTE
 CREATE TABLE CorreoCliente (
@@ -467,14 +494,19 @@ CREATE TABLE CorreoCliente (
 ALTER TABLE CorreoCliente
 	ADD CONSTRAINT pk_correocliente PRIMARY KEY (IDCliente, CorreoCliente), 
 	ADD CONSTRAINT fk_correocliente_cliente FOREIGN KEY (IDCliente) 
-		REFERENCES Cliente(IDCliente),
+		REFERENCES Cliente(IDCliente) ON DELETE CASCADE,
     ADD CONSTRAINT chk_correo_formato CHECK (
         CorreoCliente ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$' 
     );-- Uno supondría que aquí debería discutirse. 
     -- "string de al menos un caracter sin @" + "@" + "string de al menos un caracter sin @" + "$" (fin de cadena)
-   
--- Comentarios
-    
+       
+
+COMMENT ON TABLE CorreoCliente IS 'Tabla que almacena los correos electrónicos de los clientes.';
+COMMENT ON COLUMN CorreoCliente.IDCliente IS 'Identificador del cliente.';
+COMMENT ON COLUMN CorreoCliente.CorreoCliente IS 'Correo electrónico del cliente. Debe tener un formato válido de correo electrónico.';
+COMMENT ON CONSTRAINT pk_correocliente ON CorreoCliente IS 'Llave primaria de la tabla CorreoCliente.';
+COMMENT ON CONSTRAINT fk_correocliente_cliente ON CorreoCliente IS 'Llave foránea que referencia a la tabla Cliente.';
+COMMENT ON CONSTRAINT chk_correo_formato ON CorreoCliente IS 'Verifica que el correo electrónico tenga un formato válido.';
     
  -- 20# TELEFONO CLIENTE
 CREATE TABLE TelefonoCliente (
@@ -485,10 +517,16 @@ CREATE TABLE TelefonoCliente (
 ALTER TABLE TelefonoCliente
 	ADD CONSTRAINT pk_telefonocliente PRIMARY KEY (IDCliente, TelefonoCliente),
 	ADD CONSTRAINT fk_telefonocliente_cliente FOREIGN KEY (IDCliente) 
-		REFERENCES Cliente(IDCliente),
+		REFERENCES Cliente(IDCliente) ON DELETE CASCADE,
     ADD CONSTRAINT chk_telefono_formato CHECK (TelefonoCliente ~ '^[0-9]{10}$'); 
 
--- Comentarios
+COMMENT ON TABLE TelefonoCliente IS 'Tabla que almacena los números de teléfono de los clientes.';
+COMMENT ON COLUMN TelefonoCliente.IDCliente IS 'Identificador del cliente.';
+COMMENT ON COLUMN TelefonoCliente.TelefonoCliente IS 'Número de teléfono del cliente. Debe tener 10 dígitos.';
+COMMENT ON CONSTRAINT pk_telefonocliente ON TelefonoCliente IS 'Llave primaria de la tabla TelefonoCliente.';
+COMMENT ON CONSTRAINT fk_telefonocliente_cliente ON TelefonoCliente IS 'Llave foránea que referencia a la tabla Cliente.';
+COMMENT ON CONSTRAINT chk_telefono_formato ON TelefonoCliente IS 'Verifica que el número de teléfono tenga un formato válido de 10 dígitos.';
+
 
 
 -- 21# JUEGO
@@ -581,9 +619,21 @@ ALTER TABLE Premio
 	ALTER COLUMN RangoEdad SET NOT NULL,
 	ADD CONSTRAINT Premio_Rango_Edad_Valido CHECK (RangoEdad IN ('Infantil', 'Juvenil', 'Adulto')),
 	ALTER COLUMN ValorAproximado SET NOT NULL,
-	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0 AND ValorAproximado < 10000);
-	
+	ADD CONSTRAINT Premio_Valor_Valido CHECK (ValorAproximado >= 0 AND ValorAproximado < 10000);    
+
 -- Comentarios
+
+COMMENT ON TABLE Premio IS 'Almacena la información de los premios registrados en una Sucursal';
+COMMENT ON COLUMN Premio.IDPremio IS 'Identificador del Premio';
+COMMENT ON COLUMN Premio.Nombre IS 'Nombre asignado al Premio';
+COMMENT ON COLUMN Premio.RangoEdad IS 'Rango de Edades a las que es dirigido el Premio';
+COMMENT ON COLUMN Premio.ValorAproximado IS 'Valor monetario Aproximado del premio';
+COMMENT ON CONSTRAINT Premio_PK ON Premio IS 'Garantiza que cada cliente tenga un identificador único';
+COMMENT ON CONSTRAINT IDPremio_Positivo ON Premio IS 'El identificador debe poseer un identicador con etiqueta positiva';
+COMMENT ON CONSTRAINT Nombre_Premio_Minimamente_Válido ON Premio IS 'El nombre del premio es Obligatorio y no admite valores nulos';
+COMMENT ON CONSTRAINT Premio_Rango_Edad_Valido ON Premio IS 'El dominio de los valores son <Infantil,Juvenil,Adulto>';
+COMMENT ON CONSTRAINT Premio_Valor_Valido ON Premio IS 'El valor Aproximado del premio es positivo y no supera los 10,000$';
+	
 
 
 -- 24# REGISTRO PARTIDA
@@ -605,12 +655,31 @@ ALTER TABLE RegistroPartida
 	ALTER COLUMN Puntuacion SET NOT NULL,
 	ADD CONSTRAINT RegistroPartida_PK PRIMARY KEY (IDRegistro),
 	ADD CONSTRAINT IDRegistro_Valido CHECK(IDRegistro >= 0),
-	ADD CONSTRAINT  RegistroPartida_FK01M FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina),
-	ADD CONSTRAINT  RegistroPartida_FK02T FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta),
+	ADD CONSTRAINT  RegistroPartida_FK01M FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina)
+	ON DELETE RESTRICT
+	ON UPDATE CASCADE,
+	ADD CONSTRAINT  RegistroPartida_FK02T FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta)
+	ON DELETE RESTRICT
+	ON UPDATE CASCADE,
 	ADD CONSTRAINT RegistroPartida_DOM01 CHECK (Puntuacion >= 0),
 	ADD CONSTRAINT RegistroPartida_DOM02 CHECK (Fecha <= CURRENT_DATE);
 
 -- Comentarios
+COMMENT ON TABLE RegistroPartida IS 'Tabla que registra el historial de las partidas jugadas en la maquina, su fecha y hora, la tarjeta utilizada para jugar y la puntuación obtenida al finalizar el juego.';
+
+COMMENT ON COLUMN RegistroPartida.IDRegistro IS 'Identificador único de cada partida que se ha registrado';
+COMMENT ON COLUMN RegistroPartida.IDMaquina IS 'El identificador de la máquina donde se realizó la partida';
+COMMENT ON COLUMN RegistroPartida.NoTarjeta IS 'El número de tarjeta utilizada para jugar la partida';
+COMMENT ON COLUMN RegistroPartida.Fecha IS 'La fecha en la que se realizó la partida.';
+COMMENT ON COLUMN RegistroPartida.Hora IS 'La hora en la que se realizó la partida';
+COMMENT ON COLUMN RegistroPartida.Puntuacion IS 'La puntuación obtenida al finalizar la partida';
+
+COMMENT ON CONSTRAINT RegistroPartida_PK ON RegistroPartida IS 'La llave primaria que identifica a cada partida registrada de forma única';
+COMMENT ON CONSTRAINT IDRegistro_Valido ON RegistroPartida IS 'Verificación de que el identificador de cada partida registrada sea un número mayor a 0';
+COMMENT ON CONSTRAINT RegistroPartida_FK01M ON RegistroPartida IS 'Llave foránea proviniente de Maquina';
+COMMENT ON CONSTRAINT RegistroPartida_FK02T ON RegistroPartida IS 'Llave foránea proveniente de Tarjeta';
+COMMENT ON CONSTRAINT RegistroPartida_DOM01 ON RegistroPartida IS 'Verifica que la puntuación obtenida en la partida sea un número mayor o igual a 0, es decir, que la puntuación no puede ser negativa';
+COMMENT ON CONSTRAINT RegistroPartida_DOM02 ON RegistroPartida IS 'Verifiva que la fecha de la partida registrada sea válida';
 
 
 -- 25# CANJE
@@ -630,13 +699,27 @@ ALTER TABLE Canje
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Canje_FK01T FOREIGN KEY (NoTarjeta) 
 		REFERENCES Tarjeta(NoTarjeta),
+       ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN CURPEncPremios SET NOT NULL,
 	ADD CONSTRAINT Canje_FK02E FOREIGN KEY (CURPEncPremios) 
 	 	REFERENCES EncargadoPremios(CURPEncPremios), 
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN Fecha SET NOT NULL, 
 	ALTER COLUMN Hora SET NOT NULL;
+    
+--Comentarios
 
--- Comentarios
+COMMENT ON TABLE Canje IS 'Registra la infomación del Canje de un premio';
+COMMENT ON COLUMN Canje.IDCanjeo IS 'Identificador del Canje';
+COMMENT ON COLUMN Canje.NoTarjeta IS 'Número de Tarjeta del Cliente asociado al Canje';
+COMMENT ON COLUMN Canje.CURPEncPremios IS 'Curp del Encargado de Premios que realiza el Canje';
+COMMENT ON COLUMN Canje.Fecha IS 'Fecha registrada durante el Canje';
+COMMENT ON COLUMN Canje.Hora IS 'Hora registrada durante el Canje';
+
+COMMENT ON CONSTRAINT Canje_PK ON Canje IS 'El identificador del Canje es único';
+COMMENT ON CONSTRAINT IDCanjeo_Positivo ON Canje IS 'El identificador debe poseer una etiqueta positiva';
+COMMENT ON CONSTRAINT Canje_FK01T ON Canje IS 'Establece la relación entre la tabla Canje y Tarjeta, Un canje se realiza a tráves de una Tarjeta';
+COMMENT ON CONSTRAINT Canje_FK02E ON Canje Is 'Establece la relación entre la tabla Canje y EncargadoPremios, Los canjes son realizados por el Encargado de Premios';
 
 	
 -- 26# RECARGA
@@ -655,9 +738,11 @@ ALTER TABLE Recarga
 	ALTER COLUMN CURPCajero SET NOT NULL,
 	ADD CONSTRAINT Recarga_FK01C FOREIGN KEY (CURPCajero) 
 		REFERENCES Cajero(CURPCajero),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN NoTarjeta SET NOT NULL,
 	ADD CONSTRAINT Recarga_FK02T FOREIGN KEY (NoTarjeta) 
 		REFERENCES Tarjeta(NoTarjeta),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN Fecha SET NOT NULL,
 	ALTER COLUMN Hora SET NOT NULL,
 	ALTER COLUMN Monto SET NOT NULL,
@@ -665,7 +750,24 @@ ALTER TABLE Recarga
 	ALTER COLUMN MetodoAbono SET NOT NULL,
 	ADD CONSTRAINT Recarga_MetodoAbono_Valido CHECK ( MetodoAbono IN ('Efectivo', 'TarjetaDebito','TarjetaCredito', 'Paypal'));
 
--- Comentarios
+--Comentarios
+
+COMMENT ON TABLE Recarga IS 'Registra la información de una Recarga monetaria hacia una Tarjeta';
+COMMENT ON COLUMN Recarga.CURPCajero IS 'Curp del Cajero';
+COMMENT ON COLUMN Recarga.NoTarjeta IS 'Número de la Tarjeta';
+COMMENT ON COLUMN Recarga.Fecha IS 'Fecha en la que se realizo la Recarga';
+COMMENT ON COLUMN Recarga.Hora Is 'Hora en la que se realizo la Recarga';
+COMMENT ON COLUMN Recarga.Monto Is 'Total del monto Abonado en la Recarga';
+COMMENT ON COLUMN Recarga.MetodoAbono IS 'Forma de pago durante la recarga. Son Efectivo, Debito, Credito o Paypal';
+
+COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga 'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
+COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga 'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
+COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga 'El monto debe ser un valor positivo multiplo de 10';
+COMMENT ON CONSTRAINT Recarga_MetodoAbono_Valido ON Recarga 'La forma de pago tiene que corresponder con una de las disponibles';
+COMMENT ON CONSTRAINT Recarga_FK01C ON Recarga IS 'Establece la relación entre la tabla Recarga y Cajero, La recarga se hace con un Cajero';
+COMMENT ON CONSTRAINT Recarga_FK02T ON Recarga IS 'Establece la relación entre la tabla Recarga y Tarejeta, La recarga es abonada a una tarjeta';
+COMMENT ON CONSTRAINT Recarga_Monto_Valido ON Recarga IS 'El monto debe ser un valor positivo multiplo de 10';
+COMMENT ON CONSTRAINT Recarga_MetodoAbono_Valido ON Recarga IS 'La forma de pago tiene que corresponder con una de las disponibles';
 
 
 -- 27# GUARDAR
@@ -712,13 +814,24 @@ ALTER TABLE Incluir
 	ALTER COLUMN IDPremio SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK01P FOREIGN KEY (IDPremio)
 		REFERENCES Premio(IDPremio),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN IDCanjeo SET NOT NULL,
 	ADD CONSTRAINT Incluir_FK02C FOREIGN KEY (IDCanjeo)
 		REFERENCES Canje(IDCanjeo),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
 	ALTER COLUMN Cantidad SET NOT NULL,
 	ADD CONSTRAINT Incluir_Cantidad_Valida CHECK (Cantidad >= 1);
 
 -- Comentarios
+
+COMMENT ON TABLE Incluir Is 'Tabla que representa que un Canje Incuye un Premio';
+COMMENT ON COLUMN Incluir.IDPremio IS 'Identificador único del premio';
+COMMENT ON COLUMN Incluir.IDCanjeo IS 'Identificador único del Canje';
+COMMENT ON COLUMN Incluir.Cantidad Is 'Cantidad de premios que incluye el Canje';
+COMMENT ON CONSTRAINT Incluir_FK01P ON Incluir IS 'Establece la relación entre la tabla Incluye y premio, Un premio es Incluido en un canje';
+COMMENT ON CONSTRAINT Incluir_FK02C ON Incluir IS 'Establece la relación entre la tabla Incluye y canje, Un canje es Incluido para un premio';
+COMMENT ON CONSTRAINT Incluir_Cantidad_Valida ON  Incluir IS 'Debe haber al menos un premio pára realizar el Canje';
+
 
 -- 29# MANTENIMIENTO
 CREATE TABLE Mantenimiento(
