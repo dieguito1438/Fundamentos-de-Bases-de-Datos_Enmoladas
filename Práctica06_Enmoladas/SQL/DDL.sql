@@ -655,12 +655,31 @@ ALTER TABLE RegistroPartida
 	ALTER COLUMN Puntuacion SET NOT NULL,
 	ADD CONSTRAINT RegistroPartida_PK PRIMARY KEY (IDRegistro),
 	ADD CONSTRAINT IDRegistro_Valido CHECK(IDRegistro >= 0),
-	ADD CONSTRAINT  RegistroPartida_FK01M FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina),
-	ADD CONSTRAINT  RegistroPartida_FK02T FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta),
+	ADD CONSTRAINT  RegistroPartida_FK01M FOREIGN KEY (IDMaquina) REFERENCES Maquina(IDMaquina)
+	ON DELETE RESTRICT
+	ON UPDATE CASCADE,
+	ADD CONSTRAINT  RegistroPartida_FK02T FOREIGN KEY (NoTarjeta) REFERENCES Tarjeta(NoTarjeta)
+	ON DELETE RESTRICT
+	ON UPDATE CASCADE,
 	ADD CONSTRAINT RegistroPartida_DOM01 CHECK (Puntuacion >= 0),
 	ADD CONSTRAINT RegistroPartida_DOM02 CHECK (Fecha <= CURRENT_DATE);
 
 -- Comentarios
+COMMENT ON TABLE RegistroPartida IS 'Tabla que registra el historial de las partidas jugadas en la maquina, su fecha y hora, la tarjeta utilizada para jugar y la puntuación obtenida al finalizar el juego.';
+
+COMMENT ON COLUMN RegistroPartida.IDRegistro IS 'Identificador único de cada partida que se ha registrado';
+COMMENT ON COLUMN RegistroPartida.IDMaquina IS 'El identificador de la máquina donde se realizó la partida';
+COMMENT ON COLUMN RegistroPartida.NoTarjeta IS 'El número de tarjeta utilizada para jugar la partida';
+COMMENT ON COLUMN RegistroPartida.Fecha IS 'La fecha en la que se realizó la partida.';
+COMMENT ON COLUMN RegistroPartida.Hora IS 'La hora en la que se realizó la partida';
+COMMENT ON COLUMN RegistroPartida.Puntuacion IS 'La puntuación obtenida al finalizar la partida';
+
+COMMENT ON CONSTRAINT RegistroPartida_PK ON RegistroPartida IS 'La llave primaria que identifica a cada partida registrada de forma única';
+COMMENT ON CONSTRAINT IDRegistro_Valido ON RegistroPartida IS 'Verificación de que el identificador de cada partida registrada sea un número mayor a 0';
+COMMENT ON CONSTRAINT RegistroPartida_FK01M ON RegistroPartida IS 'Llave foránea proviniente de Maquina';
+COMMENT ON CONSTRAINT RegistroPartida_FK02T ON RegistroPartida IS 'Llave foránea proveniente de Tarjeta';
+COMMENT ON CONSTRAINT RegistroPartida_DOM01 ON RegistroPartida IS 'Verifica que la puntuación obtenida en la partida sea un número mayor o igual a 0, es decir, que la puntuación no puede ser negativa';
+COMMENT ON CONSTRAINT RegistroPartida_DOM02 ON RegistroPartida IS 'Verifiva que la fecha de la partida registrada sea válida';
 
 
 -- 25# CANJE
