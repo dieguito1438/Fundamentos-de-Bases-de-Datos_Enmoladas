@@ -102,12 +102,19 @@ CREATE TABLE Gerente(
 
 ALTER TABLE Gerente
     ADD CONSTRAINT GerentePK PRIMARY KEY (CURPGerente),
+    ADD CONSTRAINT GerenteCurp_valido CHECK (CURPGerente ~ '^[A-Z0-9]{18}$'),
     ADD CONSTRAINT GerenteFK FOREIGN KEY (IDSucursal) 
         REFERENCES Sucursal(IDSucursal)
         ON DELETE CASCADE,
     ADD CONSTRAINT RFCGerente_unico UNIQUE (RFCGerente),
-    ADD CONSTRAINT CedulaGerente_unico UNIQUE (CedulaProfesional),
+    ADD CONSTRAINT RFCGerente_valido CHECK (RFCGerente ~ '^[A-ZÑ0-9]{12,13}$'),
+    ADD CONSTRAINT GerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
+    ADD CONSTRAINT GerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
+    ADD CONSTRAINT GerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0),
+    ADD CONSTRAINT GerenteFechaCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente,
     ADD CONSTRAINT SalarioGerente_valido CHECK (SalarioGerente > 0),
+    ADD CONSTRAINT CedulaGerente_unico UNIQUE (CedulaProfesional),
+    ADD CONSTRAINT CedulaGerente_valido CHECK (CedulaProfesional ~ '^[0-9]{6,8}$')
     ALTER COLUMN IDSucursal SET NOT NULL,
     ALTER COLUMN RFCGerente SET NOT NULL,
     ALTER COLUMN NombreGerente SET NOT NULL,
@@ -116,28 +123,35 @@ ALTER TABLE Gerente
     ALTER COLUMN FechaContratacionGerente SET NOT NULL,
     ALTER COLUMN FechaNacimientoGerente SET NOT NULL,
     ALTER COLUMN SalarioGerente SET NOT NULL,
-    ALTER COLUMN CedulaProfesional SET NOT NULL,
-	ADD CONSTRAINT GerenteNombre_valido CHECK (NombreGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreGerente)) > 0),
-	ADD CONSTRAINT GerenteApellidoP_valido CHECK (ApellidoPaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoGerente)) > 0),
-	ADD CONSTRAINT GerenteApellidoM_valido CHECK (ApellidoMaternoGerente ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoGerente)) > 0),
-	ADD CONSTRAINT GerenteCurp_valido CHECK (CURPGerente ~ '^[A-Z0-9]{18}$'),
-	ADD CONSTRAINT RFCGerente_valido CHECK (RFCGerente ~ '^[A-Z0-9]{12,13}$'),
-	ADD CONSTRAINT GerenteFCont_valido CHECK (FechaContratacionGerente > FechaNacimientoGerente);
+    ALTER COLUMN CedulaProfesional SET NOT NULL);
 
 -- Comentarios
 
 COMMENT ON TABLE Gerente IS 'Tabla que representa a los Gerentes';
 
-COMMENT ON CONSTRAINT Gerente.CURPGerente IS 'Curp del Gerente';
-COMMENT ON CONSTRAINT Gerente.IDSucursal IS 'Identificador unico de la Sucursal en la que trabaja el Gerente';
-COMMENT ON CONSTRAINT Gerente.RFCGerente IS 'RFC del Gerente';
-COMMENT ON CONSTRAINT Gerente.NombreGerente IS 'Nombre de pila del Gerente';
-COMMENT ON CONSTRAINT Gerente.ApellidoPaternoGerente IS 'Apellido paterno del Gerente';
-COMMENT ON CONSTRAINT Gerente.ApellidoMaternoGerente IS 'Apellido materno del Gerente';
-COMMENT ON CONSTRAINT Gerente.FechaContratacionGerente IS 'Fecha de contratación del Gerente';
-COMMENT ON CONSTRAINT Gerente.FechaNacimientoGerente IS 'Fecha de nacimiento del Gerente';
-COMMENT ON CONSTRAINT Gerente.SalarioGerente IS 'Salario del Gerente';
-COMMENT ON CONSTRAINT Gerente.CedulaProfesional IS 'Cedula profesional del Gerente';
+COMMENT ON COLUMN Gerente.CURPGerente IS 'Curp del Gerente';
+COMMENT ON COLUMN Gerente.IDSucursal IS 'Identificador unico de la Sucursal en la que trabaja el Gerente';
+COMMENT ON COLUMN Gerente.RFCGerente IS 'RFC del Gerente';
+COMMENT ON COLUMN Gerente.NombreGerente IS 'Nombre de pila del Gerente';
+COMMENT ON COLUMN Gerente.ApellidoPaternoGerente IS 'Apellido paterno del Gerente';
+COMMENT ON COLUMN Gerente.ApellidoMaternoGerente IS 'Apellido materno del Gerente';
+COMMENT ON COLUMN Gerente.FechaContratacionGerente IS 'Fecha de contratación del Gerente';
+COMMENT ON COLUMN Gerente.FechaNacimientoGerente IS 'Fecha de nacimiento del Gerente';
+COMMENT ON COLUMN Gerente.SalarioGerente IS 'Salario del Gerente';
+COMMENT ON COLUMN Gerente.CedulaProfesional IS 'Cedula profesional del Gerente';
+
+COMMENT ON CONSTRAINT GerentePK IS 'Restricción de Entidad para la tabla Gerente';
+COMMENT ON CONSTRAINT GerenteCurp_valido IS 'Restricción de Dominio para el atributo CURPGerente de la tabla Gerente. Nos asegura que solo contenga letras mayusculas, números, y que su longitud sea de 18 caracteres';
+COMMENT ON CONSTRAINT GerenteFK IS 'Restricción de Integridad referencial para la tabla Gerente';
+COMMENT ON CONSTRAINT RFCGerente_unico IS 'Restricción de Dominio para el atributo RFCGerente de la tabla Gerente. No se pueden repetir los RFC ya que son unicos'
+COMMENT ON CONSTRAINT RFCGerente_valido IS 'Restricción de Dominio para el atributo RFCGerente de la tabla Gerente. Nos asegura que no este formado por espacios blancos y con letras mayusculas sin caracteres especiales';
+COMMENT ON CONSTRAINT GerenteNombre_valido IS 'Restricción de Dominio para el atributo NombreGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
+COMMENT ON CONSTRAINT GerenteApellidoP_valido IS 'Restricción de Dominio para el atributo ApellidoPaternoGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
+COMMENT ON CONSTRAINT GerenteApellidoM_valido IS 'Restricción de Dominio para el atributo ApellidoMaternoGerente de la tabla Gerente. Nos asegura que no este formado por espacios en blanco ni contenga caracteres especiales, las letras asentuadas son permitidas';
+COMMENT ON CONSTRAINT GerenteFechaCont_valido IS 'Restricción de Dominio para el atributo FechaContrataciónGerente de la tabla Gerente. Nos asegura que la fecha de contratación sea despues de la fecha de nacimiento';
+COMMENT ON CONSTRAINT SalarioGerente_valido IS 'Restricción de Dominio para el atributo SalarioGerente de la tabla Gerente. Nos asegura que el salario sea un número positivo';
+COMMENT ON CONSTRAINT CedulaGerente_unico IS 'Restricción de dominio para el atributo CedulaProfesional de la tabla Gerente. Nos asegura que la cédula no se repita entre empleados';
+COMMENT ON CONSTRAINT CedulaGerente_valido IS 'Restricción de dominio para el atributo CedulaProfesional de la tabla Gerente. Nos asegura que solo contenga números con longitud entre 6 y 8 caracteres';
 
 
 -- 4# TELEFONO GERENTE
@@ -157,8 +171,12 @@ ALTER TABLE TelefonoGerente
 
 COMMENT ON TABLE TelefonoGerente IS 'Tabla que representa los numeros de Teléfono de los gerentes';
 
-COMMENT ON CONSTRAINT TelefonoGerente.TelefonoGerente IS 'Número de Telefono del Gerente';
-COMMENT ON CONSTRAINT TelefonoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el número de Teléfono';
+COMMENT ON COLUMN TelefonoGerente.TelefonoGerente IS 'Número de Telefono del Gerente';
+COMMENT ON COLUMN TelefonoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el número de Teléfono';
+
+COMMENT ON CONSTRAINT TelefonoGerentePK IS 'Restricción de Entidad para la tabla TelefonoGerente';
+COMMENT ON CONSTRAINT TelefonoCajeroFK IS 'Restricción de Integridad referencial para la tabla TelefonoGerente';
+COMMENT ON CONSTRAINT GerenteTelefono_valido IS 'Restricción de dominio para el atributo TelefonoGerente de la tabla TelefonoGerente. Nos asegura que solo contenga números del 0 al 9 como caracteres';
 
 
 -- 5# CORREO GERENTE
@@ -180,8 +198,12 @@ ALTER TABLE CorreoGerente
 
 COMMENT ON TABLE CorreoGerente IS 'Tabla que representa los Correos electronicos de los gerentes';
 
-COMMENT ON CONSTRAINT CorreoGerente.CorreoGerente IS 'Correo del Gerente';
-COMMENT ON CONSTRAINT CorreoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el Correo electronico';
+COMMENT ON COLUMN CorreoGerente.CorreoGerente IS 'Correo del Gerente';
+COMMENT ON COLUMN CorreoGerente.CURPGerente IS 'CURP del Gerente al que está asociado el Correo electronico';
+
+COMMENT ON CONSTRAINT CorreoGerentePK IS 'Restricción de Entidad para la tabla CorreoGerente';
+COMMENT ON CONSTRAINT CorreoGerenteFK IS 'Restricción de Integridad referencial para la tabla CorreoGerente';
+COMMENT ON CONSTRAINT GerenteCorreo_valido IS 'Restricción de Dominio para el atributo CorreoGerente de la tabla CorreoGerente. Nos asegura que la dirección de correo sea valida al incluir caracteres especiales más el separador @ para el dominio del correo';
 
 
 -- 6# ENCARGADO PREMIOS
@@ -201,10 +223,16 @@ CREATE TABLE EncargadoPremios(
 
 ALTER TABLE EncargadoPremios
     ADD CONSTRAINT EncPremiosPK PRIMARY KEY (CURPEncPremios),
+    ADD CONSTRAINT EncPremiosCurp_valido CHECK (CURPEncPremios ~ '^[A-Z0-9]{18}$'),
     ADD CONSTRAINT EncPremiosFK FOREIGN KEY (IDSucursal)
         REFERENCES Sucursal(IDSucursal)
         ON DELETE CASCADE,
     ADD CONSTRAINT RFCEncPremios_unico UNIQUE (RFCEncPremios),
+    ADD CONSTRAINT RFCEncPremios_valido CHECK (RFCEncPremios ~ '^[A-ZÑ0-9]{12,13}$'),
+    ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
+	ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
+	ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios)) > 0),
+    ADD CONSTRAINT EncPremiosFechaCont_valido CHECK (FechaContratacionEncPremios > FechaNacimientoEncPremios,
     ADD CONSTRAINT SalarioEncPremios_valido CHECK (SalarioEncPremios > 0),
     ALTER COLUMN IDSucursal SET NOT NULL,
     ALTER COLUMN RFCEncPremios SET NOT NULL,
@@ -215,29 +243,30 @@ ALTER TABLE EncargadoPremios
     ALTER COLUMN FechaContratacionEncPremios SET NOT NULL,
     ALTER COLUMN SalarioEncPremios SET NOT NULL,
     ALTER COLUMN EntradaEncPremios SET NOT NULL,
-    ALTER COLUMN SalidaEncPremios SET NOT NULL,
-	ADD CONSTRAINT EncPremiosNombre_valido CHECK (NombreEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(NombreEncPremios)) > 0),
-	ADD CONSTRAINT EncPremiosApellidoP_valido CHECK (ApellidoPaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoPaternoEncPremios)) > 0),
-	ADD CONSTRAINT EncPremiosApellidoM_valido CHECK (ApellidoMaternoEncPremios ~ '^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$' AND LENGTH(TRIM(ApellidoMaternoEncPremios)) > 0),
-	ADD CONSTRAINT EncPremiosCurp_valido CHECK (CURPEncPremios ~ '^[A-Z0-9]{18}$'),
-	ADD CONSTRAINT RFCEncPremios_valido CHECK (RFCEncPremios ~ '^[A-Z0-9]{12,13}$'),
-	ADD CONSTRAINT EncPremiosFCont_valido CHECK (FechaContratacionEncPremios > FechaNacimientoEncPremios);
+    ALTER COLUMN SalidaEncPremios SET NOT NULL);
 
 -- Comentarios
 
 COMMENT ON TABLE EncargadoPremios IS 'Tabla que representa a los Encargados de los Premios';
 
-COMMENT ON CONSTRAINT EncargadoPremios.CURPEncPremios IS 'CURP del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.IDSucursal IS 'Identificador unico de la Sucursal en la que trabaja el Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.RFCEncPremios IS 'RFC del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.NombreEncPremios IS 'Nombre de pila del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.ApellidoPaternoEncPremios IS 'Apellido paterno del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.ApellidoMaternoEncPremios IS 'Apellido materno del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.FechaNacimientoEncPremios IS 'Fecha de nacimiento del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.FechaContratacionEncPremios IS 'Fecha de contratación del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.SalarioEncPremios IS 'Salario del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.EntradaEncPremios IS 'Hora de entrada del Encargado de Premios';
-COMMENT ON CONSTRAINT EncargadoPremios.SalidaEncPremios IS 'Hora de salida del Encargado Premios';
+COMMENT ON COLUMN EncargadoPremios.CURPEncPremios IS 'CURP del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.IDSucursal IS 'Identificador unico de la Sucursal en la que trabaja el Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.RFCEncPremios IS 'RFC del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.NombreEncPremios IS 'Nombre de pila del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.ApellidoPaternoEncPremios IS 'Apellido paterno del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.ApellidoMaternoEncPremios IS 'Apellido materno del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.FechaNacimientoEncPremios IS 'Fecha de nacimiento del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.FechaContratacionEncPremios IS 'Fecha de contratación del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.SalarioEncPremios IS 'Salario del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.EntradaEncPremios IS 'Hora de entrada del Encargado de Premios';
+COMMENT ON COLUMN EncargadoPremios.SalidaEncPremios IS 'Hora de salida del Encargado Premios';
+
+COMMENT ON CONSTRAINT EncPremiosPK IS 'Restricción de Entidad para la tabla EncargadoPremios';
+COMMENT ON CONSTRAINT EncPremiosCurp_valido IS 'Restricción de Dominio para el atributo CURPEncPremios de la tabla EncargadoPremios. Nos asegura que solo contenga letras mayusculas y números con una longitud de 18 en sus caracteres';
+COMMENT ON CONSTRAINT EncPremiosFK IS 'Restricción de Integridad referencial para la tabla EncargadoPremios';
+COMMENT ON CONSTRAINT RFCEncPremios_unico IS 'Restricción de Dominio para el atributo RFCEncPremios de la tabla EncargadoPremios. No se pueden repetir los RFC ya que son únicos';
+COMMENT ON CONSTRAINT RFCEncPremios_valido IS 'Restricción de Dominio para el atributo RFCEncPremios de la tabla EncargadoPremios. Nos asegura que solo contenga letras mayusculas, numeros, y que tenga una longitud de 12 a 13 caracteres';
+COMMENT ON CONSTRAINT EncPremiosNombre_valido IS 'Restricción de Dominio para el atributo NombreEncPremios de la tabla EncargadoPremios. Nos asegura que no este formado por espacios en blanco ni que contenga caracteres especiales, las letras asentuadas estan permitidas';
 
 
 -- 7# TELEFONO ENCARGADO PREMIOS
@@ -257,8 +286,8 @@ ALTER TABLE TelefonoEncPremios
 
 COMMENT ON TABLE TelefonoEncPremios IS 'Tabla que representa los números de Teléfono de los Encargados de Premios';
 
-COMMENT ON CONSTRAINT TelefonoEncPremios.TelefonoEncPremios IS 'Número de Teléfono del Encargado de Premios';
-COMMENT ON CONSTRAINT TelefonoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el número de Telefono';
+COMMENT ON COLUMN TelefonoEncPremios.TelefonoEncPremios IS 'Número de Teléfono del Encargado de Premios';
+COMMENT ON COLUMN TelefonoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el número de Telefono';
 
 -- 8# CORREO ENCARGADO PREMIOS
 CREATE TABLE CorreoEncPremios(
@@ -277,8 +306,8 @@ ALTER TABLE CorreoEncPremios
 
 COMMENT ON TABLE CorreoEncPremios IS 'Tabla que representa los Correos electronicos de los Encargados de Premios';
 
-COMMENT ON CONSTRAINT CorreoEncPremios.CorreoEncPremios IS 'Correo del Encargado de Premios';
-COMMENT ON CONSTRAINT CorreoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el Correo electronico';
+COMMENT ON COLUMN CorreoEncPremios.CorreoEncPremios IS 'Correo del Encargado de Premios';
+COMMENT ON COLUMN CorreoEncPremios.CURPEncPremios IS 'CURP del Encargado de Premios al que está asociado el Correo electronico';
 
 
 -- 9# CAJERO
@@ -324,17 +353,17 @@ ALTER TABLE Cajero
 
 COMMENT ON TABLE Cajero IS 'Tabla que representa a los Cajeros'
 
-COMMENT ON CONSTRAINT Cajero.CURPCajero IS 'CURP del Cajero';
-COMMENT ON CONSTRAINT Cajero.IDSucursal IS 'Identificador unico de la Sucursal donde trabaja el Cajero';
-COMMENT ON CONSTRAINT Cajero.RFCCajero IS 'CURP del Cajero';
-COMMENT ON CONSTRAINT Cajero.NombreCajero IS 'Nombre de pila del Cajero';
-COMMENT ON CONSTRAINT Cajero.ApellidoPaternoCajero IS 'Apellido paterno del Cajero';
-COMMENT ON CONSTRAINT Cajero.ApellidoMaternoCajero IS 'Apellido materno del Cajero';
-COMMENT ON CONSTRAINT Cajero.FechaNacimientoCajero IS 'Fecha de nacimiento del Cajero';
-COMMENT ON CONSTRAINT Cajero.FechaContratacionCajero IS 'Fecha de contratación del Cajero';
-COMMENT ON CONSTRAINT Cajero.SalarioCajero IS 'Salario del Cajero';
-COMMENT ON CONSTRAINT Cajero.EntradaCajero IS 'Hora de entrada del Cajero';
-COMMENT ON CONSTRAINT Cajero.SalidaCajero IS 'Hora de salida del Cajero.';
+COMMENT ON COLUMN Cajero.CURPCajero IS 'CURP del Cajero';
+COMMENT ON COLUMN Cajero.IDSucursal IS 'Identificador unico de la Sucursal donde trabaja el Cajero';
+COMMENT ON COLUMN Cajero.RFCCajero IS 'CURP del Cajero';
+COMMENT ON COLUMN Cajero.NombreCajero IS 'Nombre de pila del Cajero';
+COMMENT ON COLUMN Cajero.ApellidoPaternoCajero IS 'Apellido paterno del Cajero';
+COMMENT ON COLUMN Cajero.ApellidoMaternoCajero IS 'Apellido materno del Cajero';
+COMMENT ON COLUMN Cajero.FechaNacimientoCajero IS 'Fecha de nacimiento del Cajero';
+COMMENT ON COLUMN Cajero.FechaContratacionCajero IS 'Fecha de contratación del Cajero';
+COMMENT ON COLUMN Cajero.SalarioCajero IS 'Salario del Cajero';
+COMMENT ON COLUMN Cajero.EntradaCajero IS 'Hora de entrada del Cajero';
+COMMENT ON COLUMN Cajero.SalidaCajero IS 'Hora de salida del Cajero.';
 
 
 -- 10# TELEFONO CAJERO
@@ -354,8 +383,8 @@ ALTER TABLE TelefonoCajero
 
 COMMENT ON TABLE TelefonoCajero IS 'Tabla que representa los números de Teléfono de los Cajeros';
 
-COMMENT ON CONSTRAINT TelefonoCajero.TelefonoCajero IS 'Número de Teléfono del Cajero';
-COMMENT ON CONSTRAINT TelefonoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el número de Teléfono';
+COMMENT ON COLUMN TelefonoCajero.TelefonoCajero IS 'Número de Teléfono del Cajero';
+COMMENT ON COLUMN TelefonoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el número de Teléfono';
 
 
 -- 11# CORREO CAJERO
@@ -377,8 +406,8 @@ ALTER TABLE CorreoCajero
 
 COMMENT ON TABLE CorreoCajero IS 'Tabla que representa los Correos electronicos de los Cajeros';
 
-COMMENT ON CONSTRAINT CorreoCajero.CorreoCajero IS 'Correo electronico del Cajero';
-COMMENT ON CONSTRAINT CorreoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el Correo electronico';
+COMMENT ON COLUMN CorreoCajero.CorreoCajero IS 'Correo electronico del Cajero';
+COMMENT ON COLUMN CorreoCajero.CURPCajero IS 'CURP del Cajero al que está asociado el Correo electronico';
 
 
 -- 12# TECNICO
@@ -422,16 +451,16 @@ ALTER TABLE Tecnico
 
 COMMENT ON TABLE Tecnico IS 'Tabla que representa a los Tecnicos';
 
-COMMENT ON CONSTRAINT Tecnico.CURPTecnico IS 'CURP del Técnico';
-COMMENT ON CONSTRAINT Tecnico.IDSucursal IS 'Identificador único de la Sucursal donde trabaja el Técnico';
-COMMENT ON CONSTRAINT Tecnico.RFCTecnico IS 'RFC del Técnico';
-COMMENT ON CONSTRAINT Tecnico.NombreTecnico IS 'Nombre de pila del Técnico';
-COMMENT ON CONSTRAINT Tecnico.ApellidoPaternoTecnico IS 'Apellido paterno del Técnico';
-COMMENT ON CONSTRAINT Tecnico.ApellidoMaternoTecnico IS 'Apellido materno del Técnico';
-COMMENT ON CONSTRAINT Tecnico.FechaNacimientoTecnico IS 'Fecha de nacimiento del Técnico';
-COMMENT ON CONSTRAINT Tecnico.FechaContratacionTecnico IS 'Fecha de contratación del Técnico';
-COMMENT ON CONSTRAINT Tecnico.SalarioTecnico IS 'Salario del Técnico';
-COMMENT ON CONSTRAINT Tecnico.Especialidad IS 'Especialidad del Técnico';
+COMMENT ON COLUMN Tecnico.CURPTecnico IS 'CURP del Técnico';
+COMMENT ON COLUMN Tecnico.IDSucursal IS 'Identificador único de la Sucursal donde trabaja el Técnico';
+COMMENT ON COLUMN Tecnico.RFCTecnico IS 'RFC del Técnico';
+COMMENT ON COLUMN Tecnico.NombreTecnico IS 'Nombre de pila del Técnico';
+COMMENT ON COLUMN Tecnico.ApellidoPaternoTecnico IS 'Apellido paterno del Técnico';
+COMMENT ON COLUMN Tecnico.ApellidoMaternoTecnico IS 'Apellido materno del Técnico';
+COMMENT ON COLUMN Tecnico.FechaNacimientoTecnico IS 'Fecha de nacimiento del Técnico';
+COMMENT ON COLUMN Tecnico.FechaContratacionTecnico IS 'Fecha de contratación del Técnico';
+COMMENT ON COLUMN Tecnico.SalarioTecnico IS 'Salario del Técnico';
+COMMENT ON COLUMN Tecnico.Especialidad IS 'Especialidad del Técnico';
 
 
 -- 13# TELEFONO TECNICO
@@ -452,8 +481,8 @@ ALTER TABLE TelefonoTecnico
 
 COMMENT ON TABLE TelefonoTecnico IS 'Tabla que representa los números de Teléfono de los Técnicos';
 
-COMMENT ON CONSTRAINT TelefonoTecnico.TelefonoTecnico IS 'Número de Teléfono del Técnico';
-COMMENT ON CONSTRAINT TelefonoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el número de Teléfono';
+COMMENT ON COLUMN TelefonoTecnico.TelefonoTecnico IS 'Número de Teléfono del Técnico';
+COMMENT ON COLUMN TelefonoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el número de Teléfono';
 
 
 -- 14# CORREO TECNICO
@@ -476,8 +505,8 @@ ALTER TABLE CorreoTecnico
 
 COMMENT ON TABLE CorreoTecnico IS 'Tabla que representa los Correos electronicos de los Técnicos';
 
-COMMENT ON CONSTRAINT CorreoTecnico.CorreoTecnico IS 'Correo electronico del Técnico';
-COMMENT ON CONSTRAINT CorreoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el Correo electronico';
+COMMENT ON COLUMN CorreoTecnico.CorreoTecnico IS 'Correo electronico del Técnico';
+COMMENT ON COLUMN CorreoTecnico.CURPTecnico IS 'CURP del Técnico al que está asociado el Correo electronico';
 
 -- 15# CERTIFICACION
 CREATE TABLE Certificacion(
@@ -496,8 +525,8 @@ ALTER TABLE Certificacion
 
 COMMENT ON TABLE Certificacion IS 'Tabla que representa las Certificaciones de los Técnicos';
 
-COMMENT ON CONSTRAINT Certificacion.Certificacion IS 'Certificación realizada por el Técnico';
-COMMENT ON CONSTRAINT Certificacion.CURPTecnico IS 'CURP del Técnico al que está asociada la certificación';
+COMMENT ON COLUMN Certificacion.Certificacion IS 'Certificación realizada por el Técnico';
+COMMENT ON COLUMN Certificacion.CURPTecnico IS 'CURP del Técnico al que está asociada la certificación';
 
 -- 16# CLIENTE
 CREATE TABLE Cliente (
